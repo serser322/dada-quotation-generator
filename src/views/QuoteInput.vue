@@ -1,12 +1,12 @@
 <template>
   <div>
-    home
+    quote input
   </div>
 </template>
 
 <script>
 export default {
-
+  name:'QuoteInput'
 }
 </script>
 
