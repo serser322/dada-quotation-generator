@@ -1,6 +1,6 @@
 <template>
-  <main class="images-page">
-
+  <main class="images-selection">
+    <p>Images selection</p>
   </main>
 </template>
 
