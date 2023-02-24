@@ -1,10 +1,35 @@
-<script setup>
-</script>
-
 <template>
+  <Sidebar />
   <router-view />
 </template>
 
-<style scoped>
+<script setup>
+import Sidebar from './components/Sidebar.vue'
+</script>
 
+<style lang="scss">
+:root {
+
+}
+
+* {
+
+}
+
+body {
+
+}
+
+button {
+
+}
+
+#app {
+  display: flex;
+
+  main {
+    flex: 1 1 0;
+    padding: 2rem
+  }
+}
 </style>

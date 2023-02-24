@@ -8,6 +8,10 @@ module.exports = {
     'standard'
   ],
   overrides: [
+    {
+      files: ['*.html'],
+      processor: 'vue/.vue'
+    }
   ],
   parserOptions: {
     ecmaVersion: 'latest',
