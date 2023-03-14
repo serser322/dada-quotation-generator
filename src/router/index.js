@@ -18,6 +18,10 @@ export const router = createRouter(
         path: '/source-input',
         name: 'SourceInput',
         component: () => import('../views/SourceInput.vue')
+      },
+      {
+        path: '/:catchAll(.*)',
+        redirect: { name: 'Home' }
       }
     ]
   }
