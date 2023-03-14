@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name:'QuoteInput'
+  name: 'QuoteInput'
 }
 </script>
 

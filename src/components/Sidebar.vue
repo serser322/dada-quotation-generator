@@ -1,6 +1,7 @@
 <template>
   <aside>
     sidebar
+    <span class="material-symbols-outlined">group</span>
   </aside>
 </template>
 
