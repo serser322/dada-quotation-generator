@@ -25,16 +25,12 @@ body {
   height: 100vh;
 }
 
-button {
 
-}
-
-#app {
+/* #app {
   display: flex;
 
   main {
     flex: 1 1 0;
-    padding: 2rem
   }
-}
+} */
 </style>
