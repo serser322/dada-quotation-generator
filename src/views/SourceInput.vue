@@ -1,14 +1,12 @@
+<script setup>
+
+</script>
+
 <template>
   <div>
-    quote input
+    Sourse input
   </div>
 </template>
-
-<script>
-export default {
-  name: 'QuoteInput'
-}
-</script>
 
 <style>
 

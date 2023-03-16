@@ -1,25 +1,20 @@
+<script setup>
+import Sidebar from '../components/Sidebar.vue'
+
+</script>
+
 <template>
   <main class="home-page">
-    <h1>Home</h1>
-    <p>This is the home page.</p>
+    <Sidebar />
+
+    <h1>Home1234</h1>
+
+    <router-view />
   </main>
 </template>
 
-<script>
-export default {
-  name: 'HomePage',
-  created () {
-    this.test()
-  },
-  methods: {
-    test () {
-      console.log(4444)
-    }
-  }
-
-}
-</script>
-
 <style lang="scss">
-
+main {
+  display: flex;
+}
 </style>

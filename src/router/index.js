@@ -6,22 +6,30 @@ export const router = createRouter(
     routes: [
       {
         path: '/',
-        name: 'Home',
-        component: () => import('../views/Home.vue')
-      },
-      {
-        path: '/images-selection',
-        name: 'ImagesSelection',
-        component: () => import('../views/ImagesSelection.vue')
-      },
-      {
-        path: '/source-input',
-        name: 'SourceInput',
-        component: () => import('../views/SourceInput.vue')
+        name: 'Index',
+        component: () => import('../views/Home.vue'),
+        redirect: '/quote-input',
+        children: [
+          {
+            path: 'quote-input',
+            name: 'QuoteInput',
+            component: () => import('../views/QuoteInput.vue')
+          },
+          {
+            path: 'images-selection',
+            name: 'ImagesSelection',
+            component: () => import('../views/ImagesSelection.vue')
+          },
+          {
+            path: 'source-input',
+            name: 'SourceInput',
+            component: () => import('../views/SourceInput.vue')
+          }
+        ]
       },
       {
         path: '/:catchAll(.*)',
-        redirect: { name: 'Home' }
+        redirect: { name: 'QuoteInput' }
       }
     ]
   }
