@@ -1,6 +1,10 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+
+onMounted(() => {
+  isExpanded.value = window.innerWidth >= 576
+})
 
 const router = useRouter()
 function toPage (routeName) {
@@ -14,11 +18,16 @@ const isSourceInput = computed(() => route.name === 'SourceInput')
 
 const isExpanded = ref(false)
 const toggleSidebar = () => {
-  isExpanded.value = !isExpanded.value
+  if (window.innerWidth < 576) {
+    isExpanded.value = !isExpanded.value
+  } else {
+    isExpanded.value = true
+  }
 }
 </script>
 
 <template>
+  <!-- Mobile Sidebar | Start -->
   <aside
     class="sidebar"
     :class="{ 'sidebar-expanded': isExpanded }"
@@ -32,6 +41,7 @@ const toggleSidebar = () => {
       >
     </div>
     <!-- Avatar | End -->
+
     <!-- Nav | Start -->
     <nav class="sidebar__wrap">
       <div class="sidebar__line" />
@@ -76,19 +86,89 @@ const toggleSidebar = () => {
       <div class="sidebar__line" />
     </nav>
     <!-- Nav | End -->
+
     <!-- Toggle icon | Start -->
     <div class="sidebar__toggle">
-      <span
-        class="material-symbols-outlined"
-      >
+      <span class="material-symbols-outlined">
         keyboard_double_arrow_right
       </span>
     </div>
     <!-- Toggle icon | End -->
   </aside>
+  <!-- Mobile Sidebar | End -->
+
+  <!-- Web Sidebar | Start -->
+  <aside
+    class="sidebar"
+    :class="{ 'sidebar-expanded': isExpanded }"
+  >
+    <!-- Avatar | Start -->
+    <div class="sidebar__avatar">
+      <img
+        src="../assets/dada.png"
+        alt=""
+      >
+    </div>
+    <!-- Avatar | End -->
+
+    <!-- Nav | Start -->
+    <nav class="sidebar__wrap">
+      <div class="sidebar__line" />
+      <div
+        class="sidebar__item"
+        :class="{ 'sidebar__item-active': isQuoteInput }"
+        @click.stop="toPage('QuoteInput')"
+      >
+        <span class="material-symbols-outlined">
+          chat
+        </span>
+        <div>
+          輸入名言
+        </div>
+      </div>
+      <div class="sidebar__line" />
+      <div
+        class="sidebar__item"
+        :class="{ 'sidebar__item-active': isImagesSelection }"
+        @click.stop="toPage('ImagesSelection')"
+      >
+        <span class="material-symbols-outlined">
+          imagesmode
+        </span>
+        <div>
+          選擇立繪
+        </div>
+      </div>
+      <div class="sidebar__line" />
+      <div
+        class="sidebar__item"
+        :class="{ 'sidebar__item-active': isSourceInput }"
+        @click.stop="toPage('SourceInput')"
+      >
+        <span class="material-symbols-outlined">
+          link
+        </span>
+        <div>
+          輸入來源
+        </div>
+      </div>
+      <div class="sidebar__line" />
+    </nav>
+    <!-- Nav | End -->
+
+    <!-- Toggle icon | Start -->
+    <div class="sidebar__toggle">
+      <span class="material-symbols-outlined">
+        keyboard_double_arrow_right
+      </span>
+    </div>
+    <!-- Toggle icon | End -->
+  </aside>
+  <!-- Web Sidebar | End -->
 </template>
 
 <style lang="scss" scoped>
+/* Mobile style | Start */
 .sidebar {
   position: fixed;
   width: 3.5rem;
@@ -111,6 +191,7 @@ const toggleSidebar = () => {
       transition: width 0.5s ease;
     }
   }
+
   .sidebar__wrap {
     box-sizing: content-box;
 
@@ -167,6 +248,10 @@ const toggleSidebar = () => {
         color: orangered
       }
     }
+
+    @media (min-width: 576px) {
+      display: none
+    }
   }
 
   .sidebar__toggle {
@@ -179,25 +264,20 @@ const toggleSidebar = () => {
     background-color: rgb(62, 62, 62);
     transition: transform 0.3s ease-out;
   }
-  /* @media (min-width:576px) {
-    width: 20rem;
-  } */
+
+  @media (min-width: 576px) {
+    display: none
+  }
 }
 
 /* Expanded */
 .sidebar-expanded {
   width: 12rem;
 
-  .sidebar__avatar {
-    img {
-      /* width: 3.5rem; */
-    }
-  }
-
   .sidebar__wrap {
     .sidebar__item {
       :first-child {
-        margin: 1rem ;
+        margin: 1rem;
       }
 
       :nth-child(2) {
@@ -215,4 +295,6 @@ const toggleSidebar = () => {
   }
 
 }
+/* Mobile style | End */
+
 </style>
