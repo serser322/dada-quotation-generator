@@ -4,8 +4,8 @@ import Sidebar from '../components/Sidebar.vue'
 </script>
 
 <template>
+  <Sidebar />
   <main>
-    <Sidebar />
     <router-view />
   </main>
 </template>
@@ -13,5 +13,8 @@ import Sidebar from '../components/Sidebar.vue'
 <style lang="scss">
 main {
   display: flex;
+
+  padding-left:3.5rem;
+
 }
 </style>
