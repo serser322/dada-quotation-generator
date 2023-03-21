@@ -1,11 +1,9 @@
+<script setup>
+</script>
+
 <template>
-  <Sidebar />
   <router-view />
 </template>
-
-<script setup>
-import Sidebar from './components/Sidebar.vue'
-</script>
 
 <style lang="scss">
 :root {
@@ -13,23 +11,26 @@ import Sidebar from './components/Sidebar.vue'
 }
 
 * {
+  font-family: 'Noto Sans TC', sans-serif;
+  box-sizing: border-box;
+}
 
+html {
+  background-color: rgb(223, 223, 223);
+  height: 100vh;
 }
 
 body {
-
+  margin:0;
+  height: 100vh;
 }
 
-button {
 
-}
-
-#app {
+/* #app {
   display: flex;
 
   main {
     flex: 1 1 0;
-    padding: 2rem
   }
-}
+} */
 </style>

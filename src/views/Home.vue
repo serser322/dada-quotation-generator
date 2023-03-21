@@ -1,25 +1,25 @@
+<script setup>
+import Sidebar from '../components/Sidebar.vue'
+
+</script>
+
 <template>
-  <main class="home-page">
-    <h1>Home</h1>
-    <p>This is the home page.</p>
+  <main>
+    <Sidebar />
+    <router-view class="router-view" />
   </main>
 </template>
 
-<script>
-export default {
-  name: 'HomePage',
-  created () {
-    this.test()
-  },
-  methods: {
-    test () {
-      console.log(4444)
+<style lang="scss">
+main {
+  display: flex;
+
+  &:nth-child(2) {
+    margin-left: 3.5rem;
+
+    @media (min-width: 576px) {
+      margin-left: 0
     }
   }
-
 }
-</script>
-
-<style lang="scss">
-
 </style>
