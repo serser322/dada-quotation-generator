@@ -150,7 +150,6 @@ const toggleSidebar = () => {
       align-items: center;
       padding-left: 1rem;
       position: relative;
-      /* z-index: 2; */
 
       @include web {
         padding-left: calc(3.5rem/2);
