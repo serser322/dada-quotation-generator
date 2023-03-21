@@ -18,16 +18,12 @@ const isSourceInput = computed(() => route.name === 'SourceInput')
 
 const isExpanded = ref(false)
 const toggleSidebar = () => {
-  if (window.innerWidth < 576) {
-    isExpanded.value = !isExpanded.value
-  } else {
-    isExpanded.value = true
-  }
+  isExpanded.value = !isExpanded.value
 }
 </script>
 
 <template>
-  <!-- Mobile Sidebar | Start -->
+  <!-- Sidebar | Start -->
   <aside
     class="sidebar"
     :class="{ 'sidebar-expanded': isExpanded }"
@@ -95,80 +91,17 @@ const toggleSidebar = () => {
     </div>
     <!-- Toggle icon | End -->
   </aside>
-  <!-- Mobile Sidebar | End -->
-
-  <!-- Web Sidebar | Start -->
-  <aside
-    class="sidebar"
-    :class="{ 'sidebar-expanded': isExpanded }"
-  >
-    <!-- Avatar | Start -->
-    <div class="sidebar__avatar">
-      <img
-        src="../assets/dada.png"
-        alt=""
-      >
-    </div>
-    <!-- Avatar | End -->
-
-    <!-- Nav | Start -->
-    <nav class="sidebar__wrap">
-      <div class="sidebar__line" />
-      <div
-        class="sidebar__item"
-        :class="{ 'sidebar__item-active': isQuoteInput }"
-        @click.stop="toPage('QuoteInput')"
-      >
-        <span class="material-symbols-outlined">
-          chat
-        </span>
-        <div>
-          輸入名言
-        </div>
-      </div>
-      <div class="sidebar__line" />
-      <div
-        class="sidebar__item"
-        :class="{ 'sidebar__item-active': isImagesSelection }"
-        @click.stop="toPage('ImagesSelection')"
-      >
-        <span class="material-symbols-outlined">
-          imagesmode
-        </span>
-        <div>
-          選擇立繪
-        </div>
-      </div>
-      <div class="sidebar__line" />
-      <div
-        class="sidebar__item"
-        :class="{ 'sidebar__item-active': isSourceInput }"
-        @click.stop="toPage('SourceInput')"
-      >
-        <span class="material-symbols-outlined">
-          link
-        </span>
-        <div>
-          輸入來源
-        </div>
-      </div>
-      <div class="sidebar__line" />
-    </nav>
-    <!-- Nav | End -->
-
-    <!-- Toggle icon | Start -->
-    <div class="sidebar__toggle">
-      <span class="material-symbols-outlined">
-        keyboard_double_arrow_right
-      </span>
-    </div>
-    <!-- Toggle icon | End -->
-  </aside>
-  <!-- Web Sidebar | End -->
+  <!-- Sidebar | End -->
 </template>
 
 <style lang="scss" scoped>
-/* Mobile style | Start */
+
+@mixin web {
+  @media (min-width: 576px) {
+    @content
+  }
+}
+
 .sidebar {
   position: fixed;
   width: 3.5rem;
@@ -178,10 +111,23 @@ const toggleSidebar = () => {
   z-index: 1;
   transition: width 0.5s ease;
 
+  @include web {
+    position: relative;
+    width: 5rem;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
   .sidebar__avatar {
     display: flex;
     justify-content: center;
     padding: 0.8rem 0;
+
+    @include web {
+      padding: 1.5rem 0;
+    }
 
     img {
       width: 2.8rem;
@@ -189,6 +135,10 @@ const toggleSidebar = () => {
       border: 0.2rem solid white;
       border-radius: 50%;
       transition: width 0.5s ease;
+
+      @include web {
+        width: 4rem;
+      }
     }
   }
 
@@ -200,7 +150,11 @@ const toggleSidebar = () => {
       align-items: center;
       padding-left: 1rem;
       position: relative;
-      z-index: 2;
+      /* z-index: 2; */
+
+      @include web {
+        padding-left: calc(3.5rem/2);
+      }
 
       &:hover {
         cursor: pointer;
@@ -231,6 +185,10 @@ const toggleSidebar = () => {
         overflow: hidden;
         white-space: nowrap;
         transition: all 0.5s ease;
+
+        @include web {
+          font-size: 1.5rem;
+        }
       }
     }
 
@@ -248,10 +206,6 @@ const toggleSidebar = () => {
         color: orangered
       }
     }
-
-    @media (min-width: 576px) {
-      display: none
-    }
   }
 
   .sidebar__toggle {
@@ -264,16 +218,21 @@ const toggleSidebar = () => {
     background-color: rgb(62, 62, 62);
     transition: transform 0.3s ease-out;
   }
-
-  @media (min-width: 576px) {
-    display: none
-  }
 }
 
 /* Expanded */
 .sidebar-expanded {
-  width: 12rem;
+  width: 15rem;
 
+  .sidebar__avatar {
+    img {
+      width: 2.8rem;
+
+      @include web {
+        width: 8rem;
+      }
+    }
+  }
   .sidebar__wrap {
     .sidebar__item {
       :first-child {
@@ -295,6 +254,5 @@ const toggleSidebar = () => {
   }
 
 }
-/* Mobile style | End */
 
 </style>

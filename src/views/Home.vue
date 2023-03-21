@@ -4,9 +4,9 @@ import Sidebar from '../components/Sidebar.vue'
 </script>
 
 <template>
-  <Sidebar />
   <main>
-    <router-view />
+    <Sidebar />
+    <router-view class="router-view" />
   </main>
 </template>
 
@@ -14,7 +14,12 @@ import Sidebar from '../components/Sidebar.vue'
 main {
   display: flex;
 
-  padding-left:3.5rem;
+  &:nth-child(2) {
+    margin-left: 3.5rem;
 
+    @media (min-width: 576px) {
+      margin-left: 0
+    }
+  }
 }
 </style>
