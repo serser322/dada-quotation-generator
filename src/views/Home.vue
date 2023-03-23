@@ -1,11 +1,13 @@
 <script setup>
-import Sidebar from '../components/Sidebar.vue'
+import BaseSidebar from '../components/BaseSidebar.vue'
+// import BaseHeader from '../components/BaseHeader.vue'
 
 </script>
 
 <template>
   <main>
-    <Sidebar />
+    <!-- <BaseHeader /> -->
+    <BaseSidebar />
     <router-view class="router-view" />
   </main>
 </template>
