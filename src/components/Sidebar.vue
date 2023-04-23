@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
@@ -16,10 +16,14 @@ const isExpanded = ref(false)
 const toggleSidebar = () => {
   isExpanded.value = !isExpanded.value
 }
+
+watch(isExpanded, newValue => {
+  // console.log(document.querySelectorAll('.sidebar__item'))
+})
 </script>
 
 <template>
-  <aside
+  <nav
     class="sidebar"
     :class="{ 'sidebar-expanded': isExpanded }"
     @click="toggleSidebar"
@@ -37,7 +41,7 @@ const toggleSidebar = () => {
         alt=""
       >
     </div>
-    <nav class="sidebar__wrap">
+    <div class="sidebar__wrap">
       <div class="sidebar__line" />
       <div
         class="sidebar__item"
@@ -47,7 +51,9 @@ const toggleSidebar = () => {
         <span class="material-symbols-outlined">
           chat
         </span>
-        <div class="text-hidden">
+        <div
+          class="text-hidden"
+        >
           輸入名言
         </div>
       </div>
@@ -60,7 +66,9 @@ const toggleSidebar = () => {
         <span class="material-symbols-outlined">
           imagesmode
         </span>
-        <div class="text-hidden">
+        <div
+          class="text-hidden"
+        >
           選擇立繪
         </div>
       </div>
@@ -78,19 +86,19 @@ const toggleSidebar = () => {
         </div>
       </div>
       <div class="sidebar__line" />
-    </nav>
-  </aside>
+    </div>
+  </nav>
 </template>
 
 <style lang="scss" scoped>
 .sidebar {
   position: fixed;
-  width: 10rem;
+  width: 3.5rem;
   height: 100vh;
   background-color: rgb(62, 62, 62);
   color: white;
   z-index: 1;
-  transition: width 0.5s ease;
+  transition: all 0.5s ease;
 
   .sidebar__toggle {
     width: 25px;
@@ -107,26 +115,25 @@ const toggleSidebar = () => {
   .sidebar__avatar {
     display: flex;
     justify-content: center;
-    padding: 2rem 0;
+    padding: 1rem 0;
 
     img {
-      width: 6rem;
+      width: 3rem;
       background-color: rgb(223, 191, 191);
-      border: 0.4rem solid white;
+      border: 0.1rem solid white;
       border-radius: 50%;
       transition: width 0.5s ease;
     }
   }
 
   .sidebar__wrap {
-    box-sizing: content-box;
-
     .sidebar__item {
-      display: flex;
-      justify-content: center;
-      align-items: center;
       position: relative;
       z-index: 2;
+      padding:1rem 0;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
 
       &:hover {
         cursor: pointer;
@@ -139,11 +146,16 @@ const toggleSidebar = () => {
       }
 
       :first-child {
-        margin: 1.2rem 0;
-        margin-right: 0rem;
+        margin: 0rem 0.75rem;
+        font-size: 2rem;
         color: aquamarine;
         font-weight: bold;
-        transition: margin-right 0.2s ease;
+        /* transition: all 0.3s ease; */
+      }
+
+      :nth-child(2) {
+        /* display: inline-block; */
+
       }
     }
 
@@ -171,13 +183,13 @@ const toggleSidebar = () => {
 /* Sidebar expanded */
 
 .sidebar-expanded {
-  width: 20rem;
+  width: 10.5rem;
 
-  .sidebar__avatar {
+  /* .sidebar__avatar {
     img {
-      width: 11rem;
+      width: 6rem;
     }
-  }
+  } */
 
   .sidebar__wrap {
     .sidebar__item {
@@ -187,7 +199,9 @@ const toggleSidebar = () => {
       }
 
       :nth-child(2) {
-        width: auto;
+        /* width: auto; */
+        /* padding: auto 0; */
+        /* margin: 1rem 0; */
         /* height: 3rem; */
         /* margin: 1.2rem 0; */
         font-size: 1.5rem;
@@ -201,11 +215,11 @@ const toggleSidebar = () => {
 
 .text-hidden {
   /* font-size: 0px; */
-  width: 0;
-  height: 0;
-  overflow: hidden;
-  /* visibility: hidden;
-  opacity: 0; */
-  transition: all 0.5s ease;
+  /* width: 0;
+  height: 0; */
+  /* overflow: hidden; */
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
 }
 </style>
