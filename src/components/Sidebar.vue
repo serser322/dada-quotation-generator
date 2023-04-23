@@ -1,6 +1,10 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+
+onMounted(() => {
+  isExpanded.value = window.innerWidth >= 576
+})
 
 const router = useRouter()
 function toPage (routeName) {
@@ -28,13 +32,7 @@ watch(isExpanded, newValue => {
     :class="{ 'sidebar-expanded': isExpanded }"
     @click="toggleSidebar"
   >
-    <!-- <div class="sidebar__toggle">
-        <span
-          class="material-symbols-outlined"
-        >
-          keyboard_double_arrow_right
-        </span>
-      </div> -->
+    <!-- Avatar | Start -->
     <div class="sidebar__avatar">
       <img
         src="../assets/dada.png"
@@ -81,7 +79,7 @@ watch(isExpanded, newValue => {
         <span class="material-symbols-outlined">
           link
         </span>
-        <div class="text-hidden">
+        <div>
           輸入來源
         </div>
       </div>
@@ -91,6 +89,13 @@ watch(isExpanded, newValue => {
 </template>
 
 <style lang="scss" scoped>
+
+@mixin web {
+  @media (min-width: 576px) {
+    @content
+  }
+}
+
 .sidebar {
   position: fixed;
   width: 3.5rem;
@@ -100,16 +105,13 @@ watch(isExpanded, newValue => {
   z-index: 1;
   transition: all 0.5s ease;
 
-  .sidebar__toggle {
-    width: 25px;
-    height: 25px;
-    position: absolute;
-    top: 0;
-    right: -25px;
-    background-color: rgb(62, 62, 62);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  @include web {
+    position: relative;
+    width: 5rem;
+  }
+
+  &:hover {
+    cursor: pointer;
   }
 
   .sidebar__avatar {
@@ -123,6 +125,10 @@ watch(isExpanded, newValue => {
       border: 0.1rem solid white;
       border-radius: 50%;
       transition: width 0.5s ease;
+
+      @include web {
+        width: 4rem;
+      }
     }
   }
 
@@ -137,6 +143,7 @@ watch(isExpanded, newValue => {
 
       &:hover {
         cursor: pointer;
+        background-color: azure;
         box-shadow: 0 0 10px 3px orange;
         color: orange;
 
@@ -145,6 +152,7 @@ watch(isExpanded, newValue => {
         }
       }
 
+      /* icon */
       :first-child {
         margin: 0rem 0.75rem;
         font-size: 2rem;
@@ -175,13 +183,19 @@ watch(isExpanded, newValue => {
     }
   }
 
-  /* @media (min-width:576px) {
-    width: 20rem;
-  } */
+  .sidebar__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgb(62, 62, 62);
+    transition: transform 0.3s ease-out;
+  }
 }
 
-/* Sidebar expanded */
-
+/* Expanded */
 .sidebar-expanded {
   width: 10.5rem;
 
@@ -193,9 +207,8 @@ watch(isExpanded, newValue => {
 
   .sidebar__wrap {
     .sidebar__item {
-
       :first-child {
-        /* margin-right: 1rem; */
+        margin: 1rem;
       }
 
       :nth-child(2) {
@@ -207,12 +220,18 @@ watch(isExpanded, newValue => {
         font-size: 1.5rem;
         visibility: visible;
         opacity: 1;
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
       }
     }
   }
 
-}
+  .sidebar__toggle {
+    transform: rotate(180deg);
+  }
 
+}
 .text-hidden {
   /* font-size: 0px; */
   /* width: 0;
@@ -222,4 +241,5 @@ watch(isExpanded, newValue => {
   opacity: 0;
   transition: all 0.3s ease;
 }
+
 </style>
