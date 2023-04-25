@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 onMounted(() => {
@@ -21,9 +21,6 @@ const toggleSidebar = () => {
   isExpanded.value = !isExpanded.value
 }
 
-watch(isExpanded, newValue => {
-  // console.log(document.querySelectorAll('.sidebar__item'))
-})
 </script>
 
 <template>
@@ -49,9 +46,7 @@ watch(isExpanded, newValue => {
         <span class="material-symbols-outlined">
           chat
         </span>
-        <div
-          class="text-hidden"
-        >
+        <div class="text-hidden">
           輸入名言
         </div>
       </div>
@@ -64,9 +59,7 @@ watch(isExpanded, newValue => {
         <span class="material-symbols-outlined">
           imagesmode
         </span>
-        <div
-          class="text-hidden"
-        >
+        <div class="text-hidden">
           選擇立繪
         </div>
       </div>
@@ -79,7 +72,7 @@ watch(isExpanded, newValue => {
         <span class="material-symbols-outlined">
           link
         </span>
-        <div>
+        <div class="text-hidden">
           輸入來源
         </div>
       </div>
@@ -89,7 +82,6 @@ watch(isExpanded, newValue => {
 </template>
 
 <style lang="scss" scoped>
-
 @mixin web {
   @media (min-width: 576px) {
     @content
@@ -124,7 +116,6 @@ watch(isExpanded, newValue => {
       background-color: rgb(223, 191, 191);
       border: 0.1rem solid white;
       border-radius: 50%;
-      transition: width 0.5s ease;
 
       @include web {
         width: 4rem;
@@ -136,7 +127,7 @@ watch(isExpanded, newValue => {
     .sidebar__item {
       position: relative;
       z-index: 2;
-      padding:1rem 0;
+      padding: 1rem 0;
       display: flex;
       align-items: center;
       white-space: nowrap;
@@ -154,16 +145,21 @@ watch(isExpanded, newValue => {
 
       /* icon */
       :first-child {
-        margin: 0rem 0.75rem;
+        margin: 0.25rem 0.75rem;
         font-size: 2rem;
         color: aquamarine;
         font-weight: bold;
-        /* transition: all 0.3s ease; */
+
+        @include web {
+          margin: 0.25rem 1.5rem
+        }
       }
 
       :nth-child(2) {
-        /* display: inline-block; */
-
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
       }
     }
 
@@ -199,30 +195,18 @@ watch(isExpanded, newValue => {
 .sidebar-expanded {
   width: 10.5rem;
 
-  /* .sidebar__avatar {
-    img {
-      width: 6rem;
-    }
-  } */
+  @include web {
+    width:13rem;
+  }
 
   .sidebar__wrap {
     .sidebar__item {
-      :first-child {
-        margin: 1rem;
-      }
+      :first-child {}
 
       :nth-child(2) {
-        /* width: auto; */
-        /* padding: auto 0; */
-        /* margin: 1rem 0; */
-        /* height: 3rem; */
-        /* margin: 1.2rem 0; */
         font-size: 1.5rem;
         visibility: visible;
         opacity: 1;
-        display: flex;
-        align-items: center;
-        flex-wrap: nowrap;
       }
     }
   }
@@ -232,14 +216,11 @@ watch(isExpanded, newValue => {
   }
 
 }
+
 .text-hidden {
-  /* font-size: 0px; */
-  /* width: 0;
-  height: 0; */
-  /* overflow: hidden; */
+  font-size: 0;
   visibility: hidden;
   opacity: 0;
   transition: all 0.3s ease;
 }
-
 </style>
