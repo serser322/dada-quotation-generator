@@ -36,7 +36,7 @@ const toggleSidebar = () => {
         alt=""
       >
     </div>
-    <div class="sidebar__wrap">
+    <div class="sidebar__wrapper">
       <div class="sidebar__line" />
       <div
         class="sidebar__item"
@@ -123,7 +123,7 @@ const toggleSidebar = () => {
     }
   }
 
-  .sidebar__wrap {
+  .sidebar__wrapper {
     .sidebar__item {
       position: relative;
       z-index: 2;
@@ -199,7 +199,7 @@ const toggleSidebar = () => {
     width:13rem;
   }
 
-  .sidebar__wrap {
+  .sidebar__wrapper {
     .sidebar__item {
       :first-child {}
 
