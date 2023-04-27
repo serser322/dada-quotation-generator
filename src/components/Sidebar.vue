@@ -7,7 +7,7 @@ onMounted(() => {
 })
 
 const router = useRouter()
-function toPage (routeName) {
+function toPage(routeName) {
   router.push({ name: routeName })
 }
 
@@ -196,7 +196,7 @@ const toggleSidebar = () => {
   width: 10.5rem;
 
   @include web {
-    width:13rem;
+    width: 13rem;
   }
 
   .sidebar__wrapper {

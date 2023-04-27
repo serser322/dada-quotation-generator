@@ -18,8 +18,12 @@ import Sidebar from '../components/Sidebar.vue'
 .container {
   display: flex;
 
+  &>nav {
+    flex-shrink: 0;
+  }
+
   .container__wrapper {
-    width:100%;
+    width: 100%;
     margin-left: 3.5rem;
 
     @media (min-width: 576px) {
