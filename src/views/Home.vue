@@ -1,20 +1,29 @@
 <script setup>
+import Header from '../components/Header.vue'
 import Sidebar from '../components/Sidebar.vue'
 
 </script>
 
 <template>
-  <main>
+  <div class="container">
     <Sidebar />
-    <router-view class="router-view" />
-  </main>
+    <div class="container__wrapper">
+      <Header />
+      <router-view class="router-view" />
+    </div>
+  </div>
 </template>
 
 <style lang="scss">
-main {
+.container {
   display: flex;
 
-  &:nth-child(2) {
+  &>nav {
+    flex-shrink: 0;
+  }
+
+  .container__wrapper {
+    width: 100%;
     margin-left: 3.5rem;
 
     @media (min-width: 576px) {

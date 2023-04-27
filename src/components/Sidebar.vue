@@ -7,7 +7,7 @@ onMounted(() => {
 })
 
 const router = useRouter()
-function toPage (routeName) {
+function toPage(routeName) {
   router.push({ name: routeName })
 }
 
@@ -20,11 +20,11 @@ const isExpanded = ref(false)
 const toggleSidebar = () => {
   isExpanded.value = !isExpanded.value
 }
+
 </script>
 
 <template>
-  <!-- Sidebar | Start -->
-  <aside
+  <nav
     class="sidebar"
     :class="{ 'sidebar-expanded': isExpanded }"
     @click="toggleSidebar"
@@ -36,10 +36,7 @@ const toggleSidebar = () => {
         alt=""
       >
     </div>
-    <!-- Avatar | End -->
-
-    <!-- Nav | Start -->
-    <nav class="sidebar__wrap">
+    <div class="sidebar__wrapper">
       <div class="sidebar__line" />
       <div
         class="sidebar__item"
@@ -49,7 +46,7 @@ const toggleSidebar = () => {
         <span class="material-symbols-outlined">
           chat
         </span>
-        <div>
+        <div class="text-hidden">
           輸入名言
         </div>
       </div>
@@ -62,7 +59,7 @@ const toggleSidebar = () => {
         <span class="material-symbols-outlined">
           imagesmode
         </span>
-        <div>
+        <div class="text-hidden">
           選擇立繪
         </div>
       </div>
@@ -75,27 +72,16 @@ const toggleSidebar = () => {
         <span class="material-symbols-outlined">
           link
         </span>
-        <div>
+        <div class="text-hidden">
           輸入來源
         </div>
       </div>
       <div class="sidebar__line" />
-    </nav>
-    <!-- Nav | End -->
-
-    <!-- Toggle icon | Start -->
-    <div class="sidebar__toggle">
-      <span class="material-symbols-outlined">
-        keyboard_double_arrow_right
-      </span>
     </div>
-    <!-- Toggle icon | End -->
-  </aside>
-  <!-- Sidebar | End -->
+  </nav>
 </template>
 
 <style lang="scss" scoped>
-
 @mixin web {
   @media (min-width: 576px) {
     @content
@@ -109,7 +95,7 @@ const toggleSidebar = () => {
   background-color: rgb(62, 62, 62);
   color: white;
   z-index: 1;
-  transition: width 0.5s ease;
+  transition: all 0.5s ease;
 
   @include web {
     position: relative;
@@ -123,18 +109,13 @@ const toggleSidebar = () => {
   .sidebar__avatar {
     display: flex;
     justify-content: center;
-    padding: 0.8rem 0;
-
-    @include web {
-      padding: 1.5rem 0;
-    }
+    padding: 1rem 0;
 
     img {
-      width: 2.8rem;
+      width: 3rem;
       background-color: rgb(223, 191, 191);
-      border: 0.2rem solid white;
+      border: 0.1rem solid white;
       border-radius: 50%;
-      transition: width 0.5s ease;
 
       @include web {
         width: 4rem;
@@ -142,18 +123,14 @@ const toggleSidebar = () => {
     }
   }
 
-  .sidebar__wrap {
-    box-sizing: content-box;
-
+  .sidebar__wrapper {
     .sidebar__item {
+      position: relative;
+      z-index: 2;
+      padding: 1rem 0;
       display: flex;
       align-items: center;
-      padding-left: 1rem;
-      position: relative;
-
-      @include web {
-        padding-left: calc(3.5rem/2);
-      }
+      white-space: nowrap;
 
       &:hover {
         cursor: pointer;
@@ -168,26 +145,21 @@ const toggleSidebar = () => {
 
       /* icon */
       :first-child {
-        font-size: 1.5rem;
-        margin: 1rem 0.5rem 1rem 0rem;
+        margin: 0.25rem 0.75rem;
+        font-size: 2rem;
         color: aquamarine;
         font-weight: bold;
-        transition: margin 0.8s ease;
-      }
-
-      /* text */
-      :nth-child(2) {
-        font-size: 1.2rem;
-        font-weight: bold;
-        visibility: hidden;
-        opacity: 0;
-        overflow: hidden;
-        white-space: nowrap;
-        transition: all 0.5s ease;
 
         @include web {
-          font-size: 1.5rem;
+          margin: 0.25rem 1.5rem
         }
+      }
+
+      :nth-child(2) {
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
       }
     }
 
@@ -221,29 +193,20 @@ const toggleSidebar = () => {
 
 /* Expanded */
 .sidebar-expanded {
-  width: 15rem;
+  width: 10.5rem;
 
-  .sidebar__avatar {
-    img {
-      width: 2.8rem;
-
-      @include web {
-        width: 8rem;
-      }
-    }
+  @include web {
+    width: 13rem;
   }
-  .sidebar__wrap {
+
+  .sidebar__wrapper {
     .sidebar__item {
-      :first-child {
-        margin: 1rem;
-      }
+      :first-child {}
 
       :nth-child(2) {
+        font-size: 1.5rem;
         visibility: visible;
         opacity: 1;
-        display: flex;
-        align-items: center;
-        flex-wrap: nowrap;
       }
     }
   }
@@ -254,4 +217,10 @@ const toggleSidebar = () => {
 
 }
 
+.text-hidden {
+  font-size: 0;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
 </style>
