@@ -14,7 +14,7 @@ import Sidebar from '../components/Sidebar.vue'
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .container {
   display: flex;
 
