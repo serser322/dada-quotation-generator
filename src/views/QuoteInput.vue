@@ -1,13 +1,14 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
 
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
+// Date input
 const date = ref()
-
 const format = (date) => {
   const day = date.getDate()
   const month = date.getMonth() + 1
@@ -16,6 +17,11 @@ const format = (date) => {
   return `${year}/${month}/${day}`
 }
 
+// Button router
+const router = useRouter()
+const toImageSelection = () => {
+  router.push({ name: 'ImagesSelection' })
+}
 </script>
 
 <template>
@@ -57,7 +63,7 @@ const format = (date) => {
         </div>
       </div>
     </BaseCard>
-    <BaseButton>
+    <BaseButton @click="toImageSelection">
       下一步
     </BaseButton>
   </main>

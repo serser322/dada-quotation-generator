@@ -33,8 +33,12 @@ import Sidebar from '../components/Sidebar.vue'
     }
 
     .container__warp {
-      width: 900px;
+      width: 80%;
       margin: 3rem auto;
+
+      @media (min-width: 1200px) {
+        /* min-width: */
+      }
     }
   }
 }
