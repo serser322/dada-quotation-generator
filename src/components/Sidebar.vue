@@ -7,7 +7,7 @@ onMounted(() => {
 })
 
 const router = useRouter()
-function toPage(routeName) {
+function toPage (routeName) {
   router.push({ name: routeName })
 }
 
