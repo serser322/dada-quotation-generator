@@ -7,7 +7,7 @@ onMounted(() => {
 })
 
 const router = useRouter()
-function toPage(routeName) {
+function toPage (routeName) {
   router.push({ name: routeName })
 }
 
@@ -91,7 +91,8 @@ const toggleSidebar = () => {
 .sidebar {
   position: fixed;
   width: 3.5rem;
-  height: 100vh;
+  height: auto;
+  min-height: 100vh;
   background-color: rgb(62, 62, 62);
   color: white;
   z-index: 1;

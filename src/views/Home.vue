@@ -7,14 +7,16 @@ import Sidebar from '../components/Sidebar.vue'
 <template>
   <div class="container">
     <Sidebar />
-    <div class="container__wrapper">
+    <div>
       <Header />
-      <router-view class="router-view" />
+      <div class="container__warp">
+        <router-view />
+      </div>
     </div>
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .container {
   display: flex;
 
@@ -22,12 +24,21 @@ import Sidebar from '../components/Sidebar.vue'
     flex-shrink: 0;
   }
 
-  .container__wrapper {
+  div {
     width: 100%;
     margin-left: 3.5rem;
 
     @media (min-width: 576px) {
       margin-left: 0
+    }
+
+    .container__warp {
+      width: 80%;
+      margin: 3rem auto;
+
+      @media (min-width: 1200px) {
+        /* min-width: */
+      }
     }
   }
 }
