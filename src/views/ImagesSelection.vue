@@ -1,49 +1,80 @@
 <script setup>
-// import { ref } from 'vue'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import BaseCard from '../components/BaseCard.vue'
+import BaseButton from '../components/BaseButton.vue'
 
-const imagesData = ([
+const imagesData = ref([
   {
-    imagePath: 'vts-2023-04-06_01h59_42.png'
+    imagePath: 'vts-2023-04-06_01h59_42.png',
+    isSelected: false
   },
   {
-    imagePath: 'vts-2023-04-06_17h45_46.png'
+    imagePath: 'vts-2023-04-06_17h45_46.png',
+    isSelected: false
   },
   {
-    imagePath: 'vts-2023-04-06_17h47_23.png'
+    imagePath: 'vts-2023-04-06_17h47_23.png',
+    isSelected: false
   },
   {
-    imagePath: 'vts-2023-04-06_17h40_52.png'
+    imagePath: 'vts-2023-04-06_17h40_52.png',
+    isSelected: false
   },
   {
-    imagePath: 'vts-2022-11-02_06h36_59.png'
+    imagePath: 'vts-2022-11-02_06h36_59.png',
+    isSelected: false
   },
   {
-    imagePath: 'vts-2022-11-02_06h54_15.png'
+    imagePath: 'vts-2022-11-02_06h54_15.png',
+    isSelected: false
   },
   {
-    imagePath: 'vts-2022-02-22_01h01_24.png'
+    imagePath: 'vts-2022-02-22_01h01_24.png',
+    isSelected: false
   },
   {
-    imagePath: 'vts-2021-10-30_20h51_41.png'
+    imagePath: 'vts-2021-10-30_20h51_41.png',
+    isSelected: false
   },
   {
-    imagePath: 'vts-2022-04-02_11h58_58.png'
+    imagePath: 'vts-2022-04-02_11h58_58.png',
+    isSelected: false
   },
   {
-    imagePath: 'vts-2021-10-03_14h23_55.png'
+    imagePath: 'vts-2021-10-03_14h23_55.png',
+    isSelected: false
   },
   {
-    imagePath: 'vts-2021-12-24_04h22_39.png'
+    imagePath: 'vts-2021-12-24_04h22_39.png',
+    isSelected: false
   },
   {
-    imagePath: 'vts-2021-12-26_13h12_24.png'
+    imagePath: 'vts-2021-12-26_13h12_24.png',
+    isSelected: false
   }
 ])
 
 const getImgUrl = function (img) {
   const imgPath = '../assets/images/' + img
   return new URL(imgPath, import.meta.url).href
+}
+
+const selectImage = (img) => {
+  imagesData.value.forEach(image => {
+    image.isSelected = false
+  })
+  img.isSelected = true
+}
+
+// Button router
+const router = useRouter()
+const toQuoteInput = () => {
+  router.push({ name: 'QuoteInput' })
+}
+
+const toSourceInput = () => {
+  router.push({ name: 'SourceInput' })
 }
 
 </script>
@@ -58,6 +89,8 @@ const getImgUrl = function (img) {
         <div
           v-for="img in imagesData"
           :key="img"
+          :class="{selected : img.isSelected}"
+          @click="selectImage(img)"
         >
           <img
             :src="getImgUrl(img.imagePath)"
@@ -66,6 +99,14 @@ const getImgUrl = function (img) {
         </div>
       </div>
     </BaseCard>
+    <div class="btn_group">
+      <BaseButton @click="toQuoteInput">
+        上一步
+      </BaseButton>
+      <BaseButton @click="toSourceInput">
+        下一步
+      </BaseButton>
+    </div>
   </main>
 </template>
 
@@ -100,7 +141,25 @@ const getImgUrl = function (img) {
       transform: scale(1.1);
       transition: transform 0.4s ease-out;
     }
+
+    &:active {
+      border: 5px solid salmon;
+    }
   }
+
+  div.selected {
+    border: 5px solid darksalmon;
+    box-shadow: 0 0 20px 2px darksalmon;
+
+    &:active {
+      border: 5px solid salmon;
+    }
+  }
+}
+
+.btn_group {
+  display:flex;
+  justify-content: space-between;
 }
 
 </style>
