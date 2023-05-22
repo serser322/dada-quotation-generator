@@ -1,13 +1,137 @@
 <script setup>
+import { useRouter } from 'vue-router'
+import BaseCard from '../components/BaseCard.vue'
+import BaseButton from '../components/BaseButton.vue'
 
+// Button router
+const router = useRouter()
+const toImageSelection = () => {
+  router.push({ name: 'ImagesSelection' })
+}
 </script>
 
 <template>
-  <div>
-    Sourse input
-  </div>
+  <main>
+    <BaseCard>
+      <div class="source__input">
+        <div class="title">
+          <h2 for="">
+            請輸入該句名言出處：
+          </h2>
+          <div>
+            <input
+              id="hasSource"
+              type="checkbox"
+            >
+            <label for="hasSource">
+              附上來源連結
+            </label>
+          </div>
+        </div>
+        <input
+          type="text"
+          placeholder="如：該集youtube直播連結(含秒數連結更佳)、twitter文連結等"
+        >
+      </div>
+      <div class="info">
+        <h4>此連結將自動轉為短網址，並附在圖中左下角，如下示意：</h4>
+        <img
+          src="../assets/FvsC3udaUAMI4Jc.jpg"
+          alt=""
+        >
+        <ul>
+          <li>附上來源連結，除證明該名言之真實性，也方便有興趣的觀眾或烤肉man，能快速輸入短連結觀看內容。</li>
+          <li>短連結也會成為名言圖下載檔的檔名，以便分享。</li>
+          <li>若覺得短連結影響名言圖的美觀性，或不便查找來源，也可取消勾選右上角的「附上來源連結」。</li>
+        </ul>
+        <!-- <h4>
+          附上來源連結，除證明該名言之真實性，也方便有興趣的觀眾或烤肉man，能快速輸入短連結觀看內容。
+        </h4>
+        <h4>
+          短連結也會成為名言圖下載檔的檔名，以便分享。
+        </h4>
+        <h4>
+          若覺得短連結影響名言圖的美觀性，或不便查找來源，也可取消勾選右上角的「附上來源連結」。
+        </h4> -->
+      </div>
+    </BaseCard>
+    <div class="btn_group">
+      <BaseButton @click="toImageSelection">
+        上一步
+      </BaseButton>
+      <BaseButton @click="toImageSelection">
+        製作名言圖
+      </BaseButton>
+    </div>
+  </main>
 </template>
 
-<style>
+<style lang="scss" scoped>
+input[type=text] {
+  width: 100%;
+  font-size: 1.5rem;
+  background-color: transparent;
+  border: 0;
+  border-bottom: 2px solid white;
+
+  &:focus {
+    outline: 0;
+    border-bottom: 3px solid white;
+  }
+}
+
+.source__input {
+  .title {
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+
+    #hasSource{
+      accent-color: ForestGreen;
+    }
+
+    input[type=checkbox] {
+      transform:scale(1.3);
+      margin-right:5px;
+    }
+
+    label[for=hasSource] {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+  }
+
+    input[type=text]::placeholder {
+      font-size: 1rem;
+    }
+
+    input[type=text]::-webkit-input-placeholder {
+      font-size: 1rem;
+    }
+
+    input[type=text]::-moz-placeholder {
+      font-size: 1rem;
+    }
+}
+
+.info {
+  img {
+    width:30rem;
+    display: block;
+    margin: 3rem auto;
+  }
+
+  ul {
+    li {
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+  }
+}
+
+.btn_group {
+  display:flex;
+  justify-content: space-between;
+}
 
 </style>
