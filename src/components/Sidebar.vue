@@ -32,7 +32,7 @@ const toggleSidebar = () => {
     <!-- Avatar | Start -->
     <div class="sidebar__avatar">
       <img
-        src="../assets/dada.png"
+        src="../assets/images/vts-2021-10-30_20h51_41.png"
         alt=""
       >
     </div>

@@ -20,11 +20,11 @@
   font-size: 1.4rem;
   font-weight: 700;
   margin-top: 2rem;
-  margin-left: auto;
+  /* margin-left: auto; */
   box-sizing: border-box;
-  cursor: pointer;
 
   &:hover {
+    cursor: pointer;
     background-color: aquamarine;
   }
 }

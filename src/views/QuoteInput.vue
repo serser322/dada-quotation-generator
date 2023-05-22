@@ -63,7 +63,10 @@ const toImageSelection = () => {
         </div>
       </div>
     </BaseCard>
-    <BaseButton @click="toImageSelection">
+    <BaseButton
+      class="btn-next"
+      @click="toImageSelection"
+    >
       下一步
     </BaseButton>
   </main>
@@ -99,5 +102,9 @@ input[type=text] {
       left: 0;
     }
   }
+}
+
+.btn-next {
+  margin-left:auto
 }
 </style>
