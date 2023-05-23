@@ -1,7 +1,10 @@
 <script setup>
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
+
+const isSelected = ref(true)
 
 // Button router
 const router = useRouter()
@@ -21,6 +24,7 @@ const toImageSelection = () => {
           <div>
             <input
               id="hasSource"
+              v-model="isSelected"
               type="checkbox"
             >
             <label for="hasSource">
@@ -30,7 +34,8 @@ const toImageSelection = () => {
         </div>
         <input
           type="text"
-          placeholder="如：該集youtube直播連結(含秒數連結更佳)、twitter文連結等"
+          :placeholder="isSelected ? '如：該集youtube直播連結(含秒數連結更佳)、twitter文連結等' : '無'"
+          :disabled="!isSelected"
         >
       </div>
       <div class="info">
@@ -44,15 +49,6 @@ const toImageSelection = () => {
           <li>短連結也會成為名言圖下載檔的檔名，以便分享。</li>
           <li>若覺得短連結影響名言圖的美觀性，或不便查找來源，也可取消勾選右上角的「附上來源連結」。</li>
         </ul>
-        <!-- <h4>
-          附上來源連結，除證明該名言之真實性，也方便有興趣的觀眾或烤肉man，能快速輸入短連結觀看內容。
-        </h4>
-        <h4>
-          短連結也會成為名言圖下載檔的檔名，以便分享。
-        </h4>
-        <h4>
-          若覺得短連結影響名言圖的美觀性，或不便查找來源，也可取消勾選右上角的「附上來源連結」。
-        </h4> -->
       </div>
     </BaseCard>
     <div class="btn_group">
@@ -78,6 +74,11 @@ input[type=text] {
     outline: 0;
     border-bottom: 3px solid white;
   }
+
+  &:disabled {
+  border-bottom: 2px solid gray;
+  background-color: rgba(255, 255, 255, 0.5);
+  }
 }
 
 .source__input {
@@ -91,12 +92,12 @@ input[type=text] {
     }
 
     input[type=checkbox] {
-      transform:scale(1.3);
+      transform:scale(1.6);
       margin-right:5px;
     }
 
     label[for=hasSource] {
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       font-weight: bold;
     }
   }
@@ -115,6 +116,8 @@ input[type=text] {
 }
 
 .info {
+  margin-top: 3rem;
+
   img {
     width:30rem;
     display: block;
