@@ -6,9 +6,7 @@
 </template>
 
 <style lang="scss">
-:root {
-
-}
+:root {}
 
 * {
   font-family: 'Noto Sans TC', sans-serif;
@@ -17,14 +15,17 @@
 
 html {
   background-color: rgb(223, 223, 223);
-  height: 100vh;
+  height: 100%;
+}
+
+#app {
+  height: 100%;
 }
 
 body {
-  margin:0;
-  height: 100vh;
+  margin: 0;
+  height: 100%;
 }
-
 
 /* #app {
   display: flex;

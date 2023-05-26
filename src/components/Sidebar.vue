@@ -7,7 +7,7 @@ onMounted(() => {
 })
 
 const router = useRouter()
-function toPage (routeName) {
+function toPage(routeName) {
   router.push({ name: routeName })
 }
 
@@ -31,10 +31,12 @@ const toggleSidebar = () => {
   >
     <!-- Avatar | Start -->
     <div class="sidebar__avatar">
-      <img
-        src="../assets/images/vts-2021-10-30_20h51_41.png"
-        alt=""
-      >
+      <div class="avatar">
+        <img
+          src="../assets/images/vts-2021-10-30_20h51_41.png"
+          alt=""
+        >
+      </div>
     </div>
     <div class="sidebar__wrapper">
       <div class="sidebar__line" />
@@ -92,7 +94,7 @@ const toggleSidebar = () => {
   position: fixed;
   width: 3.5rem;
   height: auto;
-  min-height: 100vh;
+  min-height: 100%;
   background-color: rgb(62, 62, 62);
   color: white;
   z-index: 1;
@@ -110,16 +112,23 @@ const toggleSidebar = () => {
   .sidebar__avatar {
     display: flex;
     justify-content: center;
+    align-items: center;
     padding: 1rem 0;
+    height: 11rem;
 
-    img {
-      width: 3rem;
-      background-color: rgb(223, 191, 191);
-      border: 0.1rem solid white;
-      border-radius: 50%;
+    .avatar {
+      width: 4rem;
+      transition: width 0.5s ease;
+
+      img {
+        width: 100%;
+        background-color: rgb(223, 191, 191);
+        border: 0.1rem solid white;
+        border-radius: 50%;
+      }
 
       @include web {
-        width: 4rem;
+        /* width: 4rem; */
       }
     }
   }
@@ -195,6 +204,18 @@ const toggleSidebar = () => {
 /* Expanded */
 .sidebar-expanded {
   width: 10.5rem;
+
+  .sidebar__avatar {
+    .avatar {
+      width: 9.5rem;
+      transition: width 0.5s ease;
+
+      img {
+        width: 100%;
+      }
+    }
+
+  }
 
   @include web {
     width: 13rem;
