@@ -80,7 +80,7 @@ const toSourceInput = () => {
 </script>
 
 <template>
-  <main class="images-selection">
+  <main>
     <BaseCard>
       <h2 for="">
         請選擇此名言圖上的立繪：

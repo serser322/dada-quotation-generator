@@ -24,6 +24,11 @@ export const router = createRouter(
             path: 'source-input',
             name: 'SourceInput',
             component: () => import('../views/SourceInput.vue')
+          },
+          {
+            path: 'final-page',
+            name: 'FinalPage',
+            component: () => import('../views/FinalPage.vue')
           }
         ]
       },

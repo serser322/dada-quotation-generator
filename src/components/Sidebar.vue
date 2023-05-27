@@ -7,7 +7,7 @@ onMounted(() => {
 })
 
 const router = useRouter()
-function toPage(routeName) {
+function toPage (routeName) {
   router.push({ name: routeName })
 }
 
@@ -15,6 +15,7 @@ const route = useRoute()
 const isQuoteInput = computed(() => route.name === 'QuoteInput')
 const isImagesSelection = computed(() => route.name === 'ImagesSelection')
 const isSourceInput = computed(() => route.name === 'SourceInput')
+const isFinalPage = computed(() => route.name === 'FinalPage')
 
 const isExpanded = ref(false)
 const toggleSidebar = () => {
@@ -76,6 +77,19 @@ const toggleSidebar = () => {
         </span>
         <div class="text-hidden">
           輸入來源
+        </div>
+      </div>
+      <div class="sidebar__line" />
+      <div
+        class="sidebar__item"
+        :class="{ 'sidebar__item-active': isFinalPage }"
+        @click.stop="toPage('FinalPage')"
+      >
+        <span class="material-symbols-outlined">
+          vertical_align_bottom
+        </span>
+        <div class="text-hidden">
+          製作完成
         </div>
       </div>
       <div class="sidebar__line" />

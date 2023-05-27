@@ -51,7 +51,7 @@ const toImageSelection = () => {
         </ul>
       </div>
     </BaseCard>
-    <div class="btn_group">
+    <div class="btn__group">
       <BaseButton @click="toImageSelection">
         上一步
       </BaseButton>
@@ -132,7 +132,7 @@ input[type=text] {
   }
 }
 
-.btn_group {
+.btn__group {
   display:flex;
   justify-content: space-between;
 }
