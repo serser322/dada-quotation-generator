@@ -19,7 +19,7 @@ import Sidebar from '../components/Sidebar.vue'
 <style lang="scss" scoped>
 .container {
   display: flex;
-  height: 100%;
+  height: auto;
 
   &>nav {
     flex-shrink: 0;
