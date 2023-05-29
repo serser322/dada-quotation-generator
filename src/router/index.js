@@ -13,7 +13,7 @@ export const router = createRouter(
           {
             path: 'quotation-input',
             name: 'QuotationInput',
-            component: () => import('../views/QuoteInput.vue')
+            component: () => import('../views/QuotationInput.vue')
           },
           {
             path: 'images-selection',
