@@ -16,7 +16,6 @@ const toQuoteInput = () => {
       <h2 for="">
         名言圖完成&下載：
       </h2>
-
       <div class="final__image">
         <img
           src="../assets/FvsC3udaUAMI4Jc.jpg"
@@ -38,21 +37,19 @@ const toQuoteInput = () => {
 </template>
 
 <style lang='scss' scoped>
-
 .final__image {
   margin-top: 3rem;
 
   img {
-    width:30rem;
+    width: 30rem;
     display: block;
     margin: 3rem auto;
   }
 }
 
 .btn__group {
-  display:flex;
+  display: flex;
   justify-content: center;
-  gap:2rem;
+  gap: 2rem;
 }
-
 </style>

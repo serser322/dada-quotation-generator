@@ -1,19 +1,28 @@
 <script setup>
-import { ref } from 'vue'
+// import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useQuoteDataStore } from '../store/quoteData'
+import { storeToRefs } from 'pinia'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
 
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
+const quoteStore = useQuoteDataStore()
+
+// Quote input
+const quote = quoteStore.quote
+const updateQuote = quoteStore.setQuote
+
 // Date input
-const date = ref()
+const { date } = storeToRefs(quoteStore)
+const updateDate = quoteStore.setDate
+
 const format = (date) => {
   const day = date.getDate()
   const month = date.getMonth() + 1
   const year = date.getFullYear()
-
   return `${year}/${month}/${day}`
 }
 
@@ -31,7 +40,11 @@ const toImageSelection = () => {
         <h2 for="">
           請輸入灰妲曾說過的名言：
         </h2>
-        <input type="text">
+        <input
+          type="text"
+          :value="quote"
+          @change="updateQuote"
+        >
       </div>
       <div class="quote_date">
         <h2>
@@ -39,14 +52,15 @@ const toImageSelection = () => {
         </h2>
         <div class="date_input">
           <VueDatePicker
-            v-model="date"
+            :model-value="date"
             :enable-time-picker="false"
             auto-apply
             locale="zh-tw"
             placeholder="請選擇日期"
+            dark
             :format="format"
             :day-names="['一', '二', '三', '四', '五', '六', '日']"
-            dark
+            @update:model-value="updateDate"
           >
             <template #dp-input="{ value }">
               <input
@@ -105,6 +119,6 @@ input[type=text] {
 }
 
 .btn-next {
-  margin-left:auto
+  margin-left: auto
 }
 </style>
