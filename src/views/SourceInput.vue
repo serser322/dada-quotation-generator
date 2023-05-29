@@ -1,10 +1,19 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useQuotationDataStore } from '../store/quotationData'
+import { storeToRefs } from 'pinia'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
 
 const isSelected = ref(true)
+
+// Source input
+const quotationStore = useQuotationDataStore()
+const { source } = storeToRefs(quotationStore)
+const updateSource = (event) => {
+  quotationStore.setSourceUrl(event.target.value)
+}
 
 // Button router
 const router = useRouter()
@@ -34,8 +43,10 @@ const toImageSelection = () => {
         </div>
         <input
           type="text"
+          :value="source"
           :placeholder="isSelected ? '如：該集youtube直播連結(含秒數連結更佳)、twitter文連結等' : '無'"
           :disabled="!isSelected"
+          @change="updateSource"
         >
       </div>
       <div class="info">
@@ -76,24 +87,24 @@ input[type=text] {
   }
 
   &:disabled {
-  border-bottom: 2px solid gray;
-  background-color: rgba(255, 255, 255, 0.5);
+    border-bottom: 2px solid gray;
+    background-color: rgba(255, 255, 255, 0.5);
   }
 }
 
 .source__input {
   .title {
-    display:flex;
+    display: flex;
     align-items: center;
     justify-content: space-between;
 
-    #hasSource{
+    #hasSource {
       accent-color: ForestGreen;
     }
 
     input[type=checkbox] {
-      transform:scale(1.6);
-      margin-right:5px;
+      transform: scale(1.6);
+      margin-right: 5px;
     }
 
     label[for=hasSource] {
@@ -102,24 +113,24 @@ input[type=text] {
     }
   }
 
-    input[type=text]::placeholder {
-      font-size: 1rem;
-    }
+  input[type=text]::placeholder {
+    font-size: 1rem;
+  }
 
-    input[type=text]::-webkit-input-placeholder {
-      font-size: 1rem;
-    }
+  input[type=text]::-webkit-input-placeholder {
+    font-size: 1rem;
+  }
 
-    input[type=text]::-moz-placeholder {
-      font-size: 1rem;
-    }
+  input[type=text]::-moz-placeholder {
+    font-size: 1rem;
+  }
 }
 
 .info {
   margin-top: 3rem;
 
   img {
-    width:30rem;
+    width: 30rem;
     display: block;
     margin: 3rem auto;
   }
@@ -133,8 +144,7 @@ input[type=text] {
 }
 
 .btn__group {
-  display:flex;
+  display: flex;
   justify-content: space-between;
 }
-
 </style>

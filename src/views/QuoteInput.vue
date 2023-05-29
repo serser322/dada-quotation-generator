@@ -1,7 +1,7 @@
 <script setup>
 // import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useQuoteDataStore } from '../store/quoteData'
+import { useQuotationDataStore } from '../store/quotationData'
 import { storeToRefs } from 'pinia'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
@@ -9,15 +9,16 @@ import BaseButton from '../components/BaseButton.vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
-const quoteStore = useQuoteDataStore()
+const quotationStore = useQuotationDataStore()
 
-// Quote input
-const quote = quoteStore.quote
-const updateQuote = quoteStore.setQuote
+// Quotation input
+const { quotation, date } = storeToRefs(quotationStore)
+const updateQuotation = (event) => {
+  quotationStore.setQuotation(event.target.value)
+}
 
 // Date input
-const { date } = storeToRefs(quoteStore)
-const updateDate = quoteStore.setDate
+const updateDate = quotationStore.setDate
 
 const format = (date) => {
   const day = date.getDate()
@@ -36,17 +37,17 @@ const toImageSelection = () => {
 <template>
   <main>
     <BaseCard>
-      <div class="quote_input">
+      <div class="quotation_input">
         <h2 for="">
           請輸入灰妲曾說過的名言：
         </h2>
         <input
           type="text"
-          :value="quote"
-          @change="updateQuote"
+          :value="quotation"
+          @change="updateQuotation"
         >
       </div>
-      <div class="quote_date">
+      <div class="quotation_date">
         <h2>
           請選擇此名言金句誕生日期：
         </h2>
@@ -100,7 +101,7 @@ input[type=text] {
   }
 }
 
-.quote_date {
+.quotation_date {
   margin-top: 4rem;
 
   .date_input {
