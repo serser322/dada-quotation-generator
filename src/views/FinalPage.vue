@@ -5,8 +5,8 @@ import BaseButton from '../components/BaseButton.vue'
 
 // Button router
 const router = useRouter()
-const toQuoteInput = () => {
-  router.push({ name: 'QuoteInput' })
+const toQuotationInput = () => {
+  router.push({ name: 'QuotationInput' })
 }
 </script>
 
@@ -28,7 +28,7 @@ const toQuoteInput = () => {
           下載
         </BaseButton>
 
-        <BaseButton @click="toQuoteInput">
+        <BaseButton @click="toQuotationInput">
           重新製作
         </BaseButton>
       </div>

@@ -72,8 +72,8 @@ const selectImage = (img) => {
 
 // Button router
 const router = useRouter()
-const toQuoteInput = () => {
-  router.push({ name: 'QuoteInput' })
+const toQuotationInput = () => {
+  router.push({ name: 'QuotationInput' })
 }
 
 const toSourceInput = () => {
@@ -103,7 +103,7 @@ const toSourceInput = () => {
       </div>
     </BaseCard>
     <div class="btn_group">
-      <BaseButton @click="toQuoteInput">
+      <BaseButton @click="toQuotationInput">
         上一步
       </BaseButton>
       <BaseButton @click="toSourceInput">

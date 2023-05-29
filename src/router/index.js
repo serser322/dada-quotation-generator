@@ -8,11 +8,11 @@ export const router = createRouter(
         path: '/',
         name: 'Index',
         component: () => import('../views/Home.vue'),
-        redirect: '/quote-input',
+        redirect: '/quotation-input',
         children: [
           {
-            path: 'quote-input',
-            name: 'QuoteInput',
+            path: 'quotation-input',
+            name: 'QuotationInput',
             component: () => import('../views/QuoteInput.vue')
           },
           {
@@ -34,7 +34,7 @@ export const router = createRouter(
       },
       {
         path: '/:catchAll(.*)',
-        redirect: { name: 'QuoteInput' }
+        redirect: { name: 'QuotationInput' }
       }
     ]
   }
