@@ -1,12 +1,14 @@
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+// import { useRouter } from 'vue-router'
 import { useQuotationDataStore } from '../store/quotationData'
 import { storeToRefs } from 'pinia'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
+import mergeImages from 'merge-images'
 
 const isSelected = ref(true)
+const image2 = ref(null)
 
 // Source input
 const quotationStore = useQuotationDataStore()
@@ -15,10 +17,19 @@ const updateSource = (event) => {
   quotationStore.setSourceUrl(event.target.value)
 }
 
-// Button router
-const router = useRouter()
-const toImageSelection = () => {
-  router.push({ name: 'ImagesSelection' })
+// Make Image
+// const router = useRouter()
+const makeImage = async () => {
+  const img1 = new URL('./../assets/images/image_base.jpg', import.meta.url).href
+  const img2 = new URL('./../assets/images/vts-2023-04-06_17h45_46.png', import.meta.url).href
+  const img3 = new URL('./../assets/images/frame.png', import.meta.url).href
+  const b64 = await mergeImages([img1, { src: img2, x: 0, y: 44 }, img3])
+
+  image2.value.src = b64
+
+  // .then(b64 => { console.log(b64) })
+  // image2.value.src = new URL('./../assets/images/vts-2022-02-22_01h01_24.png', import.meta.url).href
+  // router.push({ name: 'ImagesSelection' })
 }
 </script>
 
@@ -26,8 +37,12 @@ const toImageSelection = () => {
   <main>
     <BaseCard>
       <div class="source__input">
+        <img
+          ref="image2"
+          class="image2"
+        >
         <div class="title">
-          <h2 for="">
+          <h2 for="./../assets/images/vts-2023-04-06_17h47_23.png">
             請輸入該句名言出處：
           </h2>
           <div>
@@ -66,7 +81,7 @@ const toImageSelection = () => {
       <BaseButton @click="toImageSelection">
         上一步
       </BaseButton>
-      <BaseButton @click="toImageSelection">
+      <BaseButton @click="makeImage">
         製作名言圖
       </BaseButton>
     </div>
