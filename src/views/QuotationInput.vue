@@ -20,12 +20,12 @@ const updateQuotation = (event) => {
 // Date input
 const updateDate = quotationStore.setDate
 
-const format = (date) => {
-  const day = date.getDate()
-  const month = date.getMonth() + 1
-  const year = date.getFullYear()
-  return `${year}/${month}/${day}`
-}
+// const format = (date) => {
+//   const day = date.getDate()
+//   const month = date.getMonth() + 1
+//   const year = date.getFullYear()
+//   return `${year}/${month}/${day}`
+// }
 
 // Button router
 const router = useRouter()
@@ -59,7 +59,7 @@ const toImageSelection = () => {
             locale="zh-tw"
             placeholder="請選擇日期"
             dark
-            :format="format"
+            :format="quotationStore.formatDate(date, '/')"
             :day-names="['一', '二', '三', '四', '五', '六', '日']"
             @update:model-value="updateDate"
           >

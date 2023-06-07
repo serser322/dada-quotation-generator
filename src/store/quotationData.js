@@ -26,6 +26,16 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
     sourceUrl.value = source
   }
 
+  // common functions
+  const formatDate = (date, sign) => {
+    if (!date) return
+
+    const day = date.getDate()
+    const month = date.getMonth() + 1
+    const year = date.getFullYear()
+    return `${year}${sign}${month}${sign}${day}`
+  }
+
   return {
     quotation,
     setQuotation,
@@ -34,6 +44,7 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
     image,
     setImage,
     sourceUrl,
-    setSourceUrl
+    setSourceUrl,
+    formatDate
   }
 })

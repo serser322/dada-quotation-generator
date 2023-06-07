@@ -9,10 +9,12 @@ import mergeImages from 'merge-images'
 
 const isSelected = ref(true)
 const image2 = ref(null)
+const canvasEl = ref(null)
+const canvasImg = ref(null)
 
 // Source input
 const quotationStore = useQuotationDataStore()
-const { source } = storeToRefs(quotationStore)
+const { sourceUrl, quotation, date, formatDate } = storeToRefs(quotationStore)
 const updateSource = (event) => {
   quotationStore.setSourceUrl(event.target.value)
 }
@@ -20,21 +22,65 @@ const updateSource = (event) => {
 // Make Image
 // const router = useRouter()
 const makeImage = async () => {
-  const img1 = new URL('./../assets/images/image_base.jpg', import.meta.url).href
-  const img2 = new URL('./../assets/images/vts-2023-04-06_17h45_46.png', import.meta.url).href
-  const img3 = new URL('./../assets/images/frame.png', import.meta.url).href
-  const b64 = await mergeImages([img1, { src: img2, x: 0, y: 44 }, img3])
+  const baseImage = new URL('./../assets/images/image_base.jpg', import.meta.url).href // 尺寸 1080 * 574
+  const dadaImage = new URL('./../assets/images/vts-2023-04-06_17h45_46.png', import.meta.url).href
+  const frameImage = new URL('./../assets/images/frame.png', import.meta.url).href
+  const quotationImage = new URL(getTextImage('quotation'), import.meta.url).href
+  const nameImage = new URL(getTextImage('name'), import.meta.url).href
+
+  const b64 = await mergeImages([
+    baseImage,
+    { src: dadaImage, x: 0, y: 44 },
+    frameImage,
+    { src: quotationImage, x: 480, y: 0 }, // 506px為canvas圖，距離圖左邊界的距離
+    { src: nameImage, x: 480, y: 0 }
+  ])
 
   image2.value.src = b64
 
-  // .then(b64 => { console.log(b64) })
-  // image2.value.src = new URL('./../assets/images/vts-2022-02-22_01h01_24.png', import.meta.url).href
   // router.push({ name: 'ImagesSelection' })
 }
+
+const getTextImage = (textContent) => {
+  const canvasContext = canvasEl.value.getContext('2d')
+  // 先清除畫布
+  canvasContext.clearRect(0, 0, canvasEl.value.width, canvasEl.value.height)
+
+  canvasContext.fillStyle = 'white'
+
+  // 輔助線
+  canvasContext.strokeStyle = 'yellow'
+  canvasContext.lineWidth = 2
+  canvasContext.strokeRect(0, 0, canvasEl.value.width, canvasEl.value.height)
+
+  if (textContent === 'quotation') {
+    canvasContext.font = 'bold 45px Noto Sans CJK TC'
+    canvasContext.fillText(quotation.value, 100, canvasEl.value.height / 2)
+  }
+
+  if (textContent === 'name') {
+    canvasContext.font = '30px Noto Sans CJK TC'
+    const dateString = quotationStore.formatDate(date.value, ' . ')
+    canvasContext.fillText(`── 灰妲    ${dateString}`, 200, 500)
+  }
+  return canvasContext.canvas.toDataURL()
+}
+
 </script>
 
 <template>
   <main>
+    <canvas
+      ref="canvasEl"
+      class="hide"
+      width="600"
+      height="574"
+      style="border: 3px solid red"
+    />
+    <img
+      ref="canvasImg"
+      class=""
+    >
     <BaseCard>
       <div class="source__input">
         <img
@@ -58,7 +104,7 @@ const makeImage = async () => {
         </div>
         <input
           type="text"
-          :value="source"
+          :value="sourceUrl"
           :placeholder="isSelected ? '如：該集youtube直播連結(含秒數連結更佳)、twitter文連結等' : '無'"
           :disabled="!isSelected"
           @change="updateSource"
@@ -89,6 +135,14 @@ const makeImage = async () => {
 </template>
 
 <style lang="scss" scoped>
+.canvas {
+  border: 1px solid black;
+}
+
+.hide {
+  display:none;
+}
+
 input[type=text] {
   width: 100%;
   font-size: 1.5rem;
