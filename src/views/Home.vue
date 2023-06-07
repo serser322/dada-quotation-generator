@@ -20,6 +20,7 @@ import Sidebar from '../components/Sidebar.vue'
 .container {
   display: flex;
   height: auto;
+  min-height: 100%;
 
   &>nav {
     flex-shrink: 0;

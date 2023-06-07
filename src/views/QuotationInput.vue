@@ -1,21 +1,31 @@
 <script setup>
-import { ref } from 'vue'
+// import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useQuotationDataStore } from '../store/quotationData'
+import { storeToRefs } from 'pinia'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
 
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
-// Date input
-const date = ref()
-const format = (date) => {
-  const day = date.getDate()
-  const month = date.getMonth() + 1
-  const year = date.getFullYear()
+const quotationStore = useQuotationDataStore()
 
-  return `${year}/${month}/${day}`
+// Quotation input
+const { quotation, date } = storeToRefs(quotationStore)
+const updateQuotation = (event) => {
+  quotationStore.setQuotation(event.target.value)
 }
+
+// Date input
+const updateDate = quotationStore.setDate
+
+// const format = (date) => {
+//   const day = date.getDate()
+//   const month = date.getMonth() + 1
+//   const year = date.getFullYear()
+//   return `${year}/${month}/${day}`
+// }
 
 // Button router
 const router = useRouter()
@@ -27,26 +37,31 @@ const toImageSelection = () => {
 <template>
   <main>
     <BaseCard>
-      <div class="quote_input">
+      <div class="quotation_input">
         <h2 for="">
           請輸入灰妲曾說過的名言：
         </h2>
-        <input type="text">
+        <input
+          type="text"
+          :value="quotation"
+          @change="updateQuotation"
+        >
       </div>
-      <div class="quote_date">
+      <div class="quotation_date">
         <h2>
           請選擇此名言金句誕生日期：
         </h2>
         <div class="date_input">
           <VueDatePicker
-            v-model="date"
+            :model-value="date"
             :enable-time-picker="false"
             auto-apply
             locale="zh-tw"
             placeholder="請選擇日期"
-            :format="format"
-            :day-names="['一', '二', '三', '四', '五', '六', '日']"
             dark
+            :format="quotationStore.formatDate(date, '/')"
+            :day-names="['一', '二', '三', '四', '五', '六', '日']"
+            @update:model-value="updateDate"
           >
             <template #dp-input="{ value }">
               <input
@@ -86,7 +101,7 @@ input[type=text] {
   }
 }
 
-.quote_date {
+.quotation_date {
   margin-top: 4rem;
 
   .date_input {
@@ -105,6 +120,6 @@ input[type=text] {
 }
 
 .btn-next {
-  margin-left:auto
+  margin-left: auto
 }
 </style>

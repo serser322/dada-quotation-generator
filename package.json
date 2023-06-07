@@ -1,5 +1,5 @@
 {
-  "name": "vtuber-quote-generator",
+  "name": "vtuber-quotation-generator",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@vuepic/vue-datepicker": "^5.0.1",
+    "merge-images": "^2.0.0",
+    "pinia": "^2.1.3",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },

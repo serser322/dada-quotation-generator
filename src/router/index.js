@@ -8,12 +8,12 @@ export const router = createRouter(
         path: '/',
         name: 'Index',
         component: () => import('../views/Home.vue'),
-        redirect: '/quote-input',
+        redirect: '/quotation-input',
         children: [
           {
-            path: 'quote-input',
-            name: 'QuoteInput',
-            component: () => import('../views/QuoteInput.vue')
+            path: 'quotation-input',
+            name: 'QuotationInput',
+            component: () => import('../views/QuotationInput.vue')
           },
           {
             path: 'images-selection',
@@ -24,12 +24,17 @@ export const router = createRouter(
             path: 'source-input',
             name: 'SourceInput',
             component: () => import('../views/SourceInput.vue')
+          },
+          {
+            path: 'final-page',
+            name: 'FinalPage',
+            component: () => import('../views/FinalPage.vue')
           }
         ]
       },
       {
         path: '/:catchAll(.*)',
-        redirect: { name: 'QuoteInput' }
+        redirect: { name: 'QuotationInput' }
       }
     ]
   }

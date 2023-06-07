@@ -1,24 +1,94 @@
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+// import { useRouter } from 'vue-router'
+import { useQuotationDataStore } from '../store/quotationData'
+import { storeToRefs } from 'pinia'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
+import mergeImages from 'merge-images'
 
 const isSelected = ref(true)
+const image2 = ref(null)
+const canvasEl = ref(null)
+const canvasImg = ref(null)
 
-// Button router
-const router = useRouter()
-const toImageSelection = () => {
-  router.push({ name: 'ImagesSelection' })
+// Source input
+const quotationStore = useQuotationDataStore()
+const { sourceUrl, quotation, date, formatDate } = storeToRefs(quotationStore)
+const updateSource = (event) => {
+  quotationStore.setSourceUrl(event.target.value)
 }
+
+// Make Image
+// const router = useRouter()
+const makeImage = async () => {
+  const baseImage = new URL('./../assets/images/image_base.jpg', import.meta.url).href // 尺寸 1080 * 574
+  const dadaImage = new URL('./../assets/images/vts-2023-04-06_17h45_46.png', import.meta.url).href
+  const frameImage = new URL('./../assets/images/frame.png', import.meta.url).href
+  const quotationImage = new URL(getTextImage('quotation'), import.meta.url).href
+  const nameImage = new URL(getTextImage('name'), import.meta.url).href
+
+  const b64 = await mergeImages([
+    baseImage,
+    { src: dadaImage, x: 0, y: 44 },
+    frameImage,
+    { src: quotationImage, x: 480, y: 0 }, // 506px為canvas圖，距離圖左邊界的距離
+    { src: nameImage, x: 480, y: 0 }
+  ])
+
+  image2.value.src = b64
+
+  // router.push({ name: 'ImagesSelection' })
+}
+
+const getTextImage = (textContent) => {
+  const canvasContext = canvasEl.value.getContext('2d')
+  // 先清除畫布
+  canvasContext.clearRect(0, 0, canvasEl.value.width, canvasEl.value.height)
+
+  canvasContext.fillStyle = 'white'
+
+  // 輔助線
+  canvasContext.strokeStyle = 'yellow'
+  canvasContext.lineWidth = 2
+  canvasContext.strokeRect(0, 0, canvasEl.value.width, canvasEl.value.height)
+
+  if (textContent === 'quotation') {
+    canvasContext.font = 'bold 45px Noto Sans CJK TC'
+    canvasContext.fillText(quotation.value, 100, canvasEl.value.height / 2)
+  }
+
+  if (textContent === 'name') {
+    canvasContext.font = '30px Noto Sans CJK TC'
+    const dateString = quotationStore.formatDate(date.value, ' . ')
+    canvasContext.fillText(`── 灰妲    ${dateString}`, 200, 500)
+  }
+  return canvasContext.canvas.toDataURL()
+}
+
 </script>
 
 <template>
   <main>
+    <canvas
+      ref="canvasEl"
+      class="hide"
+      width="600"
+      height="574"
+      style="border: 3px solid red"
+    />
+    <img
+      ref="canvasImg"
+      class=""
+    >
     <BaseCard>
       <div class="source__input">
+        <img
+          ref="image2"
+          class="image2"
+        >
         <div class="title">
-          <h2 for="">
+          <h2 for="./../assets/images/vts-2023-04-06_17h47_23.png">
             請輸入該句名言出處：
           </h2>
           <div>
@@ -34,8 +104,10 @@ const toImageSelection = () => {
         </div>
         <input
           type="text"
+          :value="sourceUrl"
           :placeholder="isSelected ? '如：該集youtube直播連結(含秒數連結更佳)、twitter文連結等' : '無'"
           :disabled="!isSelected"
+          @change="updateSource"
         >
       </div>
       <div class="info">
@@ -51,11 +123,11 @@ const toImageSelection = () => {
         </ul>
       </div>
     </BaseCard>
-    <div class="btn_group">
+    <div class="btn__group">
       <BaseButton @click="toImageSelection">
         上一步
       </BaseButton>
-      <BaseButton @click="toImageSelection">
+      <BaseButton @click="makeImage">
         製作名言圖
       </BaseButton>
     </div>
@@ -63,6 +135,14 @@ const toImageSelection = () => {
 </template>
 
 <style lang="scss" scoped>
+.canvas {
+  border: 1px solid black;
+}
+
+.hide {
+  display:none;
+}
+
 input[type=text] {
   width: 100%;
   font-size: 1.5rem;
@@ -76,24 +156,24 @@ input[type=text] {
   }
 
   &:disabled {
-  border-bottom: 2px solid gray;
-  background-color: rgba(255, 255, 255, 0.5);
+    border-bottom: 2px solid gray;
+    background-color: rgba(255, 255, 255, 0.5);
   }
 }
 
 .source__input {
   .title {
-    display:flex;
+    display: flex;
     align-items: center;
     justify-content: space-between;
 
-    #hasSource{
+    #hasSource {
       accent-color: ForestGreen;
     }
 
     input[type=checkbox] {
-      transform:scale(1.6);
-      margin-right:5px;
+      transform: scale(1.6);
+      margin-right: 5px;
     }
 
     label[for=hasSource] {
@@ -102,24 +182,24 @@ input[type=text] {
     }
   }
 
-    input[type=text]::placeholder {
-      font-size: 1rem;
-    }
+  input[type=text]::placeholder {
+    font-size: 1rem;
+  }
 
-    input[type=text]::-webkit-input-placeholder {
-      font-size: 1rem;
-    }
+  input[type=text]::-webkit-input-placeholder {
+    font-size: 1rem;
+  }
 
-    input[type=text]::-moz-placeholder {
-      font-size: 1rem;
-    }
+  input[type=text]::-moz-placeholder {
+    font-size: 1rem;
+  }
 }
 
 .info {
   margin-top: 3rem;
 
   img {
-    width:30rem;
+    width: 30rem;
     display: block;
     margin: 3rem auto;
   }
@@ -132,9 +212,8 @@ input[type=text] {
   }
 }
 
-.btn_group {
-  display:flex;
+.btn__group {
+  display: flex;
   justify-content: space-between;
 }
-
 </style>

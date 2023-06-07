@@ -1,56 +1,57 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useQuotationDataStore } from '../store/quotationData'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
 
 const imagesData = ref([
   {
-    imagePath: 'vts-2023-04-06_01h59_42.png',
+    imageName: 'vts-2023-04-06_01h59_42.png',
     isSelected: false
   },
   {
-    imagePath: 'vts-2023-04-06_17h45_46.png',
+    imageName: 'vts-2023-04-06_17h45_46.png',
     isSelected: false
   },
   {
-    imagePath: 'vts-2023-04-06_17h47_23.png',
+    imageName: 'vts-2023-04-06_17h47_23.png',
     isSelected: false
   },
   {
-    imagePath: 'vts-2023-04-06_17h40_52.png',
+    imageName: 'vts-2023-04-06_17h40_52.png',
     isSelected: false
   },
   {
-    imagePath: 'vts-2022-11-02_06h36_59.png',
+    imageName: 'vts-2022-11-02_06h36_59.png',
     isSelected: false
   },
   {
-    imagePath: 'vts-2022-11-02_06h54_15.png',
+    imageName: 'vts-2022-11-02_06h54_15.png',
     isSelected: false
   },
   {
-    imagePath: 'vts-2022-02-22_01h01_24.png',
+    imageName: 'vts-2022-02-22_01h01_24.png',
     isSelected: false
   },
   {
-    imagePath: 'vts-2021-10-30_20h51_41.png',
+    imageName: 'vts-2021-10-30_20h51_41.png',
     isSelected: false
   },
   {
-    imagePath: 'vts-2022-04-02_11h58_58.png',
+    imageName: 'vts-2022-04-02_11h58_58.png',
     isSelected: false
   },
   {
-    imagePath: 'vts-2021-10-03_14h23_55.png',
+    imageName: 'vts-2021-10-03_14h23_55.png',
     isSelected: false
   },
   {
-    imagePath: 'vts-2021-12-24_04h22_39.png',
+    imageName: 'vts-2021-12-24_04h22_39.png',
     isSelected: false
   },
   {
-    imagePath: 'vts-2021-12-26_13h12_24.png',
+    imageName: 'vts-2021-12-26_13h12_24.png',
     isSelected: false
   }
 ])
@@ -60,17 +61,19 @@ const getImgUrl = function (img) {
   return new URL(imgPath, import.meta.url).href
 }
 
+const quotationStore = useQuotationDataStore()
 const selectImage = (img) => {
   imagesData.value.forEach(image => {
     image.isSelected = false
   })
   img.isSelected = true
+  quotationStore.setImage(img.imageName)
 }
 
 // Button router
 const router = useRouter()
-const toQuoteInput = () => {
-  router.push({ name: 'QuoteInput' })
+const toQuotationInput = () => {
+  router.push({ name: 'QuotationInput' })
 }
 
 const toSourceInput = () => {
@@ -80,7 +83,7 @@ const toSourceInput = () => {
 </script>
 
 <template>
-  <main class="images-selection">
+  <main>
     <BaseCard>
       <h2 for="">
         請選擇此名言圖上的立繪：
@@ -89,18 +92,18 @@ const toSourceInput = () => {
         <div
           v-for="img in imagesData"
           :key="img"
-          :class="{selected : img.isSelected}"
+          :class="{ selected: img.isSelected }"
           @click="selectImage(img)"
         >
           <img
-            :src="getImgUrl(img.imagePath)"
+            :src="getImgUrl(img.imageName)"
             alt=""
           >
         </div>
       </div>
     </BaseCard>
     <div class="btn_group">
-      <BaseButton @click="toQuoteInput">
+      <BaseButton @click="toQuotationInput">
         上一步
       </BaseButton>
       <BaseButton @click="toSourceInput">
@@ -111,7 +114,6 @@ const toSourceInput = () => {
 </template>
 
 <style lang="scss" scoped>
-
 .images {
   display: flex;
   flex-wrap: wrap;
@@ -124,7 +126,7 @@ const toSourceInput = () => {
     border: 3px solid white;
     border-radius: 1rem;
     background-color: rgb(122, 122, 122);
-    margin:0.5rem;
+    margin: 0.5rem;
     transform: scale(1.0);
     transition: transform 0.4s ease-in-out;
     overflow: hidden;
@@ -158,8 +160,7 @@ const toSourceInput = () => {
 }
 
 .btn_group {
-  display:flex;
+  display: flex;
   justify-content: space-between;
 }
-
 </style>
