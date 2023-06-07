@@ -49,9 +49,9 @@ const getTextImage = (textContent) => {
   canvasContext.fillStyle = 'white'
 
   // 輔助線
-  canvasContext.strokeStyle = 'yellow'
-  canvasContext.lineWidth = 2
-  canvasContext.strokeRect(0, 0, canvasEl.value.width, canvasEl.value.height)
+  // canvasContext.strokeStyle = 'yellow'
+  // canvasContext.lineWidth = 2
+  // canvasContext.strokeRect(0, 0, canvasEl.value.width, canvasEl.value.height)
 
   if (textContent === 'quotation') {
     canvasContext.font = 'bold 45px Noto Sans CJK TC'
