@@ -49,13 +49,13 @@ const getTextImage = (textContent) => {
   canvasContext.fillStyle = 'white'
 
   // 輔助線
-  // canvasContext.strokeStyle = 'yellow'
-  // canvasContext.lineWidth = 2
-  // canvasContext.strokeRect(0, 0, canvasEl.value.width, canvasEl.value.height)
+  canvasContext.strokeStyle = 'yellow'
+  canvasContext.lineWidth = 2
+  canvasContext.strokeRect(0, 0, canvasEl.value.width, canvasEl.value.height)
 
   if (textContent === 'quotation') {
     canvasContext.font = 'bold 45px Noto Sans CJK TC'
-    canvasContext.fillText(quotation.value, 100, canvasEl.value.height / 2)
+    canvasContext.fillText('哈囉', 50, canvasEl.value.height / 2)
   }
 
   if (textContent === 'name') {
@@ -64,6 +64,13 @@ const getTextImage = (textContent) => {
     canvasContext.fillText(`── 灰妲    ${dateString}`, 200, 500)
   }
   return canvasContext.canvas.toDataURL()
+}
+
+const setTextOnImage = (text) => {
+  // const wordsPerLine = 10
+  // const maxLine = 6
+  const textLines = text.slice()
+  console.log(text.match(/.{1,10}/g))
 }
 
 </script>
