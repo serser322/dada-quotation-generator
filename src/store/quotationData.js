@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 export const useQuotationDataStore = defineStore('quotationData', () => {
   // Quotation
-  const quotation = ref('今天又是有趣的連動爆發日，禮拜三想要蹭吃蹭喝的過，然後禮拜五會是一個測試企劃(主題可能會更動)，請多指教！')
+  const quotation = ref('今天又是有趣的連動爆發，希望我們今天都能活著出去')
   const setQuotation = (quotationInput) => {
     quotation.value = quotationInput
   }

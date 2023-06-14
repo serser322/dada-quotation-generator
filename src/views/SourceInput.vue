@@ -49,13 +49,12 @@ const getTextImage = (textContent) => {
   canvasContext.fillStyle = 'white'
 
   // 輔助線
-  canvasContext.strokeStyle = 'yellow'
-  canvasContext.lineWidth = 2
-  canvasContext.strokeRect(0, 0, canvasEl.value.width, canvasEl.value.height)
+  // canvasContext.strokeStyle = 'yellow'
+  // canvasContext.lineWidth = 2
+  // canvasContext.strokeRect(0, 0, canvasEl.value.width, canvasEl.value.height)
 
   if (textContent === 'quotation') {
-    canvasContext.font = 'bold 45px Noto Sans CJK TC'
-    canvasContext.fillText('哈囉', 50, canvasEl.value.height / 2)
+    setTextOnImage(quotation.value, canvasContext)
   }
 
   if (textContent === 'name') {
@@ -63,15 +62,26 @@ const getTextImage = (textContent) => {
     const dateString = quotationStore.formatDate(date.value, ' . ')
     canvasContext.fillText(`── 灰妲    ${dateString}`, 200, 500)
   }
+
   return canvasContext.canvas.toDataURL()
 }
 
-const setTextOnImage = (text) => {
-  // const wordsPerLine = 10
-  // const maxLine = 6
-  const textLines = text.slice()
-  console.log(text.match(/.{1,10}/g))
+const setTextOnImage = (text, canvas) => {
+  // const maxLine = 5
+  // 需驗證是否超過5行
+  // 若字體僅一行，水平置中
+
+  canvas.font = 'bold 40px Noto Sans CJK TC'
+  const lineHeight = 40 * 2 // 字體為40px，然後再多*1.7為行距
+  const textArray = convertToFull(text).match(/.{1,12}/g) // 先轉為全形字體，而後每12字組成一字串，再依序放入陣列中
+  const totalLines = textArray.length
+  const startYPosition = (canvasEl.value.height - totalLines * lineHeight) / 2 + 20 // 找出能將文字置中於畫布上的Y軸位置，再+10稍微調整位置
+  textArray.forEach((element, i) => {
+    canvas.fillText(element, 50, startYPosition + i * lineHeight) // 50為x軸位置(留白)
+  })
 }
+
+const convertToFull = (text) => text.replace(/[!-~]/g, matchedChar => String.fromCharCode(matchedChar.charCodeAt(0) + 0xfee0))
 
 </script>
 
@@ -84,6 +94,7 @@ const setTextOnImage = (text) => {
       height="574"
       style="border: 3px solid red"
     />
+
     <img
       ref="canvasImg"
       class=""
