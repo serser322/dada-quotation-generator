@@ -14,7 +14,7 @@ const quotationStore = useQuotationDataStore()
 // Quotation input
 const { quotation, date } = storeToRefs(quotationStore)
 const updateQuotation = (event) => {
-  quotationStore.setQuotation(event.target.value)
+  quotationStore.setQuotation(event.target.value.trim())
 }
 
 // Date input

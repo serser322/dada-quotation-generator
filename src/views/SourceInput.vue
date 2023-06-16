@@ -10,11 +10,10 @@ import mergeImages from 'merge-images'
 const isSelected = ref(true)
 const image2 = ref(null)
 const canvasEl = ref(null)
-const canvasImg = ref(null)
 
 // Source input
 const quotationStore = useQuotationDataStore()
-const { sourceUrl, quotation, date, formatDate } = storeToRefs(quotationStore)
+const { sourceUrl, quotation, image, date, formatDate } = storeToRefs(quotationStore)
 const updateSource = (event) => {
   quotationStore.setSourceUrl(event.target.value)
 }
@@ -23,23 +22,27 @@ const updateSource = (event) => {
 // const router = useRouter()
 const makeImage = async () => {
   const baseImage = new URL('./../assets/images/image_base.jpg', import.meta.url).href // 尺寸 1080 * 574
-  const dadaImage = new URL('./../assets/images/vts-2023-04-06_17h45_46.png', import.meta.url).href
+  const dadaImage = new URL(getDadaImage(image.value), import.meta.url).href
   const frameImage = new URL('./../assets/images/frame.png', import.meta.url).href
   const quotationImage = new URL(getTextImage('quotation'), import.meta.url).href
   const nameImage = new URL(getTextImage('name'), import.meta.url).href
+  const sourceUrlImage = new URL(getTextImage('sourceUrl'), import.meta.url).href
 
   const b64 = await mergeImages([
     baseImage,
     { src: dadaImage, x: 0, y: 44 },
     frameImage,
     { src: quotationImage, x: 480, y: 0 }, // 506px為canvas圖，距離圖左邊界的距離
-    { src: nameImage, x: 480, y: 0 }
+    { src: nameImage, x: 480, y: 0 },
+    { src: sourceUrlImage, x: 0, y: 0 }
   ])
 
   image2.value.src = b64
 
   // router.push({ name: 'ImagesSelection' })
 }
+
+const getDadaImage = (image) => `./../assets/images/${image}`
 
 const getTextImage = (textContent) => {
   const canvasContext = canvasEl.value.getContext('2d')
@@ -49,13 +52,12 @@ const getTextImage = (textContent) => {
   canvasContext.fillStyle = 'white'
 
   // 輔助線
-  canvasContext.strokeStyle = 'yellow'
-  canvasContext.lineWidth = 2
-  canvasContext.strokeRect(0, 0, canvasEl.value.width, canvasEl.value.height)
+  // canvasContext.strokeStyle = 'yellow'
+  // canvasContext.lineWidth = 2
+  // canvasContext.strokeRect(0, 0, canvasEl.value.width, canvasEl.value.height)
 
   if (textContent === 'quotation') {
-    canvasContext.font = 'bold 45px Noto Sans CJK TC'
-    canvasContext.fillText(quotation.value, 100, canvasEl.value.height / 2)
+    setTextOnImage(quotation.value, canvasContext)
   }
 
   if (textContent === 'name') {
@@ -63,8 +65,42 @@ const getTextImage = (textContent) => {
     const dateString = quotationStore.formatDate(date.value, ' . ')
     canvasContext.fillText(`── 灰妲    ${dateString}`, 200, 500)
   }
+
+  if (textContent === 'sourceUrl') {
+    canvasContext.fillStyle = 'black'
+    canvasContext.font = '15px Noto Sans CJK TC'
+    canvasContext.fillText(`名言來源：${sourceUrl.value}`, 15, 571)
+  }
+
   return canvasContext.canvas.toDataURL()
 }
+
+const setTextOnImage = (text, canvas) => {
+  // const maxLine = 5
+  // 需驗證是否超過5行
+
+  canvas.font = 'bold 40px Noto Sans CJK TC'
+  const textArray = convertToFull(text).match(/.{1,12}/g) // 先轉為全形字體，而後每12字組成一字串，再依序放入陣列中
+  const lineHeight = (canvas.measureText(textArray[0]).fontBoundingBoxAscent + canvas.measureText(textArray[0]).fontBoundingBoxDescent) * 1.3 // *1.3行高
+  const totalLines = textArray.length
+  const startYPosition = (canvasEl.value.height - totalLines * lineHeight) / 2 + 10 // 找出能將文字置中於畫布上的Y軸位置，再+10稍微調整位置
+
+  // 若字體僅一行，水平置中
+  if (totalLines === 1) {
+    const textWidth = canvas.measureText(textArray[0]).width
+    canvas.fillText(textArray[0], (canvasEl.value.width - textWidth) / 2 - 20, startYPosition)
+  }
+
+  // 超過一行，多行排列
+  if (totalLines > 1) {
+    textArray.forEach((element, i) => {
+      canvas.fillText(element, 20, startYPosition + i * lineHeight) // 50為x軸位置(留白)
+    })
+  }
+}
+
+// 轉為全形字體
+const convertToFull = (text) => text.replace(/[!-~]/g, matchedChar => String.fromCharCode(matchedChar.charCodeAt(0) + 0xfee0))
 
 </script>
 
@@ -77,15 +113,12 @@ const getTextImage = (textContent) => {
       height="574"
       style="border: 3px solid red"
     />
-    <img
-      ref="canvasImg"
-      class=""
-    >
     <BaseCard>
       <div class="source__input">
         <img
           ref="image2"
           class="image2"
+          width="700"
         >
         <div class="title">
           <h2 for="./../assets/images/vts-2023-04-06_17h47_23.png">
