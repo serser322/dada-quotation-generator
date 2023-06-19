@@ -13,7 +13,7 @@ const canvasEl = ref(null)
 
 // Source input
 const quotationStore = useQuotationDataStore()
-const { sourceUrl, quotation, image, date, formatDate } = storeToRefs(quotationStore)
+const { sourceUrl, quotation, image, date } = storeToRefs(quotationStore)
 const updateSource = (event) => {
   quotationStore.setSourceUrl(event.target.value)
 }
@@ -49,27 +49,29 @@ const getTextImage = (textContent) => {
   // 先清除畫布
   canvasContext.clearRect(0, 0, canvasEl.value.width, canvasEl.value.height)
 
-  canvasContext.fillStyle = 'white'
-
   // 輔助線
   // canvasContext.strokeStyle = 'yellow'
   // canvasContext.lineWidth = 2
   // canvasContext.strokeRect(0, 0, canvasEl.value.width, canvasEl.value.height)
 
+  canvasContext.fillStyle = 'white'
+
   if (textContent === 'quotation') {
     setTextOnImage(quotation.value, canvasContext)
   }
 
+  // 署名字串
   if (textContent === 'name') {
     canvasContext.font = '30px Noto Sans CJK TC'
     const dateString = quotationStore.formatDate(date.value, ' . ')
-    canvasContext.fillText(`── 灰妲    ${dateString}`, 200, 500)
+    canvasContext.fillText(`── 灰妲    ${dateString}`, 200, 460)
   }
 
+  // 來源連結字串
   if (textContent === 'sourceUrl') {
     canvasContext.fillStyle = 'black'
     canvasContext.font = '15px Noto Sans CJK TC'
-    canvasContext.fillText(`名言來源：${sourceUrl.value}`, 15, 571)
+    canvasContext.fillText(`名言來源：${isSelected.value ? sourceUrl.value : ''}`, 15, 571)
   }
 
   return canvasContext.canvas.toDataURL()
@@ -137,8 +139,8 @@ const convertToFull = (text) => text.replace(/[!-~]/g, matchedChar => String.fro
         </div>
         <input
           type="text"
-          :value="sourceUrl"
-          :placeholder="isSelected ? '如：該集youtube直播連結(含秒數連結更佳)、twitter文連結等' : '無'"
+          :value="isSelected ? sourceUrl: '無連結'"
+          :placeholder="isSelected ? '如：該集youtube直播連結(含秒數連結更佳)、twitter文連結等' : '無連結'"
           :disabled="!isSelected"
           @change="updateSource"
         >
@@ -190,7 +192,7 @@ input[type=text] {
 
   &:disabled {
     border-bottom: 2px solid gray;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.3);
   }
 }
 
