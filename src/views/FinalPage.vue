@@ -1,7 +1,13 @@
 <script setup>
 import { useRouter } from 'vue-router'
+import { useQuotationDataStore } from '../store/quotationData'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
+import { storeToRefs } from 'pinia'
+
+// Source input
+const quotationStore = useQuotationDataStore()
+const { shortUrl, finalImageB64 } = storeToRefs(quotationStore)
 
 // Button router
 const router = useRouter()
@@ -18,8 +24,10 @@ const toQuotationInput = () => {
       </h2>
       <div class="final__image">
         <img
-          src="../assets/FvsC3udaUAMI4Jc.jpg"
+          ref="finalImage"
+          :src="finalImageB64"
           alt=""
+          width="800"
         >
       </div>
 

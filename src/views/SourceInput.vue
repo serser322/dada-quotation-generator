@@ -1,33 +1,45 @@
 <script setup>
-import { ref } from 'vue'
-// import { useRouter } from 'vue-router'
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { useQuotationDataStore } from '../store/quotationData'
 import { storeToRefs } from 'pinia'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
 import mergeImages from 'merge-images'
 
+const router = useRouter()
 const isSelected = ref(true)
-const image2 = ref(null)
 const canvasEl = ref(null)
+const loading = ref(false)
 
 // Source input
 const quotationStore = useQuotationDataStore()
-const { sourceUrl, quotation, image, date } = storeToRefs(quotationStore)
+const { sourceUrl, quotation, image, date, shortUrl } = storeToRefs(quotationStore)
 const updateSource = (event) => {
   quotationStore.setSourceUrl(event.target.value)
 }
 
-// Make Image
-// const router = useRouter()
+// 回上頁 (照片選擇頁)
+const toImageSelection = () => {
+  router.push({ name: 'ImagesSelection' })
+}
+
+// 名言圖合成製作
 const makeImage = async () => {
+  loading.value = true
+
+  // 取得短網址
+  await setShortUrl(sourceUrl.value)
+
+  // 取得圖片
   const baseImage = new URL('./../assets/images/image_base.jpg', import.meta.url).href // 尺寸 1080 * 574
-  const dadaImage = new URL(getDadaImage(image.value), import.meta.url).href
+  const dadaImage = new URL(dadaImagePath.value, import.meta.url).href
   const frameImage = new URL('./../assets/images/frame.png', import.meta.url).href
   const quotationImage = new URL(getTextImage('quotation'), import.meta.url).href
   const nameImage = new URL(getTextImage('name'), import.meta.url).href
-  const sourceUrlImage = new URL(getTextImage('sourceUrl'), import.meta.url).href
+  const sourceUrlImage = new URL(getTextImage('shortUrl'), import.meta.url).href
 
+  // 合成圖片
   const b64 = await mergeImages([
     baseImage,
     { src: dadaImage, x: 0, y: 44 },
@@ -37,12 +49,15 @@ const makeImage = async () => {
     { src: sourceUrlImage, x: 0, y: 0 }
   ])
 
-  image2.value.src = b64
+  loading.value = true
 
-  // router.push({ name: 'ImagesSelection' })
+  // 儲存合成圖
+  quotationStore.setFinalImageB64(b64)
+  // 到下一頁
+  router.push({ name: 'FinalPage' })
 }
 
-const getDadaImage = (image) => `./../assets/images/${image}`
+const dadaImagePath = computed(() => `./../assets/images/${image.value}`)
 
 const getTextImage = (textContent) => {
   const canvasContext = canvasEl.value.getContext('2d')
@@ -67,11 +82,11 @@ const getTextImage = (textContent) => {
     canvasContext.fillText(`── 灰妲    ${dateString}`, 200, 460)
   }
 
-  // 來源連結字串
-  if (textContent === 'sourceUrl') {
+  // 來源短網址字串
+  if (textContent === 'shortUrl') {
     canvasContext.fillStyle = 'black'
-    canvasContext.font = '15px Noto Sans CJK TC'
-    canvasContext.fillText(`名言來源：${isSelected.value ? sourceUrl.value : ''}`, 15, 571)
+    canvasContext.font = '500 15px Noto Sans CJK TC'
+    canvasContext.fillText(`名言來源：${isSelected.value ? shortUrl.value : ''}`, 16, 571)
   }
 
   return canvasContext.canvas.toDataURL()
@@ -104,6 +119,31 @@ const setTextOnImage = (text, canvas) => {
 // 轉為全形字體
 const convertToFull = (text) => text.replace(/[!-~]/g, matchedChar => String.fromCharCode(matchedChar.charCodeAt(0) + 0xfee0))
 
+// 建立短網址，並儲存之
+const setShortUrl = async (originUrl) => {
+  // URL Shortener Service API提供之 url 與 options 設置
+  const url = 'https://url-shortener-service.p.rapidapi.com/shorten'
+  const options = {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded',
+      'X-RapidAPI-Key': 'a53c08d88bmsheaa4874a715c1a1p155050jsnd069bc6d9507',
+      'X-RapidAPI-Host': 'url-shortener-service.p.rapidapi.com'
+    },
+    body: new URLSearchParams({
+      url: originUrl
+    })
+  }
+  try {
+    const response = await fetch(url, options)
+    const result = await response.json()
+    const shortUrl = result.result_url.replace('\\', '').replace('https://', '') // 去掉字串中的'\'，也為求簡潔，去掉開頭'https://
+    quotationStore.setShortUrl(shortUrl)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 </script>
 
 <template>
@@ -117,11 +157,6 @@ const convertToFull = (text) => text.replace(/[!-~]/g, matchedChar => String.fro
     />
     <BaseCard>
       <div class="source__input">
-        <img
-          ref="image2"
-          class="image2"
-          width="700"
-        >
         <div class="title">
           <h2 for="./../assets/images/vts-2023-04-06_17h47_23.png">
             請輸入該句名言出處：
@@ -162,7 +197,10 @@ const convertToFull = (text) => text.replace(/[!-~]/g, matchedChar => String.fro
       <BaseButton @click="toImageSelection">
         上一步
       </BaseButton>
-      <BaseButton @click="makeImage">
+      <BaseButton
+        :loading="loading"
+        @click="makeImage"
+      >
         製作名言圖
       </BaseButton>
     </div>

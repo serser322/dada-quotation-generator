@@ -26,6 +26,17 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
     sourceUrl.value = source
   }
 
+  // source short url
+  const shortUrl = ref('')
+  const setShortUrl = (url) => {
+    shortUrl.value = url
+  }
+
+  const finalImageB64 = ref('')
+  const setFinalImageB64 = (b64) => {
+    finalImageB64.value = b64
+  }
+
   // common functions
   const formatDate = (date, sign) => {
     if (!date) return
@@ -45,6 +56,10 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
     setImage,
     sourceUrl,
     setSourceUrl,
+    shortUrl,
+    setShortUrl,
+    finalImageB64,
+    setFinalImageB64,
     formatDate
   }
 })
