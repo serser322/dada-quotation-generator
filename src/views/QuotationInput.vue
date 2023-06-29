@@ -20,13 +20,6 @@ const updateQuotation = (event) => {
 // Date input
 const updateDate = quotationStore.setDate
 
-// const format = (date) => {
-//   const day = date.getDate()
-//   const month = date.getMonth() + 1
-//   const year = date.getFullYear()
-//   return `${year}/${month}/${day}`
-// }
-
 // Button router
 const router = useRouter()
 const toImageSelection = () => {
@@ -46,6 +39,14 @@ const toImageSelection = () => {
           :value="quotation"
           @change="updateQuotation"
         >
+      </div>
+      <div>
+        <textarea
+          :value="quotation"
+          rows="5"
+          cols="20"
+          @change="updateQuotation"
+        />
       </div>
       <div class="quotation_date">
         <h2>
@@ -99,6 +100,10 @@ input[type=text] {
     outline: 0;
     border-bottom: 3px solid white;
   }
+}
+
+textarea {
+  width: 100%
 }
 
 .quotation_date {
