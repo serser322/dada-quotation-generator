@@ -1,5 +1,5 @@
 <script setup>
-// import { ref } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuotationDataStore } from '../store/quotationData'
 import { storeToRefs } from 'pinia'
@@ -10,12 +10,36 @@ import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
 const quotationStore = useQuotationDataStore()
+const MAX_CHARACTERS = 5
+const MAX_LINES = 3
 
 // Quotation input
 const { quotation, date } = storeToRefs(quotationStore)
+const isTextarea = ref(false)
+const isValid = ref(true)
+const validateText = ref('')
 const updateQuotation = (event) => {
+  validate(event.target.value.trim())
   quotationStore.setQuotation(event.target.value.trim())
+
+  // console.log(quotationStore.quotation.match(/\n/g))
+  // console.log(quotationStore.quotation.split(/\n/))
 }
+
+const validate = (inputText) => {
+  isValid.value = inputText.length <= MAX_CHARACTERS
+  if (inputText.length === 0) {
+    isValid.value = false
+    validateText.value = '此欄位必填'
+  } else if (inputText.length > MAX_CHARACTERS) {
+    isValid.value = false
+    validateText.value = `字數請勿超過${MAX_CHARACTERS}字`
+  } else {
+    isValid.value = true
+  }
+}
+
+// Quotation textarea
 
 // Date input
 const updateDate = quotationStore.setDate
@@ -36,15 +60,22 @@ const toImageSelection = () => {
         </h2>
         <input
           type="text"
+          :class="isValid ? '': 'invalid'"
           :value="quotation"
-          @change="updateQuotation"
+          @input="updateQuotation"
         >
+        <div
+          class="invalid_text"
+          :class="isValid ? 'hidden':''"
+        >
+          提示：{{ validateText }}
+        </div>
       </div>
       <div>
         <textarea
           :value="quotation"
           rows="5"
-          cols="20"
+          cols="5"
           @change="updateQuotation"
         />
       </div>
@@ -100,6 +131,10 @@ input[type=text] {
     outline: 0;
     border-bottom: 3px solid white;
   }
+
+  &.invalid {
+    border-bottom: 2px solid red;
+  }
 }
 
 textarea {
@@ -121,6 +156,17 @@ textarea {
       top: 1px;
       left: 0;
     }
+  }
+}
+
+.invalid_text{
+  font-size: 0.8rem;
+  color:red;
+  visibility: visible;
+  margin-top:3px;
+
+  &.hidden {
+    visibility: hidden;
   }
 }
 
