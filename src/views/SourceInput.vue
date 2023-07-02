@@ -158,7 +158,7 @@ const setShortUrl = async (originUrl) => {
     <BaseCard>
       <div class="source__input">
         <div class="title">
-          <h2 for="./../assets/images/vts-2023-04-06_17h47_23.png">
+          <h2>
             請輸入該句名言出處：
           </h2>
           <div>

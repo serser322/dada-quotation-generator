@@ -11,38 +11,78 @@ import '@vuepic/vue-datepicker/dist/main.css'
 
 const quotationStore = useQuotationDataStore()
 const MAX_CHARACTERS = 5
-const MAX_LINES = 3
+const MAX_LINES = 2
+const MAX_CHARACTERS_PER_LINE = 7
 
-// Quotation input
+// Quotation input / textarea
 const { quotation, date } = storeToRefs(quotationStore)
 const isTextarea = ref(false)
-const isValid = ref(true)
-const validateText = ref('')
-const updateQuotation = (event) => {
-  validate(event.target.value.trim())
-  quotationStore.setQuotation(event.target.value.trim())
 
-  // console.log(quotationStore.quotation.match(/\n/g))
-  // console.log(quotationStore.quotation.split(/\n/))
-}
+const isInputValid = ref(true)
+const inputValidateText = ref('')
 
-const validate = (inputText) => {
-  isValid.value = inputText.length <= MAX_CHARACTERS
+const validateInput = (inputText) => {
   if (inputText.length === 0) {
-    isValid.value = false
-    validateText.value = '此欄位必填'
+    isInputValid.value = false
+    inputValidateText.value = '此欄位必填'
   } else if (inputText.length > MAX_CHARACTERS) {
-    isValid.value = false
-    validateText.value = `字數請勿超過${MAX_CHARACTERS}字`
+    isInputValid.value = false
+    inputValidateText.value = `因名言圖排版需求，字數請勿超過${MAX_CHARACTERS}字`
   } else {
-    isValid.value = true
+    isInputValid.value = true
   }
 }
 
-// Quotation textarea
+const isTextareaValid = ref(true)
+const textareaValidateText = ref('')
+
+const validateTextarea = (inputText) => {
+  const textArray = inputText.trim().split(/\n/) // 依段落拆分為array，以便驗證
+  if (inputText.length === 0) {
+    isTextareaValid.value = false
+    textareaValidateText.value = '此欄位必填'
+  } else if (textArray.length > MAX_LINES) {
+    isTextareaValid.value = false
+    textareaValidateText.value = `因名言圖排版需求，行數請勿超過${MAX_LINES}行`
+  } else if (isLineCharactersOver(textArray)) {
+    isTextareaValid.value = false
+    textareaValidateText.value = `因名言圖排版需求，每行字數請勿超過${MAX_CHARACTERS_PER_LINE}字`
+  } else {
+    isTextareaValid.value = true
+  }
+}
+
+const updateQuotation = (event) => {
+  const inputValue = event.target.value
+
+  if (!isTextarea.value) {
+    validateInput(inputValue.trim())
+    if (isInputValid.value) {
+      quotationStore.setQuotation(inputValue.trim())
+    }
+  }
+
+  if (isTextarea.value) {
+    validateTextarea(inputValue)
+    if (isTextareaValid.value) {
+      validateTextarea(event.target.value)
+    }
+  }
+}
+
+const isLineCharactersOver = (textArray) => textArray.some(text => text.length > MAX_CHARACTERS_PER_LINE)
 
 // Date input
-const updateDate = quotationStore.setDate
+
+const isDateValid = ref(true)
+const validateDate = (data) => {
+  isDateValid.value = !!data
+}
+const updateDate = (modelData) => {
+  date.value = modelData
+  validateDate(modelData)
+  quotationStore.setDate(modelData)
+}
 
 // Button router
 const router = useRouter()
@@ -54,36 +94,65 @@ const toImageSelection = () => {
 <template>
   <main>
     <BaseCard>
-      <div class="quotation_input">
-        <h2 for="">
-          請輸入灰妲曾說過的名言：
-        </h2>
-        <input
-          type="text"
-          :class="isValid ? '': 'invalid'"
-          :value="quotation"
-          @input="updateQuotation"
-        >
+      <div class="quotation">
+        <div class="title">
+          <h2 for="">
+            請輸入灰妲曾說過的名言：
+          </h2>
+          <div>
+            <input
+              id="isTextarea"
+              v-model="isTextarea"
+              type="checkbox"
+            >
+            <label for="isTextarea">
+              自行分段
+            </label>
+          </div>
+        </div>
         <div
-          class="invalid_text"
-          :class="isValid ? 'hidden':''"
+          v-if="!isTextarea"
+          class="quotation__input"
         >
-          提示：{{ validateText }}
+          <input
+            type="text"
+            :class="isInputValid ? '': 'invalid'"
+            :value="quotation"
+            placeholder="請在此輸入名言..."
+            @input="updateQuotation"
+          >
+          <div
+            class="invalid__text"
+            :class="isInputValid ? 'hidden':''"
+          >
+            提示：{{ inputValidateText }}
+          </div>
+        </div>
+        <div
+          v-if="isTextarea"
+          class="quotation__textarea"
+        >
+          <textarea
+            :value="quotation"
+            rows="5"
+            :class="isTextareaValid ? '': 'invalid'"
+            placeholder="請在此輸入名言..."
+            @input="updateQuotation"
+          />
+          <div
+            class="invalid__text"
+            :class="isTextareaValid ? 'hidden':''"
+          >
+            提示：{{ textareaValidateText }}
+          </div>
         </div>
       </div>
-      <div>
-        <textarea
-          :value="quotation"
-          rows="5"
-          cols="5"
-          @change="updateQuotation"
-        />
-      </div>
-      <div class="quotation_date">
+
+      <div class="date">
         <h2>
           請選擇此名言金句誕生日期：
         </h2>
-        <div class="date_input">
+        <div class="date__select">
           <VueDatePicker
             :model-value="date"
             :enable-time-picker="false"
@@ -97,7 +166,7 @@ const toImageSelection = () => {
           >
             <template #dp-input="{ value }">
               <input
-                class="date"
+                class="date__input"
                 type="text"
                 :value="value"
                 placeholder="請選擇日期"
@@ -107,6 +176,12 @@ const toImageSelection = () => {
               </i>
             </template>
           </VueDatePicker>
+          <div
+            class="invalid__text"
+            :class="isDateValid ? 'hidden':''"
+          >
+            提示：此欄位必填
+          </div>
         </div>
       </div>
     </BaseCard>
@@ -120,34 +195,70 @@ const toImageSelection = () => {
 </template>
 
 <style lang="scss" scoped>
+.quotation {
+  .title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    #isTextarea {
+      accent-color: ForestGreen;
+    }
+
+    input[type=checkbox] {
+      transform: scale(1.6);
+      margin-right: 5px;
+    }
+
+    label[for=isTextarea] {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+  }
+}
+
 input[type=text] {
+    width: 100%;
+    font-size: 1.5rem;
+    background-color: transparent;
+    border: 0;
+    border-bottom: 2px solid white;
+
+    &:focus {
+      outline: 0;
+      border-bottom: 3px solid white;
+    }
+
+    &.invalid {
+      border-bottom: 2px solid red;
+    }
+  }
+
+textarea {
   width: 100%;
   font-size: 1.5rem;
   background-color: transparent;
-  border: 0;
-  border-bottom: 2px solid white;
+  border: 2px solid white;
+  border-radius: 10px;
+  resize:none;
 
   &:focus {
-    outline: 0;
-    border-bottom: 3px solid white;
-  }
+      outline: 0;
+      border-bottom: 3px solid white;
+    }
 
   &.invalid {
-    border-bottom: 2px solid red;
+    border: 2px solid red;
   }
 }
 
-textarea {
-  width: 100%
-}
-
-.quotation_date {
+.date {
   margin-top: 4rem;
 
-  .date_input {
+  .date__select {
     width: 30%;
 
-    .date {
+    .date__input {
       padding-left: 2.5rem;
     }
 
@@ -159,7 +270,7 @@ textarea {
   }
 }
 
-.invalid_text{
+.invalid__text{
   font-size: 0.8rem;
   color:red;
   visibility: visible;
