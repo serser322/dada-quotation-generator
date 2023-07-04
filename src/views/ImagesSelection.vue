@@ -1,7 +1,8 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuotationDataStore } from '../store/quotationData'
+import { storeToRefs } from 'pinia'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
 
@@ -23,27 +24,61 @@ const imagesData = ref([
     isSelected: false
   },
   {
-    imageName: 'vts-2022-11-02_06h36_59.png',
+    imageName: 'vts-2023-04-06_17h42_42.png',
+    isSelected: false
+  },
+  // {
+  //   imageName: 'vts-2022-11-02_06h44_01.png',
+  //   isSelected: false
+  // },
+  {
+    imageName: 'vts-2022-11-02_06h44_19.png',
     isSelected: false
   },
   {
     imageName: 'vts-2022-11-02_06h54_15.png',
     isSelected: false
   },
+
+  // {
+  //   imageName: 'vts-2022-11-02_06h49_47.png',
+  //   isSelected: false
+  // },
+
+  {
+    imageName: 'vts-2022-11-02_06h48_00.png',
+    isSelected: false
+  },
+  {
+    imageName: 'vts-2022-11-02_06h36_59.png',
+    isSelected: false
+  },
   {
     imageName: 'vts-2022-02-22_01h01_24.png',
     isSelected: false
   },
+  // {
+  //   imageName: 'vts-2022-01-27_11h59_44.png',
+  //   isSelected: false
+  // },
+  {
+    imageName: 'vts-2022-01-24_06h58_47.png',
+    isSelected: false
+  },
+  // {
+  //   imageName: 'vts-2021-11-21_13h11_03.png',
+  //   isSelected: false
+  // },
   {
     imageName: 'vts-2021-10-30_20h51_41.png',
     isSelected: false
   },
   {
-    imageName: 'vts-2022-04-02_11h58_58.png',
+    imageName: 'vts-2021-11-15_18h23_24.png',
     isSelected: false
   },
   {
-    imageName: 'vts-2021-10-03_14h23_55.png',
+    imageName: 'vts-2021-12-25_22h52_13.png',
     isSelected: false
   },
   {
@@ -69,6 +104,14 @@ const selectImage = (img) => {
   img.isSelected = true
   quotationStore.setImage(img.imageName)
 }
+
+// 標記已選擇的立繪
+const { image } = storeToRefs(quotationStore)
+onMounted(() => {
+  imagesData.value.forEach(img => {
+    img.isSelected = (img.imageName === image.value)
+  })
+})
 
 // Button router
 const router = useRouter()
