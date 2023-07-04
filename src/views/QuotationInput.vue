@@ -10,9 +10,9 @@ import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
 const quotationStore = useQuotationDataStore()
-const MAX_CHARACTERS = 5
-const MAX_LINES = 2
-const MAX_CHARACTERS_PER_LINE = 7
+const MAX_CHARACTERS = 72
+const MAX_LINES = 6
+const MAX_CHARACTERS_PER_LINE = 12
 
 // Quotation input / textarea
 const { quotation, date } = storeToRefs(quotationStore)
@@ -37,7 +37,7 @@ const isTextareaValid = ref(true)
 const textareaValidateText = ref('')
 
 const validateTextarea = (inputText) => {
-  const textArray = inputText.trim().split(/\n/) // 依段落拆分為array，以便驗證
+  const textArray = inputText.split(/\n/) // 依段落拆分為array，以便驗證
   if (inputText.length === 0) {
     isTextareaValid.value = false
     textareaValidateText.value = '此欄位必填'
@@ -52,22 +52,20 @@ const validateTextarea = (inputText) => {
   }
 }
 
-const updateQuotation = (event) => {
-  const inputValue = event.target.value
-
+const validateQuotation = (input) => {
   if (!isTextarea.value) {
-    validateInput(inputValue.trim())
-    if (isInputValid.value) {
-      quotationStore.setQuotation(inputValue.trim())
-    }
+    validateInput(input)
   }
 
   if (isTextarea.value) {
-    validateTextarea(inputValue)
-    if (isTextareaValid.value) {
-      validateTextarea(event.target.value)
-    }
+    validateTextarea(input)
   }
+}
+
+const updateQuotation = (event) => {
+  const inputValue = event.target.value.trim()
+  validateQuotation(inputValue)
+  quotationStore.setQuotation(inputValue)
 }
 
 const isLineCharactersOver = (textArray) => textArray.some(text => text.length > MAX_CHARACTERS_PER_LINE)
@@ -87,7 +85,9 @@ const updateDate = (modelData) => {
 // Button router
 const router = useRouter()
 const toImageSelection = () => {
-  router.push({ name: 'ImagesSelection' })
+  validateQuotation(quotation.value)
+  validateDate(date.value)
+  if ((isInputValid.value || isTextareaValid.value) && isDateValid.value) { router.push({ name: 'ImagesSelection' }) }
 }
 </script>
 

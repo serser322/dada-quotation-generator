@@ -49,7 +49,7 @@ const toQuotationInput = () => {
   margin-top: 3rem;
 
   img {
-    width: 30rem;
+    width: 45rem;
     display: block;
     margin: 3rem auto;
   }

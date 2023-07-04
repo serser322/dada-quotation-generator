@@ -79,7 +79,7 @@ const getTextImage = (textContent) => {
   if (textContent === 'name') {
     canvasContext.font = '30px Noto Sans CJK TC'
     const dateString = quotationStore.formatDate(date.value, ' . ')
-    canvasContext.fillText(`── 灰妲    ${dateString}`, 200, 460)
+    canvasContext.fillText(`── 灰妲    ${dateString}`, 200, 485)
   }
 
   // 來源短網址字串
@@ -98,20 +98,20 @@ const setTextOnImage = (text, canvas) => {
 
   canvas.font = 'bold 40px Noto Sans CJK TC'
   const textArray = convertToFull(text).match(/.{1,12}/g) // 先轉為全形字體，而後每12字組成一字串，再依序放入陣列中
-  const lineHeight = (canvas.measureText(textArray[0]).fontBoundingBoxAscent + canvas.measureText(textArray[0]).fontBoundingBoxDescent) * 1.3 // *1.3行高
+  const lineHeight = (canvas.measureText(textArray[0]).fontBoundingBoxAscent + canvas.measureText(textArray[0]).fontBoundingBoxDescent) * 1.2 // *1.3行高
   const totalLines = textArray.length
   const startYPosition = (canvasEl.value.height - totalLines * lineHeight) / 2 + 10 // 找出能將文字置中於畫布上的Y軸位置，再+10稍微調整位置
 
   // 若字體僅一行，水平置中
   if (totalLines === 1) {
     const textWidth = canvas.measureText(textArray[0]).width
-    canvas.fillText(textArray[0], (canvasEl.value.width - textWidth) / 2 - 20, startYPosition)
+    canvas.fillText(textArray[0], (canvasEl.value.width - textWidth) / 2 - 20, startYPosition) // 20為x軸位置(留白)，因此計算上須扣除
   }
 
   // 超過一行，多行排列
   if (totalLines > 1) {
     textArray.forEach((element, i) => {
-      canvas.fillText(element, 20, startYPosition + i * lineHeight) // 50為x軸位置(留白)
+      canvas.fillText(element, 20, startYPosition + i * lineHeight) // 20為x軸位置(留白)
     })
   }
 }
