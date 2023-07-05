@@ -71,7 +71,6 @@ const updateQuotation = (event) => {
 const isLineCharactersOver = (textArray) => textArray.some(text => text.length > MAX_CHARACTERS_PER_LINE)
 
 // Date input
-
 const isDateValid = ref(true)
 const validateDate = (data) => {
   isDateValid.value = !!data

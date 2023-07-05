@@ -91,11 +91,6 @@ const imagesData = ref([
   }
 ])
 
-const getImgUrl = function (img) {
-  const imgPath = '../assets/images/' + img
-  return new URL(imgPath, import.meta.url).href
-}
-
 const quotationStore = useQuotationDataStore()
 const selectImage = (img) => {
   imagesData.value.forEach(image => {
@@ -113,6 +108,12 @@ onMounted(() => {
   })
 })
 
+// Validate
+const isValid = ref(true)
+const validate = () => {
+  isValid.value = !!image.value
+}
+
 // Button router
 const router = useRouter()
 const toQuotationInput = () => {
@@ -120,9 +121,14 @@ const toQuotationInput = () => {
 }
 
 const toSourceInput = () => {
-  router.push({ name: 'SourceInput' })
+  validate()
+  isValid.value && router.push({ name: 'SourceInput' })
 }
 
+const getImgUrl = function (img) {
+  const imgPath = '../assets/images/' + img
+  return new URL(imgPath, import.meta.url).href
+}
 </script>
 
 <template>
@@ -131,7 +137,16 @@ const toSourceInput = () => {
       <h2 for="">
         請選擇此名言圖上的立繪：
       </h2>
-      <div class="images">
+      <div
+        class="invalid__text"
+        :class="isValid ? 'hidden':''"
+      >
+        提示：需選擇一張立繪
+      </div>
+      <div
+        class="images"
+        :class="{ invalid__border: !isValid , invalid__border__space:isValid }"
+      >
         <div
           v-for="img in imagesData"
           :key="img"
@@ -145,7 +160,7 @@ const toSourceInput = () => {
         </div>
       </div>
     </BaseCard>
-    <div class="btn_group">
+    <div class="btn__group">
       <BaseButton @click="toQuotationInput">
         上一步
       </BaseButton>
@@ -157,11 +172,33 @@ const toSourceInput = () => {
 </template>
 
 <style lang="scss" scoped>
+
+.invalid__text{
+  font-size: 0.9rem;
+  color:red;
+  visibility: visible;
+  margin-top:-10px;
+  margin-bottom: 10px;
+
+  &.hidden {
+    visibility: hidden;
+  }
+}
 .images {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   height: 100%;
+
+  &.invalid__border, &.invalid__border__space {
+      border: 2px dashed red;
+      border-radius: 2rem;
+      padding: 1rem 0;
+    }
+
+  &.invalid__border__space {
+    border: 2px solid transparent;
+  }
 
   div {
     width: 12rem;
@@ -202,7 +239,7 @@ const toSourceInput = () => {
   }
 }
 
-.btn_group {
+.btn__group {
   display: flex;
   justify-content: space-between;
 }
