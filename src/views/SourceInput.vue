@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuotationDataStore } from '../store/quotationData'
 import { storeToRefs } from 'pinia'
+import sweetAlert from 'sweetalert2'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
 import mergeImages from 'merge-images'
@@ -26,35 +27,51 @@ const toImageSelection = () => {
 
 // 名言圖合成製作
 const makeImage = async () => {
-  loading.value = true
+  try {
+    loading.value = true
 
-  // 取得短網址
-  await setShortUrl(sourceUrl.value)
+    // 取得短網址
+    await setShortUrl(sourceUrl.value)
 
-  // 取得圖片
-  const baseImage = new URL('./../assets/images/image_base.jpg', import.meta.url).href // 尺寸 1080 * 574
-  const dadaImage = new URL(dadaImagePath.value, import.meta.url).href
-  const frameImage = new URL('./../assets/images/frame.png', import.meta.url).href
-  const quotationImage = new URL(getTextImage('quotation'), import.meta.url).href
-  const nameImage = new URL(getTextImage('name'), import.meta.url).href
-  const sourceUrlImage = new URL(getTextImage('shortUrl'), import.meta.url).href
+    // 取得圖片
+    const baseImage = new URL('./../assets/images/image_base.jpg', import.meta.url).href // 尺寸 1080 * 574
+    const dadaImage = new URL(dadaImagePath.value, import.meta.url).href
+    const frameImage = new URL('./../assets/images/frame.png', import.meta.url).href
+    const quotationImage = new URL(getTextImage('quotation'), import.meta.url).href
+    const nameImage = new URL(getTextImage('name'), import.meta.url).href
+    const sourceUrlImage = new URL(getTextImage('shortUrl'), import.meta.url).href
 
-  // 合成圖片
-  const b64 = await mergeImages([
-    baseImage,
-    { src: dadaImage, x: 0, y: 44 },
-    frameImage,
-    { src: quotationImage, x: 480, y: 0 }, // 506px為canvas圖，距離圖左邊界的距離
-    { src: nameImage, x: 480, y: 0 },
-    { src: sourceUrlImage, x: 0, y: 0 }
-  ])
+    // 合成圖片
+    const b64 = await mergeImages([
+      baseImage,
+      { src: dadaImage, x: 0, y: 44 },
+      frameImage,
+      { src: quotationImage, x: 480, y: 0 }, // 506px為canvas圖，距離圖左邊界的距離
+      { src: nameImage, x: 480, y: 0 },
+      { src: sourceUrlImage, x: 0, y: 0 }
+    ])
 
-  loading.value = true
+    // loading.value = true
 
-  // 儲存合成圖
-  quotationStore.setFinalImageB64(b64)
-  // 到下一頁
-  router.push({ name: 'FinalPage' })
+    // 儲存合成圖
+    quotationStore.setFinalImageB64(b64)
+    // 到下一頁
+    router.push({ name: 'FinalPage' })
+  } catch (error) {
+    // 使用sweet alert
+
+    if (error) {
+      // console.error(error)
+      sweetAlert.fire({
+        icon: 'error',
+        title: '出錯惹QAQ',
+        text: error,
+        confirmButtonText: '好喔！'
+      })
+    }
+  } finally {
+    loading.value = true
+  }
 }
 
 const dadaImagePath = computed(() => `./../assets/images/${image.value}`)
@@ -63,11 +80,6 @@ const getTextImage = (textContent) => {
   const canvasContext = canvasEl.value.getContext('2d')
   // 先清除畫布
   canvasContext.clearRect(0, 0, canvasEl.value.width, canvasEl.value.height)
-
-  // 輔助線
-  // canvasContext.strokeStyle = 'yellow'
-  // canvasContext.lineWidth = 2
-  // canvasContext.strokeRect(0, 0, canvasEl.value.width, canvasEl.value.height)
 
   canvasContext.fillStyle = 'white'
 
@@ -90,12 +102,14 @@ const getTextImage = (textContent) => {
   }
 
   return canvasContext.canvas.toDataURL()
+
+  // 輔助線
+  // canvasContext.strokeStyle = 'yellow'
+  // canvasContext.lineWidth = 2
+  // canvasContext.strokeRect(0, 0, canvasEl.value.width, canvasEl.value.height)
 }
 
 const setTextOnImage = (text, canvas) => {
-  // const maxLine = 5
-  // 需驗證是否超過5行
-
   canvas.font = 'bold 40px Noto Sans CJK TC'
   const textArray = convertToFull(text).match(/.{1,12}/g) // 先轉為全形字體，而後每12字組成一字串，再依序放入陣列中
   const lineHeight = (canvas.measureText(textArray[0]).fontBoundingBoxAscent + canvas.measureText(textArray[0]).fontBoundingBoxDescent) * 1.2 // *1.3行高
@@ -121,7 +135,7 @@ const convertToFull = (text) => text.replace(/[!-~]/g, matchedChar => String.fro
 
 // 建立短網址，並儲存之
 const setShortUrl = async (originUrl) => {
-  // URL Shortener Service API提供之 url 與 options 設置
+  // 121~133行是 URL Shortener Service API提供之 url 與 options 設置
   const url = 'https://url-shortener-service.p.rapidapi.com/shorten'
   const options = {
     method: 'POST',
@@ -136,11 +150,20 @@ const setShortUrl = async (originUrl) => {
   }
   try {
     const response = await fetch(url, options)
-    const result = await response.json()
+    const result = ''
+    if (!response.ok) {
+      const result = await response.json()
+      console.log('result:', result)
+      throw new Error(result)
+      // const text = await response.text()
+      // console.log('text:', text)
+    }
+
     const shortUrl = result.result_url.replace('\\', '').replace('https://', '') // 去掉字串中的'\'，也為求簡潔，去掉開頭'https://
     quotationStore.setShortUrl(shortUrl)
   } catch (error) {
-    console.log(error)
+    // console.log('err', error)
+    throw new Error(error)
   }
 }
 
