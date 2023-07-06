@@ -27,11 +27,14 @@ const toImageSelection = () => {
 
 // 名言圖合成製作
 const makeImage = async () => {
+  validate()
+  if (!isValid.value) return
+
   try {
     loading.value = true
 
     // 取得短網址
-    await setShortUrl(sourceUrl.value)
+    isSelected.value && await setShortUrl(sourceUrl.value)
 
     // 取得圖片
     const baseImage = new URL('./../assets/images/image_base.jpg', import.meta.url).href // 尺寸 1080 * 574
@@ -51,26 +54,22 @@ const makeImage = async () => {
       { src: sourceUrlImage, x: 0, y: 0 }
     ])
 
-    // loading.value = true
-
     // 儲存合成圖
     quotationStore.setFinalImageB64(b64)
     // 到下一頁
     router.push({ name: 'FinalPage' })
   } catch (error) {
     // 使用sweet alert
-
-    if (error) {
-      // console.error(error)
-      sweetAlert.fire({
-        icon: 'error',
-        title: '出錯惹QAQ',
-        text: error,
-        confirmButtonText: '好喔！'
-      })
-    }
+    console.error(error)
+    const errorText = error?.error?.includes('URL is invalid') ? '輸入的網址好像無效QQ，請確認是否輸入有誤' : error
+    sweetAlert.fire({
+      icon: 'error',
+      title: '<div style=\'display: flex; justify-content:center; align-items:center\'><span style=\'padding-right:5px\'>出錯惹</span><img width=60 src=\'src/assets/images/error_image.png\'></div>',
+      text: errorText,
+      confirmButtonText: '好喔！'
+    })
   } finally {
-    loading.value = true
+    loading.value = false
   }
 }
 
@@ -98,7 +97,7 @@ const getTextImage = (textContent) => {
   if (textContent === 'shortUrl') {
     canvasContext.fillStyle = 'black'
     canvasContext.font = '500 15px Noto Sans CJK TC'
-    canvasContext.fillText(`名言來源：${isSelected.value ? shortUrl.value : ''}`, 16, 571)
+    canvasContext.fillText(`${isSelected.value ? '名言來源：' + shortUrl.value : ''}`, 16, 571)
   }
 
   return canvasContext.canvas.toDataURL()
@@ -148,23 +147,23 @@ const setShortUrl = async (originUrl) => {
       url: originUrl
     })
   }
-  try {
-    const response = await fetch(url, options)
-    const result = ''
-    if (!response.ok) {
-      const result = await response.json()
-      console.log('result:', result)
-      throw new Error(result)
-      // const text = await response.text()
-      // console.log('text:', text)
-    }
+  // try {
+  const response = await fetch(url, options)
+  let result = ''
 
-    const shortUrl = result.result_url.replace('\\', '').replace('https://', '') // 去掉字串中的'\'，也為求簡潔，去掉開頭'https://
-    quotationStore.setShortUrl(shortUrl)
-  } catch (error) {
-    // console.log('err', error)
-    throw new Error(error)
+  if (!response.ok) {
+    result = await response.json()
+    throw result
   }
+
+  const shortUrl = result.result_url.replace('\\', '').replace('https://', '') // 去掉字串中的'\'，也為求簡潔，去掉開頭'https://
+  quotationStore.setShortUrl(shortUrl)
+}
+
+// 驗證
+const isValid = ref(true)
+const validate = () => {
+  isValid.value = isSelected.value ? !!sourceUrl.value : true
 }
 
 </script>
@@ -197,11 +196,17 @@ const setShortUrl = async (originUrl) => {
         </div>
         <input
           type="text"
-          :value="isSelected ? sourceUrl: '無連結'"
+          :value="isSelected ? sourceUrl : '無連結'"
           :placeholder="isSelected ? '如：該集youtube直播連結(含秒數連結更佳)、twitter文連結等' : '無連結'"
           :disabled="!isSelected"
           @change="updateSource"
         >
+        <div
+          class="invalid__text"
+          :class="isValid ? 'hidden' : ''"
+        >
+          提示：如有勾選「附上來源連結」，請貼上來源連結
+        </div>
       </div>
       <div class="info">
         <h4>此連結將自動轉為短網址，並附在圖中左下角，如下示意：</h4>
@@ -236,7 +241,7 @@ const setShortUrl = async (originUrl) => {
 }
 
 .hide {
-  display:none;
+  display: none;
 }
 
 input[type=text] {
@@ -311,5 +316,16 @@ input[type=text] {
 .btn__group {
   display: flex;
   justify-content: space-between;
+}
+
+.invalid__text {
+  font-size: 0.9rem;
+  color: red;
+  visibility: visible;
+  margin-top: 5px;
+
+  &.hidden {
+    visibility: hidden;
+  }
 }
 </style>
