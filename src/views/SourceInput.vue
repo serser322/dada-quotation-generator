@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuotationDataStore } from '../store/quotationData'
 import { storeToRefs } from 'pinia'
+import sweetAlert from 'sweetalert2'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
 import mergeImages from 'merge-images'
@@ -26,35 +27,49 @@ const toImageSelection = () => {
 
 // 名言圖合成製作
 const makeImage = async () => {
-  loading.value = true
+  validate()
+  if (!isValid.value) return
 
-  // 取得短網址
-  await setShortUrl(sourceUrl.value)
+  try {
+    loading.value = true
 
-  // 取得圖片
-  const baseImage = new URL('./../assets/images/image_base.jpg', import.meta.url).href // 尺寸 1080 * 574
-  const dadaImage = new URL(dadaImagePath.value, import.meta.url).href
-  const frameImage = new URL('./../assets/images/frame.png', import.meta.url).href
-  const quotationImage = new URL(getTextImage('quotation'), import.meta.url).href
-  const nameImage = new URL(getTextImage('name'), import.meta.url).href
-  const sourceUrlImage = new URL(getTextImage('shortUrl'), import.meta.url).href
+    // 取得短網址
+    isSelected.value && await setShortUrl(sourceUrl.value)
 
-  // 合成圖片
-  const b64 = await mergeImages([
-    baseImage,
-    { src: dadaImage, x: 0, y: 44 },
-    frameImage,
-    { src: quotationImage, x: 480, y: 0 }, // 506px為canvas圖，距離圖左邊界的距離
-    { src: nameImage, x: 480, y: 0 },
-    { src: sourceUrlImage, x: 0, y: 0 }
-  ])
+    // 取得圖片
+    const baseImage = new URL('./../assets/images/image_base.jpg', import.meta.url).href // 尺寸 1080 * 574
+    const dadaImage = new URL(dadaImagePath.value, import.meta.url).href
+    const frameImage = new URL('./../assets/images/frame.png', import.meta.url).href
+    const quotationImage = new URL(getTextImage('quotation'), import.meta.url).href
+    const nameImage = new URL(getTextImage('name'), import.meta.url).href
+    const sourceUrlImage = new URL(getTextImage('shortUrl'), import.meta.url).href
 
-  loading.value = true
+    // 合成圖片
+    const b64 = await mergeImages([
+      baseImage,
+      { src: dadaImage, x: 0, y: 44 },
+      frameImage,
+      { src: quotationImage, x: 480, y: 0 }, // 506px為canvas圖，距離圖左邊界的距離
+      { src: nameImage, x: 480, y: 0 },
+      { src: sourceUrlImage, x: 0, y: 0 }
+    ])
 
-  // 儲存合成圖
-  quotationStore.setFinalImageB64(b64)
-  // 到下一頁
-  router.push({ name: 'FinalPage' })
+    // 儲存合成圖
+    quotationStore.setFinalImageB64(b64)
+    // 到下一頁
+    router.push({ name: 'FinalPage' })
+  } catch (error) {
+    // 使用sweet alert
+    const errorText = error?.error?.includes('URL is invalid') ? '輸入的網址好像無效QQ，請確認是否輸入有誤' : error
+    sweetAlert.fire({
+      icon: 'error',
+      title: '<div style=\'display: flex; justify-content:center; align-items:center\'><span style=\'padding-right:5px\'>出錯惹</span><img width=60 src=\'src/assets/images/error_image.png\'></div>',
+      text: errorText,
+      confirmButtonText: '好喔！'
+    })
+  } finally {
+    loading.value = false
+  }
 }
 
 const dadaImagePath = computed(() => `./../assets/images/${image.value}`)
@@ -63,11 +78,6 @@ const getTextImage = (textContent) => {
   const canvasContext = canvasEl.value.getContext('2d')
   // 先清除畫布
   canvasContext.clearRect(0, 0, canvasEl.value.width, canvasEl.value.height)
-
-  // 輔助線
-  // canvasContext.strokeStyle = 'yellow'
-  // canvasContext.lineWidth = 2
-  // canvasContext.strokeRect(0, 0, canvasEl.value.width, canvasEl.value.height)
 
   canvasContext.fillStyle = 'white'
 
@@ -85,17 +95,19 @@ const getTextImage = (textContent) => {
   // 來源短網址字串
   if (textContent === 'shortUrl') {
     canvasContext.fillStyle = 'black'
-    canvasContext.font = '500 15px Noto Sans CJK TC'
-    canvasContext.fillText(`名言來源：${isSelected.value ? shortUrl.value : ''}`, 16, 571)
+    canvasContext.font = '500 13px Noto Sans CJK TC'
+    canvasContext.fillText(`${isSelected.value ? '名言來源：' + shortUrl.value : ''}`, 16, 571)
   }
 
   return canvasContext.canvas.toDataURL()
+
+  // 輔助線
+  // canvasContext.strokeStyle = 'yellow'
+  // canvasContext.lineWidth = 2
+  // canvasContext.strokeRect(0, 0, canvasEl.value.width, canvasEl.value.height)
 }
 
 const setTextOnImage = (text, canvas) => {
-  // const maxLine = 5
-  // 需驗證是否超過5行
-
   canvas.font = 'bold 40px Noto Sans CJK TC'
   const textArray = convertToFull(text).match(/.{1,12}/g) // 先轉為全形字體，而後每12字組成一字串，再依序放入陣列中
   const lineHeight = (canvas.measureText(textArray[0]).fontBoundingBoxAscent + canvas.measureText(textArray[0]).fontBoundingBoxDescent) * 1.2 // *1.3行高
@@ -121,7 +133,7 @@ const convertToFull = (text) => text.replace(/[!-~]/g, matchedChar => String.fro
 
 // 建立短網址，並儲存之
 const setShortUrl = async (originUrl) => {
-  // URL Shortener Service API提供之 url 與 options 設置
+  // 121~133行是 URL Shortener Service API提供之 url 與 options 設置
   const url = 'https://url-shortener-service.p.rapidapi.com/shorten'
   const options = {
     method: 'POST',
@@ -134,14 +146,22 @@ const setShortUrl = async (originUrl) => {
       url: originUrl
     })
   }
-  try {
-    const response = await fetch(url, options)
-    const result = await response.json()
+  // 打API
+  const response = await fetch(url, options)
+  const result = await response.json()
+
+  if (!response.ok) throw result
+
+  if (response.ok) {
     const shortUrl = result.result_url.replace('\\', '').replace('https://', '') // 去掉字串中的'\'，也為求簡潔，去掉開頭'https://
     quotationStore.setShortUrl(shortUrl)
-  } catch (error) {
-    console.log(error)
   }
+}
+
+// 驗證
+const isValid = ref(true)
+const validate = () => {
+  isValid.value = isSelected.value ? !!sourceUrl.value : true
 }
 
 </script>
@@ -174,11 +194,17 @@ const setShortUrl = async (originUrl) => {
         </div>
         <input
           type="text"
-          :value="isSelected ? sourceUrl: '無連結'"
+          :value="isSelected ? sourceUrl : '無連結'"
           :placeholder="isSelected ? '如：該集youtube直播連結(含秒數連結更佳)、twitter文連結等' : '無連結'"
           :disabled="!isSelected"
           @change="updateSource"
         >
+        <div
+          class="invalid__text"
+          :class="isValid ? 'hidden' : ''"
+        >
+          提示：如有勾選「附上來源連結」，請貼上來源連結
+        </div>
       </div>
       <div class="info">
         <h4>此連結將自動轉為短網址，並附在圖中左下角，如下示意：</h4>
@@ -213,7 +239,7 @@ const setShortUrl = async (originUrl) => {
 }
 
 .hide {
-  display:none;
+  display: none;
 }
 
 input[type=text] {
@@ -288,5 +314,16 @@ input[type=text] {
 .btn__group {
   display: flex;
   justify-content: space-between;
+}
+
+.invalid__text {
+  font-size: 0.9rem;
+  color: red;
+  visibility: visible;
+  margin-top: 5px;
+
+  &.hidden {
+    visibility: hidden;
+  }
 }
 </style>
