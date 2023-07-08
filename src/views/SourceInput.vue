@@ -60,7 +60,6 @@ const makeImage = async () => {
     router.push({ name: 'FinalPage' })
   } catch (error) {
     // 使用sweet alert
-    console.error(error)
     const errorText = error?.error?.includes('URL is invalid') ? '輸入的網址好像無效QQ，請確認是否輸入有誤' : error
     sweetAlert.fire({
       icon: 'error',
@@ -96,7 +95,7 @@ const getTextImage = (textContent) => {
   // 來源短網址字串
   if (textContent === 'shortUrl') {
     canvasContext.fillStyle = 'black'
-    canvasContext.font = '500 15px Noto Sans CJK TC'
+    canvasContext.font = '500 13px Noto Sans CJK TC'
     canvasContext.fillText(`${isSelected.value ? '名言來源：' + shortUrl.value : ''}`, 16, 571)
   }
 
@@ -147,17 +146,16 @@ const setShortUrl = async (originUrl) => {
       url: originUrl
     })
   }
-  // try {
+  // 打API
   const response = await fetch(url, options)
-  let result = ''
+  const result = await response.json()
 
-  if (!response.ok) {
-    result = await response.json()
-    throw result
+  if (!response.ok) throw result
+
+  if (response.ok) {
+    const shortUrl = result.result_url.replace('\\', '').replace('https://', '') // 去掉字串中的'\'，也為求簡潔，去掉開頭'https://
+    quotationStore.setShortUrl(shortUrl)
   }
-
-  const shortUrl = result.result_url.replace('\\', '').replace('https://', '') // 去掉字串中的'\'，也為求簡潔，去掉開頭'https://
-  quotationStore.setShortUrl(shortUrl)
 }
 
 // 驗證
