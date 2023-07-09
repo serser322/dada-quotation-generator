@@ -7,8 +7,9 @@
 
 <style lang="scss">
 :root {
-  --primary-color: rgb(255, 195, 98);
-  --text-color: #373b3e
+  --primary-color: rgb(251, 196, 57);
+  --text-color: #373b3e;
+  --sidebar-background-color: rgb(62, 62, 62);
 }
 
 * {
