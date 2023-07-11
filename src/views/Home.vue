@@ -1,14 +1,14 @@
 <script setup>
 import Header from '../components/Header.vue'
-import SidebarMobile from '../components/SidebarMobile.vue'
-import Sidebar from '../components/Sidebar.vue'
+// import SidebarMobile from '../components/SidebarMobile.vue'
+// import Sidebar from '../components/Sidebar.vue'
 
 </script>
 
 <template>
   <div class="container">
-    <SidebarMobile class="sidebar__mobile" />
-    <Sidebar class="sidebar" />
+    <!-- <SidebarMobile class="sidebar__mobile" />
+    <Sidebar class="sidebar" /> -->
     <div>
       <Header />
       <div class="container__warp">
@@ -36,18 +36,8 @@ import Sidebar from '../components/Sidebar.vue'
   height: auto;
   min-height: 100%;
 
-  .sidebar__mobile {
-    @media (min-width: 576px) {
-      display: none
-    }
-  }
-
   .sidebar {
     display: none;
-
-    @media (min-width: 576px) {
-      display: block
-    }
   }
 
   &>nav {
@@ -64,8 +54,32 @@ import Sidebar from '../components/Sidebar.vue'
     }
 
     .container__warp {
-      width: 80%;
-      margin: 3rem auto;
+      width: 90%;
+      margin: 2rem auto;
+    }
+  }
+}
+
+@media (min-width: 576px) {
+  .container {
+    /* .sidebar__mobile {
+      display: none
+    }
+
+    .sidebar {
+      display: block
+    } */
+
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    div {
+      .container__warp {
+        width: 80%;
+        margin: 3rem auto;
+      }
     }
   }
 }

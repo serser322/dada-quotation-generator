@@ -18,7 +18,7 @@ const props = defineProps({
 
 <style lang="scss" scoped>
 .btn {
-  width: 10rem;
+  width: 100%;
   padding: 0.8rem 0;
   border: 6px solid white;
   border-radius: 0.8rem;
@@ -34,6 +34,12 @@ const props = defineProps({
   &:hover {
     cursor: pointer;
     background-color: aquamarine;
+  }
+}
+
+@media (min-width: 576px) {
+  .btn {
+    width: 10rem;
   }
 }
 
@@ -57,4 +63,5 @@ const props = defineProps({
   100% {
     transform: rotate(360deg);
   }
-}</style>
+}
+</style>

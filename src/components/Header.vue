@@ -2,21 +2,20 @@
 import { useQuotationDataStore } from '../store/quotationData'
 const quotationStore = useQuotationDataStore()
 const openSidebar = () => {
-  console.log(123123)
   quotationStore.setSidebarOpen(true)
 }
 </script>
 
 <template>
   <header>
-    <div
+    <!-- <div
       class="header__sidebar__toggler"
       @click="openSidebar"
     >
       <span class="material-symbols-outlined">
         menu
       </span>
-    </div>
+    </div> -->
 
     <div class="header__logo">
       <img
@@ -36,12 +35,13 @@ const openSidebar = () => {
 <style lang="scss" scoped>
 header {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
+  align-items: center;
   width: 100%;
   height: 8rem;
   background-color: var(--primary-color);
 
-  .header__sidebar__toggler {
+  /* .header__sidebar__toggler {
     position: absolute;
     left: 10px;
     top: 50px;
@@ -50,20 +50,27 @@ header {
       border: 1px solid white;
       width: 25px;
       height: 25px;
-
       font-size: 25px;
       font-weight: 600;
-      /* border-radius: 0 5px 5px 0; */
       background-color: var(--sidebar-background-color);
+    }
+  } */
+
+  .header__logo {
+    /* display: none; */
+    /* height: 5rem; */
+    height: 100%;
+    width: 10rem;
+    display: flex;
+    align-items: center;
+
+    img {
+      width: 100%;
     }
   }
 
-  .header__logo {
-    display: none;
-  }
-
   .header__image {
-    height: auto;
+    height: 100%;
 
     img {
       height: 100%;
@@ -71,8 +78,6 @@ header {
   }
 
   @media (min-width:576px) {
-
-    justify-content: space-between;
     height: 11rem;
 
     .header__logo {
