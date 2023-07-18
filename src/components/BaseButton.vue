@@ -20,26 +20,26 @@ const props = defineProps({
 .btn {
   width: 100%;
   padding: 0.8rem 0;
-  border: 6px solid white;
+  border: 4px solid white;
   border-radius: 0.8rem;
   background-color: var(--primary-color);
   text-align: center;
   font-size: 1.4rem;
   font-weight: 700;
-  margin-top: 2rem;
+  margin-top: 1rem;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
 
+  div {
+    display: flex;
+    align-items: center;
+    gap:0.5rem
+  }
+
   &:hover {
     cursor: pointer;
     background-color: aquamarine;
-  }
-}
-
-@media (min-width: 576px) {
-  .btn {
-    width: 10rem;
   }
 }
 
@@ -64,4 +64,13 @@ const props = defineProps({
     transform: rotate(360deg);
   }
 }
+
+@media (min-width: 576px) {
+  .btn {
+    margin-top: 2rem;
+    width: 10rem;
+    border: 6px solid white;
+  }
+}
+
 </style>

@@ -139,13 +139,13 @@ const getImgUrl = function (img) {
       </h2>
       <div
         class="invalid__text"
-        :class="isValid ? 'hidden':''"
+        :class="isValid ? 'hidden' : ''"
       >
         提示：需選擇一張立繪
       </div>
       <div
         class="images"
-        :class="{ invalid__border: !isValid , invalid__border__space:isValid }"
+        :class="{ invalid__border: !isValid, invalid__border__space: isValid }"
       >
         <div
           v-for="img in imagesData"
@@ -162,51 +162,62 @@ const getImgUrl = function (img) {
     </BaseCard>
     <div class="btn__group">
       <BaseButton @click="toQuotationInput">
+        <span class="material-symbols-outlined">
+          arrow_back
+        </span>
         上一步
       </BaseButton>
       <BaseButton @click="toSourceInput">
         下一步
+        <span class="material-symbols-outlined">
+          arrow_forward
+        </span>
       </BaseButton>
     </div>
   </main>
 </template>
 
 <style lang="scss" scoped>
+h2 {
+  font-size: var(--title-font-size);
+}
 
-.invalid__text{
+.invalid__text {
   font-size: 0.9rem;
-  color:red;
+  color: red;
   visibility: visible;
-  margin-top:-10px;
+  margin-top: -10px;
   margin-bottom: 10px;
 
   &.hidden {
     visibility: hidden;
   }
 }
+
 .images {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   height: 100%;
 
-  &.invalid__border, &.invalid__border__space {
-      border: 2px dashed red;
-      border-radius: 2rem;
-      padding: 1rem 0;
-    }
+  &.invalid__border,
+  &.invalid__border__space {
+    border: 2px dashed red;
+    border-radius: 2rem;
+    padding: 1rem 0;
+  }
 
   &.invalid__border__space {
     border: 2px solid transparent;
   }
 
   div {
-    width: 12rem;
-    height: 12rem;
+    width: 7rem;
+    height: 7rem;
+    margin: 0.2rem;
     border: 3px solid white;
     border-radius: 1rem;
     background-color: rgb(122, 122, 122);
-    margin: 0.5rem;
     transform: scale(1.0);
     transition: transform 0.4s ease-in-out;
     overflow: hidden;
@@ -241,6 +252,46 @@ const getImgUrl = function (img) {
 
 .btn__group {
   display: flex;
+  flex-direction: column-reverse;
+  /* justify-content: space-between; */
+}
+
+@media (min-width: 576px) {
+  h2 {
+    font-size: var(--title-font-size-pad);
+  }
+
+  .images {
+    div {
+      width: 9rem;
+      height: 9rem;
+      margin: 0.4rem;
+    }
+  }
+
+  .btn__group {
+  display: flex;
   justify-content: space-between;
+  }
+}
+
+@media (min-width: 768px) {
+  .images {
+    div {
+      width: 11rem;
+      height: 11rem;
+      margin: 0.5rem;
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  .images {
+    div {
+      width: 12rem;
+      height: 12rem;
+      margin: 0.6rem;
+    }
+  }
 }
 </style>

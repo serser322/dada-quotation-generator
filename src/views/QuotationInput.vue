@@ -189,6 +189,9 @@ const toImageSelection = () => {
       @click="toImageSelection"
     >
       下一步
+      <span class="material-symbols-outlined">
+        arrow_forward
+      </span>
     </BaseButton>
   </main>
 </template>
@@ -206,7 +209,7 @@ const toImageSelection = () => {
     }
 
     label[for=isTextarea] {
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: bold;
     }
   }
@@ -268,7 +271,7 @@ textarea {
 }
 
 h2 {
-  font-size: 1.2rem;
+  font-size: var(--title-font-size);
 }
 
 .invalid__text {
@@ -321,7 +324,7 @@ h2 {
   }
 
   h2 {
-    font-size: 1.5rem;
+    font-size: var(--title-font-size-pad);
   }
 
 }

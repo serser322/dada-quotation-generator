@@ -10,6 +10,8 @@
   --primary-color: rgb(251, 196, 57);
   --text-color: #373b3e;
   --sidebar-background-color: rgb(62, 62, 62);
+  --title-font-size: 1.2rem;
+  --title-font-size-pad: 1.5rem;
 }
 
 * {
