@@ -6,6 +6,7 @@ onMounted(() => {
   isExpanded.value = window.innerWidth >= 576
 })
 
+// Router
 const router = useRouter()
 function toPage(routeName) {
   router.push({ name: routeName })
@@ -21,10 +22,17 @@ const isExpanded = ref(false)
 const toggleSidebar = () => {
   isExpanded.value = !isExpanded.value
 }
-
 </script>
 
 <template>
+  <!-- <div
+    class="sidebar__toggler"
+    @click="showSidebar"
+  >
+    <span class="material-symbols-outlined">
+      keyboard_double_arrow_right
+    </span>
+  </div> -->
   <nav
     class="sidebar"
     :class="{ 'sidebar-expanded': isExpanded }"
@@ -98,30 +106,43 @@ const toggleSidebar = () => {
 </template>
 
 <style lang="scss" scoped>
-@mixin web {
+/* @mixin screen-pad {
   @media (min-width: 576px) {
     @content
   }
-}
+} */
 
 .sidebar {
-  position: fixed;
-  width: 3.5rem;
+  position: relative;
+  width: 5rem;
   height: auto;
   min-height: 100%;
-  background-color: rgb(62, 62, 62);
+  background-color: var(--sidebar-background-color);
   color: white;
   z-index: 1;
   transition: all 0.5s ease;
 
-  @include web {
-    position: relative;
-    width: 5rem;
-  }
-
   &:hover {
     cursor: pointer;
   }
+
+  /* .sidebar__toggler {
+    span.material-symbols-outlined {
+      position: absolute;
+      width: 25px;
+      right: -25px;
+      width: 25px;
+      height: 25px;
+      font-size: 25px;
+      font-weight: 600;
+      border-radius: 0 5px 5px 0;
+      background-color: var(--sidebar-background-color);
+
+      @media (min-width: 576px) {
+        display: none;
+      }
+    }
+  } */
 
   .sidebar__avatar {
     display: flex;
@@ -141,7 +162,7 @@ const toggleSidebar = () => {
         border-radius: 50%;
       }
 
-      @include web {
+      @media (min-width: 576px) {
         /* width: 4rem; */
       }
     }
@@ -174,7 +195,7 @@ const toggleSidebar = () => {
         color: aquamarine;
         font-weight: bold;
 
-        @include web {
+        @media (min-width: 576px) {
           margin: 0.25rem 1.5rem
         }
       }
@@ -203,7 +224,7 @@ const toggleSidebar = () => {
     }
   }
 
-  .sidebar__toggle {
+  /* .sidebar__toggle {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -212,10 +233,10 @@ const toggleSidebar = () => {
     right: 10px;
     background-color: rgb(62, 62, 62);
     transition: transform 0.3s ease-out;
-  }
+  } */
 }
 
-/* Expanded */
+/* Expanded on 576px above screen*/
 .sidebar-expanded {
   width: 10.5rem;
 
@@ -231,7 +252,7 @@ const toggleSidebar = () => {
 
   }
 
-  @include web {
+  @media (min-width: 576px) {
     width: 13rem;
   }
 
@@ -247,9 +268,9 @@ const toggleSidebar = () => {
     }
   }
 
-  .sidebar__toggle {
+  /* .sidebar__toggle {
     transform: rotate(180deg);
-  }
+  } */
 
 }
 

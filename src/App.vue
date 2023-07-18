@@ -6,7 +6,11 @@
 </template>
 
 <style lang="scss">
-:root {}
+:root {
+  --primary-color: rgb(251, 196, 57);
+  --text-color: #373b3e;
+  --sidebar-background-color: rgb(62, 62, 62);
+}
 
 * {
   font-family: 'Noto Sans TC', sans-serif;

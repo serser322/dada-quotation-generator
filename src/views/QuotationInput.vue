@@ -95,7 +95,7 @@ const toImageSelection = () => {
     <BaseCard>
       <div class="quotation">
         <div class="title">
-          <h2 for="">
+          <h2>
             請輸入灰妲曾說過的名言：
           </h2>
           <div>
@@ -115,14 +115,14 @@ const toImageSelection = () => {
         >
           <input
             type="text"
-            :class="isInputValid ? '': 'invalid'"
+            :class="isInputValid ? '' : 'invalid'"
             :value="quotation"
             placeholder="請在此輸入名言..."
             @input="updateQuotation"
           >
           <div
             class="invalid__text"
-            :class="isInputValid ? 'hidden':''"
+            :class="isInputValid ? 'hidden' : ''"
           >
             提示：{{ inputValidateText }}
           </div>
@@ -134,13 +134,13 @@ const toImageSelection = () => {
           <textarea
             :value="quotation"
             rows="5"
-            :class="isTextareaValid ? '': 'invalid'"
+            :class="isTextareaValid ? '' : 'invalid'"
             placeholder="請在此輸入名言..."
             @input="updateQuotation"
           />
           <div
             class="invalid__text"
-            :class="isTextareaValid ? 'hidden':''"
+            :class="isTextareaValid ? 'hidden' : ''"
           >
             提示：{{ textareaValidateText }}
           </div>
@@ -177,7 +177,7 @@ const toImageSelection = () => {
           </VueDatePicker>
           <div
             class="invalid__text"
-            :class="isDateValid ? 'hidden':''"
+            :class="isDateValid ? 'hidden' : ''"
           >
             提示：此欄位必填
           </div>
@@ -196,55 +196,53 @@ const toImageSelection = () => {
 <style lang="scss" scoped>
 .quotation {
   .title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
     #isTextarea {
       accent-color: ForestGreen;
     }
 
     input[type=checkbox] {
-      transform: scale(1.6);
-      margin-right: 5px;
+      transform: scale(1.3);
+      margin-right: 2px;
     }
 
     label[for=isTextarea] {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: bold;
     }
   }
 }
 
 input[type=text] {
-    width: 100%;
-    font-size: 1.5rem;
-    background-color: transparent;
-    border: 0;
-    border-bottom: 2px solid white;
+  margin-top: 1rem;
+  width: 100%;
+  font-size: 1.2rem;
+  background-color: transparent;
+  border: 0;
+  border-bottom: 2px solid white;
 
-    &:focus {
-      outline: 0;
-      border-bottom: 3px solid white;
-    }
-
-    &.invalid {
-      border-bottom: 2px solid red;
-    }
+  &:focus {
+    outline: 0;
+    border-bottom: 3px solid white;
   }
 
+  &.invalid {
+    border-bottom: 2px solid red;
+  }
+}
+
 textarea {
+  margin-top: 1rem;
   width: 100%;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   background-color: transparent;
   border: 2px solid white;
   border-radius: 10px;
-  resize:none;
+  resize: none;
 
   &:focus {
-      outline: 0;
-      border-bottom: 3px solid white;
-    }
+    outline: 0;
+    border-bottom: 3px solid white;
+  }
 
   &.invalid {
     border: 2px solid red;
@@ -255,7 +253,7 @@ textarea {
   margin-top: 4rem;
 
   .date__select {
-    width: 30%;
+    width: 100%;
 
     .date__input {
       padding-left: 2.5rem;
@@ -263,17 +261,21 @@ textarea {
 
     .material-symbols-outlined {
       position: absolute;
-      top: 1px;
+      top: 13px;
       left: 0;
     }
   }
 }
 
-.invalid__text{
+h2 {
+  font-size: 1.2rem;
+}
+
+.invalid__text {
   font-size: 0.8rem;
-  color:red;
+  color: red;
   visibility: visible;
-  margin-top:3px;
+  margin-top: 3px;
 
   &.hidden {
     visibility: hidden;
@@ -282,5 +284,53 @@ textarea {
 
 .btn-next {
   margin-left: auto
+}
+
+@media (min-width: 576px) {
+  .quotation {
+    .title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      input[type=checkbox] {
+        transform: scale(1.6);
+        margin-right: 5px;
+      }
+
+      label[for=isTextarea] {
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+    }
+  }
+
+  input[type=text],
+  textarea {
+    margin-top: 0;
+    font-size: 1.5rem;
+  }
+
+  .date {
+    .date__select {
+      .material-symbols-outlined {
+        position: absolute;
+        top: 1px;
+      }
+    }
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+}
+
+@media (min-width: 768px) {
+  .date {
+    .date__select {
+      width: 50%;
+    }
+  }
 }
 </style>

@@ -2,6 +2,12 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useQuotationDataStore = defineStore('quotationData', () => {
+  // Sidebar on mobile
+  const isSidebarOpen = ref(false)
+  const setSidebarOpen = (sidebarStatus) => {
+    isSidebarOpen.value = sidebarStatus
+  }
+
   // Quotation
   const quotation = ref('')
   const setQuotation = (quotationInput) => {
@@ -48,6 +54,8 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
   }
 
   return {
+    isSidebarOpen,
+    setSidebarOpen,
     quotation,
     setQuotation,
     date,

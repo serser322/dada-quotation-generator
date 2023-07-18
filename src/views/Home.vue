@@ -1,12 +1,14 @@
 <script setup>
 import Header from '../components/Header.vue'
-import Sidebar from '../components/Sidebar.vue'
+// import SidebarMobile from '../components/SidebarMobile.vue'
+// import Sidebar from '../components/Sidebar.vue'
 
 </script>
 
 <template>
   <div class="container">
-    <Sidebar />
+    <!-- <SidebarMobile class="sidebar__mobile" />
+    <Sidebar class="sidebar" /> -->
     <div>
       <Header />
       <div class="container__warp">
@@ -17,10 +19,26 @@ import Sidebar from '../components/Sidebar.vue'
 </template>
 
 <style lang="scss" scoped>
+/* @mixin screen-mobile {
+  @media (min-width:var(--screen-mobile)) {
+    @content
+  }
+};
+
+@mixin screen-pad {
+  @media (min-width: var(--screen-pad)) {
+    @content
+  }
+} */
+
 .container {
   display: flex;
   height: auto;
   min-height: 100%;
+
+  .sidebar {
+    display: none;
+  }
 
   &>nav {
     flex-shrink: 0;
@@ -28,18 +46,39 @@ import Sidebar from '../components/Sidebar.vue'
 
   div {
     width: 100%;
-    margin-left: 3.5rem;
+    /* margin-left: 3.5rem; //保留空間給sidebar */
 
     @media (min-width: 576px) {
-      margin-left: 0
+      /* margin-left: 0 */
+      /* margin-left: 3.5rem; //保留空間給sidebar */
     }
 
     .container__warp {
-      width: 80%;
-      margin: 3rem auto;
+      width: 90%;
+      margin: 2rem auto;
+    }
+  }
+}
 
-      @media (min-width: 1200px) {
-        /* min-width: */
+@media (min-width: 576px) {
+  .container {
+    /* .sidebar__mobile {
+      display: none
+    }
+
+    .sidebar {
+      display: block
+    } */
+
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    div {
+      .container__warp {
+        width: 80%;
+        margin: 3rem auto;
       }
     }
   }

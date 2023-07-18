@@ -18,17 +18,17 @@ const props = defineProps({
 
 <style lang="scss" scoped>
 .btn {
-  width: 10rem;
+  width: 100%;
   padding: 0.8rem 0;
   border: 6px solid white;
   border-radius: 0.8rem;
-  background-color: rgb(255, 195, 98);
+  background-color: var(--primary-color);
   text-align: center;
   font-size: 1.4rem;
   font-weight: 700;
   margin-top: 2rem;
   box-sizing: border-box;
-  display:flex;
+  display: flex;
   justify-content: center;
 
   &:hover {
@@ -37,9 +37,17 @@ const props = defineProps({
   }
 }
 
+@media (min-width: 576px) {
+  .btn {
+    width: 10rem;
+  }
+}
+
 .loader {
-  border: 5px solid #f3f3f3; /* Light grey */
-  border-top: 5px solid #3498db; /* Blue */
+  border: 5px solid #f3f3f3;
+  /* Light grey */
+  border-top: 5px solid #3498db;
+  /* Blue */
   border-radius: 50%;
   width: 30px;
   height: 30px;
@@ -48,7 +56,12 @@ const props = defineProps({
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
