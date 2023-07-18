@@ -25,7 +25,7 @@ const props = defineProps({
   background-color: var(--primary-color);
   text-align: center;
   font-size: 1.4rem;
-  font-weight: 700;
+  font-weight: 800;
   margin-top: 1rem;
   box-sizing: border-box;
   display: flex;

@@ -218,7 +218,7 @@ const toImageSelection = () => {
 input[type=text] {
   margin-top: 1rem;
   width: 100%;
-  font-size: 1.2rem;
+  font-size: var(--input-font-size);
   background-color: transparent;
   border: 0;
   border-bottom: 2px solid white;
@@ -231,12 +231,20 @@ input[type=text] {
   &.invalid {
     border-bottom: 2px solid red;
   }
+
+  &::placeholder {
+    font-size: var(--input-font-size);
+  }
+
+  &::-webkit-input-placeholder {
+    font-size: var(--input-font-size);
+  }
 }
 
 textarea {
   margin-top: 1rem;
   width: 100%;
-  font-size: 1.2rem;
+  font-size: var(--input-font-size);
   background-color: transparent;
   border: 2px solid white;
   border-radius: 10px;
@@ -249,6 +257,14 @@ textarea {
 
   &.invalid {
     border: 2px solid red;
+  }
+
+  &::placeholder {
+    font-size: var(--input-font-size);
+  }
+
+  &::-webkit-input-placeholder {
+    font-size: var(--input-font-size);
   }
 }
 
@@ -275,7 +291,7 @@ h2 {
 }
 
 .invalid__text {
-  font-size: 0.8rem;
+  font-size: var(--invalid-text-size);
   color: red;
   visibility: visible;
   margin-top: 3px;
@@ -303,7 +319,6 @@ h2 {
 
       label[for=isTextarea] {
         font-size: 1.2rem;
-        font-weight: bold;
       }
     }
   }
@@ -311,7 +326,15 @@ h2 {
   input[type=text],
   textarea {
     margin-top: 0;
-    font-size: 1.5rem;
+    font-size: var(--input-font-size-pad);
+
+    &::placeholder {
+      font-size: var(--input-font-size-pad);
+    }
+
+    &::-webkit-input-placeholder {
+      font-size: var(--input-font-size-pad);
+    }
   }
 
   .date {
@@ -327,6 +350,9 @@ h2 {
     font-size: var(--title-font-size-pad);
   }
 
+  .invalid__text {
+    font-size: var(--invalid-text-size-pad);
+  }
 }
 
 @media (min-width: 768px) {

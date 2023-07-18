@@ -12,6 +12,10 @@
   --sidebar-background-color: rgb(62, 62, 62);
   --title-font-size: 1.2rem;
   --title-font-size-pad: 1.5rem;
+  --invalid-text-size: 0.6rem;
+  --invalid-text-size-pad: 0.8rem;
+  --input-font-size: 1.1rem;
+  --input-font-size-pad: 1.3rem;
 }
 
 * {

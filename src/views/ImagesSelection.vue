@@ -137,26 +137,12 @@ const getImgUrl = function (img) {
       <h2 for="">
         請選擇此名言圖上的立繪：
       </h2>
-      <div
-        class="invalid__text"
-        :class="isValid ? 'hidden' : ''"
-      >
+      <div class="invalid__text" :class="isValid ? 'hidden' : ''">
         提示：需選擇一張立繪
       </div>
-      <div
-        class="images"
-        :class="{ invalid__border: !isValid, invalid__border__space: isValid }"
-      >
-        <div
-          v-for="img in imagesData"
-          :key="img"
-          :class="{ selected: img.isSelected }"
-          @click="selectImage(img)"
-        >
-          <img
-            :src="getImgUrl(img.imageName)"
-            alt=""
-          >
+      <div class="images" :class="{ invalid__border: !isValid, invalid__border__space: isValid }">
+        <div v-for="img in imagesData" :key="img" :class="{ selected: img.isSelected }" @click="selectImage(img)">
+          <img :src="getImgUrl(img.imageName)" alt="">
         </div>
       </div>
     </BaseCard>
@@ -183,7 +169,7 @@ h2 {
 }
 
 .invalid__text {
-  font-size: 0.9rem;
+  font-size: var(--invalid-text-size);
   color: red;
   visibility: visible;
   margin-top: -10px;
@@ -253,12 +239,15 @@ h2 {
 .btn__group {
   display: flex;
   flex-direction: column-reverse;
-  /* justify-content: space-between; */
 }
 
 @media (min-width: 576px) {
   h2 {
     font-size: var(--title-font-size-pad);
+  }
+
+  .invalid__text {
+    font-size: var(--invalid-text-size-pad);
   }
 
   .images {
@@ -270,8 +259,9 @@ h2 {
   }
 
   .btn__group {
-  display: flex;
-  justify-content: space-between;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
   }
 }
 
