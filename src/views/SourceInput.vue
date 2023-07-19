@@ -195,7 +195,7 @@ const validate = () => {
         <input
           type="text"
           :value="isSelected ? sourceUrl : '無連結'"
-          :placeholder="isSelected ? '如：該集youtube直播連結(含秒數連結更佳)、twitter文連結等' : '無連結'"
+          :placeholder="isSelected ? '直播連結(含秒數連結佳)、推特連結等' : '無連結'"
           :disabled="!isSelected"
           @change="updateSource"
         >
@@ -221,13 +221,19 @@ const validate = () => {
     </BaseCard>
     <div class="btn__group">
       <BaseButton @click="toImageSelection">
+        <span class="material-symbols-outlined">
+          arrow_back
+        </span>
         上一步
       </BaseButton>
       <BaseButton
         :loading="loading"
         @click="makeImage"
       >
-        製作名言圖
+        製作成圖
+        <span class="material-symbols-outlined">
+          arrow_forward
+        </span>
       </BaseButton>
     </div>
   </main>
@@ -242,9 +248,32 @@ const validate = () => {
   display: none;
 }
 
+.source__input {
+  .title {
+    h2 {
+      font-size: var(--title-font-size);
+    }
+
+    #hasSource {
+      accent-color: ForestGreen;
+    }
+
+    input[type=checkbox] {
+      transform: scale(1.3);
+      margin-right: 2px;
+    }
+
+    label[for=hasSource] {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+  }
+}
+
 input[type=text] {
+  margin-top: 1rem;
   width: 100%;
-  font-size: 1.5rem;
+  font-size: var(--input-font-size);
   background-color: transparent;
   border: 0;
   border-bottom: 2px solid white;
@@ -258,52 +287,28 @@ input[type=text] {
     border-bottom: 2px solid gray;
     background-color: rgba(255, 255, 255, 0.3);
   }
-}
 
-.source__input {
-  .title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    #hasSource {
-      accent-color: ForestGreen;
-    }
-
-    input[type=checkbox] {
-      transform: scale(1.6);
-      margin-right: 5px;
-    }
-
-    label[for=hasSource] {
-      font-size: 1.4rem;
-      font-weight: bold;
-    }
+  &::placeholder {
+    font-size: var(--input-font-size);
   }
 
-  input[type=text]::placeholder {
-    font-size: 1rem;
-  }
-
-  input[type=text]::-webkit-input-placeholder {
-    font-size: 1rem;
-  }
-
-  input[type=text]::-moz-placeholder {
-    font-size: 1rem;
+  &::-webkit-input-placeholder {
+    font-size: var(--input-font-size);
   }
 }
 
 .info {
-  margin-top: 3rem;
+  margin-top: 1rem;
 
   img {
-    width: 30rem;
+    width: 100%;
     display: block;
-    margin: 3rem auto;
+    margin: 1.5rem auto;
   }
 
   ul {
+    padding-left: 1rem;
+
     li {
       margin-bottom: 1rem;
       font-weight: bold;
@@ -313,17 +318,76 @@ input[type=text] {
 
 .btn__group {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column-reverse;
 }
 
 .invalid__text {
-  font-size: 0.9rem;
+  font-size: var(--invalid-text-size);
   color: red;
   visibility: visible;
   margin-top: 5px;
 
   &.hidden {
     visibility: hidden;
+  }
+}
+
+@media (min-width: 576px) {
+  .source__input {
+    .title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      h2 {
+        font-size: var(--title-font-size-pad);
+      }
+
+      input[type=checkbox] {
+        transform: scale(1.6);
+        margin-right: 5px;
+      }
+
+      label[for=hasSource] {
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  input[type=text] {
+    margin-top: 0;
+    font-size: var(--input-font-size-pad);
+
+    &::placeholder {
+      font-size: var(--input-font-size-pad);
+    }
+
+    &::-webkit-input-placeholder {
+      font-size: var(--input-font-size-pad);
+    }
+  }
+
+  .info {
+    margin-top: 2rem;
+
+    img {
+      margin: 2rem auto;
+    }
+  }
+  .invalid__text {
+    font-size: var(--invalid-text-size-pad);
+  }
+
+  .btn__group {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+@media (min-width: 768px) {
+  img {
+    max-width: 40rem;
   }
 }
 </style>
