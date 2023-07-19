@@ -34,11 +34,13 @@ const toQuotationInput = () => {
           ref="finalImage"
           :src="finalImageB64"
           alt=""
-          width="800"
         >
       </div>
 
-      <div class="final__short__url">
+      <div
+        v-if="shortUrl"
+        class="final__short__url"
+      >
         <label for="shortUrl">
           名言出處短網址：
         </label>
@@ -62,10 +64,16 @@ const toQuotationInput = () => {
 
       <div class="btn__group">
         <BaseButton>
+          <span class="material-symbols-outlined">
+            download
+          </span>
           下載
         </BaseButton>
 
         <BaseButton @click="toQuotationInput">
+          <span class="material-symbols-outlined">
+            replay
+          </span>
           重新製作
         </BaseButton>
       </div>
@@ -74,11 +82,15 @@ const toQuotationInput = () => {
 </template>
 
 <style lang='scss' scoped>
+h2 {
+  font-size: var(--title-font-size);
+}
+
 .final__image {
   margin-top: 3rem;
 
   img {
-    width: 45rem;
+    width: 100%;
     display: block;
     margin: 3rem auto;
   }
@@ -133,9 +145,23 @@ const toQuotationInput = () => {
 
 }
 
-.btn__group {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
+@media (min-width: 576px) {
+  h2 {
+    font-size: var(--title-font-size-pad);
+  }
+
+  .btn__group {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .final__image {
+    img {
+      max-width: 45rem;
+    }
+  }
 }
 </style>

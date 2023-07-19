@@ -19,12 +19,12 @@ const props = defineProps({
 <style lang="scss" scoped>
 .btn {
   width: 100%;
-  padding: 0.8rem 0;
+  padding: 0.4rem 0;
   border: 4px solid white;
   border-radius: 0.8rem;
   background-color: var(--primary-color);
   text-align: center;
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   font-weight: 800;
   margin-top: 1rem;
   box-sizing: border-box;
@@ -70,7 +70,10 @@ const props = defineProps({
     margin-top: 2rem;
     width: 10rem;
     border: 6px solid white;
+    padding: 0.8rem 0;
+    font-size: 1.4rem;
   }
 }
+
 
 </style>
