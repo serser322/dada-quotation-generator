@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuotationDataStore } from '../store/quotationData'
 import { storeToRefs } from 'pinia'
+import BaseStepper from '../components/BaseStepper.vue'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
 
@@ -133,6 +134,9 @@ const getImgUrl = function (img) {
 
 <template>
   <main>
+    <BaseStepper
+      page="imagesSelection"
+    />
     <BaseCard>
       <h2 for="">
         請選擇此名言圖上的立繪：
