@@ -42,6 +42,7 @@ const makeImage = async () => {
     const frameImage = new URL('./../assets/images/frame.png', import.meta.url).href
     const quotationImage = new URL(getTextImage('quotation'), import.meta.url).href
     const nameImage = new URL(getTextImage('name'), import.meta.url).href
+    const dateImage = new URL(getTextImage('date'), import.meta.url).href
     const sourceUrlImage = new URL(getTextImage('shortUrl'), import.meta.url).href
 
     // 合成圖片
@@ -51,6 +52,7 @@ const makeImage = async () => {
       frameImage,
       { src: quotationImage, x: 480, y: 0 }, // 506px為canvas圖，距離圖左邊界的距離
       { src: nameImage, x: 480, y: 0 },
+      { src: dateImage, x: 480, y: 0 },
       { src: sourceUrlImage, x: 0, y: 0 }
     ])
 
@@ -87,9 +89,15 @@ const getTextImage = (textContent) => {
 
   // 署名字串
   if (textContent === 'name') {
+    canvasContext.font = '37px Noto Sans CJK TC'
+    canvasContext.fillText('──  灰妲', 170, 485)
+  }
+
+  // 日期字串
+  if (textContent === 'date') {
     canvasContext.font = '30px Noto Sans CJK TC'
     const dateString = quotationStore.formatDate(date.value, ' . ')
-    canvasContext.fillText(`── 灰妲    ${dateString}`, 200, 485)
+    canvasContext.fillText(`${dateString}`, 370, 485)
   }
 
   // 來源短網址字串
@@ -214,7 +222,6 @@ const validate = () => {
         >
         <ul>
           <li>附上來源連結，除證明該名言之真實性，也方便有興趣的觀眾或烤肉man，能快速輸入短連結觀看內容。</li>
-          <li>短連結也會成為名言圖下載檔的檔名，以便分享。</li>
           <li>若覺得短連結影響名言圖的美觀性，或不便查找來源，也可取消勾選右上角的「附上來源連結」。</li>
         </ul>
       </div>

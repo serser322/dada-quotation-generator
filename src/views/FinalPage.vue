@@ -1,4 +1,5 @@
 <script setup>
+import { saveAs } from 'file-saver'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuotationDataStore } from '../store/quotationData'
@@ -21,49 +22,57 @@ const router = useRouter()
 const toQuotationInput = () => {
   router.push({ name: 'QuotationInput' })
 }
+
+// Download
+const download = () => {
+  saveAs(finalImageB64.value, '灰妲名言圖.png')
+}
 </script>
 
 <template>
   <main>
     <BaseCard>
-      <h2 for="">
-        名言圖完成&下載：
-      </h2>
-      <div class="final__image">
-        <img
-          ref="finalImage"
-          :src="finalImageB64"
-          alt=""
-        >
-      </div>
+      <div class="final">
+        <div>
+          <h2 for="">
+            名言圖完成&下載：
+          </h2>
+          <div class="final__image">
+            <img
+              ref="finalImage"
+              :src="finalImageB64"
+              alt=""
+            >
+          </div>
 
-      <div
-        v-if="shortUrl"
-        class="final__short__url"
-      >
-        <label for="shortUrl">
-          名言出處短網址：
-        </label>
-        <input
-          ref="shortUrlInput"
-          type="text"
-          :value="shortUrl"
-          name="shortUrl"
-          readonly
-        >
-        <button
-          type="button"
-          @click="copyToClipboard"
-        >
-          <span class="material-symbols-outlined">
-            content_copy
-          </span>
-          <span>複製</span>
-        </button>
+          <div
+            v-if="shortUrl"
+            class="final__short__url"
+          >
+            <label for="shortUrl">
+              名言出處短網址：
+            </label>
+            <input
+              ref="shortUrlInput"
+              type="text"
+              :value="shortUrl"
+              name="shortUrl"
+              readonly
+            >
+            <button
+              type="button"
+              @click="copyToClipboard"
+            >
+              <span class="material-symbols-outlined">
+                content_copy
+              </span>
+              <span>複製</span>
+            </button>
+          </div>
+        </div>
       </div>
-
       <div class="btn__group">
-        <BaseButton>
+        <BaseButton @click="download">
           <span class="material-symbols-outlined">
             download
           </span>
@@ -82,26 +91,29 @@ const toQuotationInput = () => {
 </template>
 
 <style lang='scss' scoped>
-h2 {
-  font-size: var(--title-font-size);
-}
+.final {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-.final__image {
-  margin-top: 3rem;
-
-  img {
-    width: 100%;
-    display: block;
-    margin: 3rem auto;
+  h2 {
+    font-size: var(--title-font-size);
   }
+  .final__image {
+    margin-top: 2rem;
 
+    img {
+      width: 100%;
+      display: block;
+    }
+  }
 }
 
 .final__short__url {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 2rem;
+  margin: 3rem 0 2rem 0;
 
   label[for=shortUrl] {
     font-weight: bold;
@@ -146,8 +158,10 @@ h2 {
 }
 
 @media (min-width: 576px) {
-  h2 {
-    font-size: var(--title-font-size-pad);
+  .final {
+    h2 {
+      font-size: var(--title-font-size-pad);
+    }
   }
 
   .btn__group {
