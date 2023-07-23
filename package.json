@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@vuepic/vue-datepicker": "^5.0.1",
+    "file-saver": "^2.0.5",
     "merge-images": "^2.0.0",
     "pinia": "^2.1.3",
     "sweetalert2": "^11.7.12",
