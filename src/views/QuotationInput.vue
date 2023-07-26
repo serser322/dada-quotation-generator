@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuotationDataStore } from '../store/quotationData'
 import { storeToRefs } from 'pinia'
+import BaseStepper from '../components/BaseStepper.vue'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
 
@@ -92,6 +93,9 @@ const toImageSelection = () => {
 
 <template>
   <main>
+    <BaseStepper
+      page="quotationInput"
+    />
     <BaseCard>
       <div class="quotation">
         <div class="title">

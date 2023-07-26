@@ -3,6 +3,7 @@ import { saveAs } from 'file-saver'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuotationDataStore } from '../store/quotationData'
+import BaseStepper from '../components/BaseStepper.vue'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
 import { storeToRefs } from 'pinia'
@@ -31,6 +32,9 @@ const download = () => {
 
 <template>
   <main>
+    <BaseStepper
+      page="finalPage"
+    />
     <BaseCard>
       <div class="final">
         <div>

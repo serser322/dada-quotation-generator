@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { useQuotationDataStore } from '../store/quotationData'
 import { storeToRefs } from 'pinia'
 import sweetAlert from 'sweetalert2'
+import BaseStepper from '../components/BaseStepper.vue'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
 import mergeImages from 'merge-images'
@@ -176,12 +177,14 @@ const validate = () => {
 
 <template>
   <main>
+    <BaseStepper
+      page="sourceInput"
+    />
     <canvas
       ref="canvasEl"
       class="hide"
       width="600"
       height="574"
-      style="border: 3px solid red"
     />
     <BaseCard>
       <div class="source__input">
