@@ -131,14 +131,24 @@ const setTextOnImage = (text, canvas) => {
 
   // 超過一行，多行排列
   if (totalLines > 1) {
+    const longestTextWidth = canvas.measureText(getLongestString(textArray)).width
     textArray.forEach((element, i) => {
-      canvas.fillText(element, 20, startYPosition + i * lineHeight) // 20為x軸位置(留白)
+      canvas.fillText(element, (canvasEl.value.width - longestTextWidth) / 2 - 20, startYPosition + i * lineHeight) // 20為x軸位置(留白)，因此計算上須扣除
     })
   }
 }
 
 // 轉為全形字體
 const convertToFull = (text) => text.replace(/[!-~]/g, matchedChar => String.fromCharCode(matchedChar.charCodeAt(0) + 0xfee0))
+
+// 找出最長字串
+const getLongestString = (strArray) => {
+  let longestStr = ''
+  strArray.forEach(string => {
+    longestStr = (string.length > longestStr.length) ? string : longestStr
+  })
+  return longestStr
+}
 
 // 建立短網址，並儲存之
 const setShortUrl = async (originUrl) => {
