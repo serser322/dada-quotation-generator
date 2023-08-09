@@ -126,7 +126,7 @@ const download = () => {
 
   input[type=text] {
     border: 2px solid white;
-    width: 8.1rem;
+    width: 9.5rem;
     font-weight: 600;
   }
 
