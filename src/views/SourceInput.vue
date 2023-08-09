@@ -187,9 +187,7 @@ const validate = () => {
 
 <template>
   <main>
-    <BaseStepper
-      page="sourceInput"
-    />
+    <BaseStepper page="sourceInput" />
     <canvas
       ref="canvasEl"
       class="hide"
@@ -230,7 +228,7 @@ const validate = () => {
       <div class="info">
         <h4>此連結將自動轉為短網址，並附在圖中左下角，如下示意：</h4>
         <img
-          src="../assets/FvsC3udaUAMI4Jc.jpg"
+          src="../assets/images/source_example.png"
           alt=""
         >
         <ul>
@@ -394,6 +392,7 @@ input[type=text] {
       margin: 2rem auto;
     }
   }
+
   .invalid__text {
     font-size: var(--invalid-text-size-pad);
   }
