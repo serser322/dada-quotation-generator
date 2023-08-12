@@ -1,12 +1,20 @@
 <script setup>
 import { saveAs } from 'file-saver'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import JSConfetti from 'js-confetti'
 import { useQuotationDataStore } from '../store/quotationData'
 import BaseStepper from '../components/BaseStepper.vue'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
 import { storeToRefs } from 'pinia'
+
+// 慶祝效果
+const confetti = new JSConfetti()
+
+onMounted(() => {
+  confetti.addConfetti()
+})
 
 // Source input
 const quotationStore = useQuotationDataStore()
@@ -33,8 +41,14 @@ const download = () => {
 <template>
   <main>
     <BaseStepper page="finalPage" />
+
     <BaseCard>
       <div class="final">
+        <div>
+          <h1>
+            🎉 製作完成！
+          </h1>
+        </div>
         <div>
           <h2 for="">
             名言圖完成&下載：
