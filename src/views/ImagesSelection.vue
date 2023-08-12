@@ -28,48 +28,31 @@ const imagesData = ref([
     imageName: 'vts-2023-04-06_17h42_42.png',
     isSelected: false
   },
-  // {
-  //   imageName: 'vts-2022-11-02_06h44_01.png',
-  //   isSelected: false
-  // },
   {
-    imageName: 'vts-2022-11-02_06h44_19.png',
+    imageName: 'vts-2022-11-02_06h44_01.png',
     isSelected: false
   },
   {
     imageName: 'vts-2022-11-02_06h54_15.png',
     isSelected: false
   },
+  {
+    imageName: 'vts-2022-11-02_06h49_12.png',
+    isSelected: false
+  },
 
-  // {
-  //   imageName: 'vts-2022-11-02_06h49_47.png',
-  //   isSelected: false
-  // },
-
   {
-    imageName: 'vts-2022-11-02_06h48_00.png',
+    imageName: 'vts-2022-11-02_06h48_44.png',
     isSelected: false
   },
   {
-    imageName: 'vts-2022-11-02_06h36_59.png',
+    imageName: 'vts-2022-02-22_01h03_51.png',
     isSelected: false
   },
-  {
-    imageName: 'vts-2022-02-22_01h01_24.png',
-    isSelected: false
-  },
-  // {
-  //   imageName: 'vts-2022-01-27_11h59_44.png',
-  //   isSelected: false
-  // },
   {
     imageName: 'vts-2022-01-24_06h58_47.png',
     isSelected: false
   },
-  // {
-  //   imageName: 'vts-2021-11-21_13h11_03.png',
-  //   isSelected: false
-  // },
   {
     imageName: 'vts-2021-10-30_20h51_41.png',
     isSelected: false
@@ -134,12 +117,10 @@ const getImgUrl = function (img) {
 
 <template>
   <main>
-    <BaseStepper
-      page="imagesSelection"
-    />
+    <BaseStepper page="imagesSelection" />
     <BaseCard>
       <h2 for="">
-        請選擇此名言圖上的立繪：
+        請選擇此名言圖的立繪：
       </h2>
       <div
         class="invalid__text"
@@ -183,6 +164,7 @@ const getImgUrl = function (img) {
 
 <style lang="scss" scoped>
 h2 {
+  color: var(--secondary-yellow);
   font-size: var(--title-font-size);
 }
 
@@ -221,7 +203,7 @@ h2 {
     margin: 0.2rem;
     border: 3px solid white;
     border-radius: 1rem;
-    background-color: rgb(122, 122, 122);
+    background-color: rgb(0, 0, 0, 0.5);
     transform: scale(1.0);
     transition: transform 0.4s ease-in-out;
     overflow: hidden;
@@ -234,7 +216,7 @@ h2 {
 
     &:hover {
       cursor: pointer;
-      border: 5px solid aquamarine;
+      border: 5px solid var(--primary-yellow);
       transform: scale(1.1);
       transition: transform 0.4s ease-out;
     }
@@ -245,11 +227,11 @@ h2 {
   }
 
   div.selected {
-    border: 5px solid darksalmon;
-    box-shadow: 0 0 20px 2px darksalmon;
+    border: 5px solid var(--primary-yellow);
+    box-shadow: 0 0 20px 2px var(--primary-yellow);
 
     &:active {
-      border: 5px solid salmon;
+      border: 5px solid var(--primary-yellow);
     }
   }
 }

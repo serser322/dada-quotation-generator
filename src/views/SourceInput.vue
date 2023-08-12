@@ -219,6 +219,7 @@ const validate = () => {
           @change="updateSource"
         >
         <div
+          v-if="isSelected"
           class="invalid__text"
           :class="isValid ? 'hidden' : ''"
         >
@@ -226,7 +227,7 @@ const validate = () => {
         </div>
       </div>
       <div class="info">
-        <h4>此連結將自動轉為短網址，並附在圖中左下角，如下示意：</h4>
+        <div>此連結將自動轉為短網址，並附在圖中左下角，如下示意：</div>
         <img
           src="../assets/images/source_example.png"
           alt=""
@@ -254,6 +255,13 @@ const validate = () => {
         </span>
       </BaseButton>
     </div>
+    <div
+      v-if="isSelected"
+      class="invalid__hint invalid__text"
+      :class="isValid ? 'hidden' : ''"
+    >
+      提示：如有勾選「附上來源連結」，請貼上連結，若無則取消勾選
+    </div>
   </main>
 </template>
 
@@ -268,6 +276,8 @@ const validate = () => {
 
 .source__input {
   .title {
+    color: var(--secondary-yellow);
+
     h2 {
       font-size: var(--title-font-size);
     }
@@ -292,21 +302,22 @@ input[type=text] {
   margin-top: 1rem;
   width: 100%;
   font-size: var(--input-font-size);
-  background-color: transparent;
   border: 0;
-  border-bottom: 2px solid white;
+  border-bottom: 2px solid var(--secondary-yellow);
+  color: var(--text-color);
 
   &:focus {
     outline: 0;
-    border-bottom: 3px solid white;
+    border-bottom: 3px solid var(--secondary-yellow);
   }
 
   &:disabled {
     border-bottom: 2px solid gray;
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(0, 0, 0, 0.1);
   }
 
   &::placeholder {
+    color: var(--placeholder-color);
     font-size: var(--input-font-size);
   }
 
@@ -316,7 +327,10 @@ input[type=text] {
 }
 
 .info {
+  color: var(--secondary-yellow);
   margin-top: 1rem;
+  font-size: 1.2rem;
+  font-weight: 800;
 
   img {
     width: 100%;
@@ -329,7 +343,6 @@ input[type=text] {
 
     li {
       margin-bottom: 1rem;
-      font-weight: bold;
     }
   }
 }
@@ -348,6 +361,11 @@ input[type=text] {
   &.hidden {
     visibility: hidden;
   }
+}
+
+.invalid__hint.invalid__text {
+  float: right;
+  margin-top: 1rem;
 }
 
 @media (min-width: 576px) {

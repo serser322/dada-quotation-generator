@@ -93,15 +93,28 @@ const toImageSelection = () => {
 
 <template>
   <main>
-    <BaseStepper
-      page="quotationInput"
-    />
+    <BaseStepper page="quotationInput" />
+    <BaseCard class="example__card">
+      <div class="example">
+        <div class="title">
+          <h2>名言圖範例：</h2>
+        </div>
+        <div class="images">
+          <img src="../assets/images/example1.png">
+          <img src="../assets/images/example2.png">
+        </div>
+      </div>
+    </BaseCard>
     <BaseCard>
       <div class="quotation">
         <div class="title">
-          <h2>
-            請輸入灰妲曾說過的名言：
-          </h2>
+          <div>
+            <h2>
+              請輸入灰妲曾說過的名言：
+            </h2>
+            <small v-if="!isTextarea"><b>(因排版緣故，字數最多72字)</b></small>
+            <small v-if="isTextarea"><b>(因排版緣故，行數最多6行；每行最多12字)</b></small>
+          </div>
           <div>
             <input
               id="isTextarea"
@@ -121,7 +134,7 @@ const toImageSelection = () => {
             type="text"
             :class="isInputValid ? '' : 'invalid'"
             :value="quotation"
-            placeholder="請在此輸入名言..."
+            placeholder="請在此輸入名言金句..."
             @input="updateQuotation"
           >
           <div
@@ -201,8 +214,41 @@ const toImageSelection = () => {
 </template>
 
 <style lang="scss" scoped>
+.example__card {
+  margin-bottom: 1.5rem;
+
+  .example {
+    .title {
+      color: var(--secondary-yellow);
+      margin-bottom: 1rem;
+    }
+
+    .images {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      row-gap: 1rem;
+
+      img {
+        width: 16rem;
+        box-shadow: var(--image-shadow)
+      }
+    }
+  }
+}
+
 .quotation {
   .title {
+    color: var(--secondary-yellow);
+
+    div {
+      margin-bottom: 0.5rem;
+
+      h2 {
+        margin-bottom: 0.5rem;
+      }
+    }
+
     #isTextarea {
       accent-color: ForestGreen;
     }
@@ -223,20 +269,22 @@ input[type=text] {
   margin-top: 1rem;
   width: 100%;
   font-size: var(--input-font-size);
+  color: var(--text-color);
   background-color: transparent;
   border: 0;
-  border-bottom: 2px solid white;
+  border-bottom: 2px solid var(--secondary-yellow);
 
   &:focus {
     outline: 0;
-    border-bottom: 3px solid white;
+    border-bottom: 3px solid var(--secondary-yellow);
   }
 
   &.invalid {
-    border-bottom: 2px solid red;
+    border-bottom: 3px solid red;
   }
 
   &::placeholder {
+    color: var(--placeholder-color);
     font-size: var(--input-font-size);
   }
 
@@ -249,21 +297,24 @@ textarea {
   margin-top: 1rem;
   width: 100%;
   font-size: var(--input-font-size);
+  color: var(--text-color);
   background-color: transparent;
-  border: 2px solid white;
+  border: 2px solid var(--secondary-yellow);
   border-radius: 10px;
+  padding: 10px;
   resize: none;
 
   &:focus {
     outline: 0;
-    border-bottom: 3px solid white;
+    border: 3px solid var(--secondary-yellow);
   }
 
   &.invalid {
-    border: 2px solid red;
+    border: 3px solid red;
   }
 
   &::placeholder {
+    color: var(--placeholder-color);
     font-size: var(--input-font-size);
   }
 
@@ -275,6 +326,10 @@ textarea {
 .date {
   margin-top: 4rem;
 
+  h2 {
+    color: var(--secondary-yellow)
+  }
+
   .date__select {
     width: 100%;
 
@@ -283,6 +338,7 @@ textarea {
     }
 
     .material-symbols-outlined {
+      color: var(--secondary-yellow);
       position: absolute;
       top: 13px;
       left: 0;
@@ -310,6 +366,16 @@ h2 {
 }
 
 @media (min-width: 576px) {
+  .example__card {
+    .example {
+      .images {
+        img {
+          width: 21rem;
+        }
+      }
+    }
+  }
+
   .quotation {
     .title {
       display: flex;
@@ -360,9 +426,61 @@ h2 {
 }
 
 @media (min-width: 768px) {
+  .example__card {
+    .example {
+      .images {
+        img {
+          width: 16.5rem;
+        }
+      }
+    }
+  }
+
   .date {
     .date__select {
       width: 50%;
+    }
+  }
+}
+
+@media (min-width: 992px) {
+
+  .example__card {
+    .example {
+      .images {
+        img {
+          width: 22rem;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 1200px) {
+  .example__card {
+    .example {
+      .images {
+        justify-content: center;
+        column-gap: 3rem;
+
+        img {
+          width: 24rem;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 1440px) {
+  .example__card {
+    .example {
+      .images {
+        column-gap: 4rem;
+
+        img {
+          width: 25rem;
+        }
+      }
     }
   }
 }

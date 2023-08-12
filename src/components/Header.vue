@@ -39,7 +39,7 @@ header {
   align-items: center;
   width: 100%;
   height: 8rem;
-  background-color: var(--primary-color);
+  background-color: var(--primary-yellow);
 
   /* .header__sidebar__toggler {
     position: absolute;

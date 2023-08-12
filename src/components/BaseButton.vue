@@ -22,24 +22,32 @@ const props = defineProps({
   padding: 0.4rem 0;
   border: 4px solid white;
   border-radius: 0.8rem;
-  background-color: var(--primary-color);
+  background-color: var(--primary-yellow);
   text-align: center;
   font-size: 1.1rem;
-  font-weight: 800;
+  font-weight: 900;
   margin-top: 1rem;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
+  box-shadow: var(--element-shadow);
 
   div {
     display: flex;
     align-items: center;
-    gap:0.5rem
+    gap: 0.5rem;
+    color: #ffffff;
   }
 
   &:hover {
     cursor: pointer;
-    background-color: aquamarine;
+    background-color: var(--primary-red);
+    box-shadow: 0 0 15px rgb(223, 87, 97, 0.5);
+  }
+
+  &:active {
+    background-color: salmon;
+    box-shadow: 0 0 20px rgb(223, 87, 97, 0.7);
   }
 }
 
@@ -74,6 +82,4 @@ const props = defineProps({
     font-size: 1.4rem;
   }
 }
-
-
 </style>

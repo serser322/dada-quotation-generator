@@ -32,9 +32,7 @@ const download = () => {
 
 <template>
   <main>
-    <BaseStepper
-      page="finalPage"
-    />
+    <BaseStepper page="finalPage" />
     <BaseCard>
       <div class="final">
         <div>
@@ -99,16 +97,19 @@ const download = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: var(--secondary-yellow);
 
   h2 {
     font-size: var(--title-font-size);
   }
+
   .final__image {
     margin-top: 2rem;
 
     img {
       width: 100%;
       display: block;
+      box-shadow: var(--image-shadow)
     }
   }
 }
@@ -125,7 +126,7 @@ const download = () => {
   }
 
   input[type=text] {
-    border: 2px solid white;
+    border: 2px solid var(--secondary-yellow);
     width: 9.5rem;
     font-weight: 600;
   }
@@ -135,9 +136,10 @@ const download = () => {
     align-items: center;
     border: 0;
     border-radius: 5px;
-    background-color: var(--primary-color);
+    background-color: var(--primary-yellow);
     margin-left: 10px;
-    color: var(--text-color);
+    color: var(--primary-grey);
+    box-shadow: 1px 1px 4px rgb(0, 0, 0, 0.2);
     cursor: pointer;
 
     span {
@@ -150,12 +152,12 @@ const download = () => {
     }
 
     &:hover {
-      background-color: gold;
+      background-color: salmon;
     }
 
     &:active {
       color: white;
-      background-color: salmon;
+      background-color: var(--primary-red);
     }
   }
 

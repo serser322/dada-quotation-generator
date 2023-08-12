@@ -7,8 +7,14 @@
 
 <style lang="scss">
 :root {
-  --primary-color: rgb(251, 196, 57);
-  --text-color: #373b3e;
+  --primary-yellow: rgb(251, 196, 57);
+  --secondary-yellow: #fab802;
+  --primary-grey: #5E5A6B;
+  --secondary-grey: #A29DB3;
+  --primary-red: #DF5761;
+  /* --text-color: #373b3e; */
+  --text-color: #fab802;
+  --placeholder-color: #d4d4d4;
   --sidebar-background-color: rgb(62, 62, 62);
   --title-font-size: 1.2rem;
   --title-font-size-pad: 1.5rem;
@@ -16,6 +22,8 @@
   --invalid-text-size-pad: 0.8rem;
   --input-font-size: 1.1rem;
   --input-font-size-pad: 1.3rem;
+  --image-shadow: 0 0 10px 4px rgb(0, 0, 0, 0.25);
+  --element-shadow: 3px 3px 4px rgb(0, 0, 0, 0.2);
 }
 
 * {
@@ -24,7 +32,7 @@
 }
 
 html {
-  background-color: rgb(223, 223, 223);
+  background-color: #ECECEC;
   height: 100%;
 }
 
