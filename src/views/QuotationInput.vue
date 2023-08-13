@@ -17,7 +17,7 @@ const MAX_CHARACTERS_PER_LINE = 12
 
 // Quotation input / textarea
 const { quotation, date } = storeToRefs(quotationStore)
-const isTextarea = ref(false)
+const isTextarea = ref(true)
 
 const isInputValid = ref(true)
 const inputValidateText = ref('')
@@ -112,8 +112,8 @@ const toImageSelection = () => {
             <h2>
               請輸入灰妲曾說過的名言：
             </h2>
-            <small v-if="!isTextarea"><b>(因排版緣故，字數最多72字)</b></small>
-            <small v-if="isTextarea"><b>(因排版緣故，行數最多6行；每行最多12字)</b></small>
+            <small v-if="!isTextarea"><b>(排版緣故，字型會轉全型；字數最多72字)</b></small>
+            <small v-if="isTextarea"><b>(排版緣故，字型會轉全型；行數最多6行；每行最多12字)</b></small>
           </div>
           <div>
             <input
