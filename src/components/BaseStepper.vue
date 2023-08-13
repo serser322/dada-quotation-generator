@@ -63,6 +63,9 @@ const steppers = [
   display: flex;
   justify-content: center;
   margin-bottom: 2rem;
+  position: relative;
+  opacity: 0;
+  animation: stepperAnimate 0.6s ease-out 1s forwards;
 
   .stepper__item {
     display: flex;
@@ -115,6 +118,17 @@ const steppers = [
   }
 }
 
+@keyframes stepperAnimate {
+  0% {
+    bottom: 20px;
+    opacity: 0%;
+  }
+
+  100% {
+    bottom: 0px;
+    opacity: 100%;
+  }
+}
 
 @media (min-width: 768px) {
   .stepper__group {

@@ -17,6 +17,22 @@
   padding: 2rem 1.5rem;
   border-radius: 2rem;
   box-shadow: var(--element-shadow);
+  position: relative;
+  top: 30px;
+  opacity: 0%;
+  animation: cardAnimate 0.6s ease-in-out 1s forwards;
+
+  @keyframes cardAnimate {
+    0% {
+      top: 30px;
+      opacity: 0%;
+    }
+
+    100% {
+      top: 0px;
+      opacity: 100%;
+    }
+  }
 
 }
 

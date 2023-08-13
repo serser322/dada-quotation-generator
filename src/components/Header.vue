@@ -70,6 +70,7 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
+    animation: logoAnimate 0.5s ease-out;
 
     img {
       height: 100%;
@@ -82,9 +83,38 @@ header {
     height: 100%;
     display: flex;
     justify-content: center;
+    position: relative;
+    opacity: 0;
+    animation: img2Animate 0.5s ease-out 0.5s forwards;
 
     img {
       height: 100%;
+    }
+  }
+
+  @keyframes logoAnimate {
+    from {
+      height: 0;
+    }
+
+    70% {
+      height: 80%;
+    }
+
+    to {
+      height: 75%;
+    }
+  }
+
+  @keyframes img2Animate {
+    0% {
+      left: 200px;
+      opacity: 0%;
+    }
+
+    100% {
+      left: 0;
+      opacity: 100%;
     }
   }
 
@@ -99,6 +129,9 @@ header {
       justify-content: center;
       align-items: end;
       margin-left: 0.5rem;
+      position: relative;
+      opacity: 0;
+      animation: img1Animate 0.5s ease-out 0.5s forwards;
 
       img {
         /* height: 80%; */
@@ -109,13 +142,34 @@ header {
 
     .header__logo {
       height: 65%;
+      animation: logoAnimate 0.5s ease-out;
+    }
 
-      img {
-        /* width: 100%; */
+    @keyframes img1Animate {
+      0% {
+        right: 200px;
+        opacity: 0%;
+      }
+
+      100% {
+        right: 0;
+        opacity: 100%;
       }
     }
 
-    .header__image2 {}
+    @keyframes logoAnimate {
+      0% {
+        height: 0;
+      }
+
+      70% {
+        height: 69%;
+      }
+
+      100% {
+        height: 65%;
+      }
+    }
 
   }
 
@@ -132,6 +186,21 @@ header {
 
     .header__logo {
       height: 75%;
+      animation: logoAnimate 0.5s ease-out;
+    }
+
+    @keyframes logoAnimate {
+      from {
+        height: 0;
+      }
+
+      60% {
+        height: 80%;
+      }
+
+      to {
+        height: 75%;
+      }
     }
 
   }
@@ -147,6 +216,20 @@ header {
 
     .header__logo {
       height: 85%;
+    }
+
+    @keyframes logoAnimate {
+      0% {
+        height: 0;
+      }
+
+      60% {
+        height: 95%;
+      }
+
+      100% {
+        height: 85%;
+      }
     }
 
   }

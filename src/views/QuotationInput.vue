@@ -139,7 +139,7 @@ const toImageSelection = () => {
           >
           <div
             class="invalid__text"
-            :class="isInputValid ? 'hidden' : ''"
+            :class="isInputValid ? 'hidden' : 'showHint'"
           >
             提示：{{ inputValidateText }}
           </div>
@@ -157,7 +157,7 @@ const toImageSelection = () => {
           />
           <div
             class="invalid__text"
-            :class="isTextareaValid ? 'hidden' : ''"
+            :class="isTextareaValid ? 'hidden' : 'showHint'"
           >
             提示：{{ textareaValidateText }}
           </div>
@@ -194,7 +194,7 @@ const toImageSelection = () => {
           </VueDatePicker>
           <div
             class="invalid__text"
-            :class="isDateValid ? 'hidden' : ''"
+            :class="isDateValid ? 'hidden' : 'showHint'"
           >
             提示：此欄位必填
           </div>
@@ -355,14 +355,31 @@ h2 {
   color: red;
   visibility: visible;
   margin-top: 3px;
+  position: relative;
 
   &.hidden {
     visibility: hidden;
+  }
+
+  &.showHint {
+    animation: invalidTextAnimate 0.3s ease-out;
   }
 }
 
 .btn-next {
   margin-left: auto
+}
+
+@keyframes invalidTextAnimate {
+  0% {
+    opacity: 0;
+    bottom: 10px;
+  }
+
+  100% {
+    opacity: 100%;
+    bottom: 0;
+  }
 }
 
 @media (min-width: 576px) {
