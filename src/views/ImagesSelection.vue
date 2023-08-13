@@ -82,6 +82,7 @@ const selectImage = (img) => {
   })
   img.isSelected = true
   quotationStore.setImage(img.imageName)
+  isValid.value = true
 }
 
 // 標記已選擇的立繪
@@ -124,7 +125,7 @@ const getImgUrl = function (img) {
       </h2>
       <div
         class="invalid__text"
-        :class="isValid ? 'hidden' : ''"
+        :class="isValid ? 'hidden' : 'showHint'"
       >
         提示：需選擇一張立繪
       </div>
@@ -174,9 +175,41 @@ h2 {
   visibility: visible;
   margin-top: -10px;
   margin-bottom: 10px;
+  position: relative;
 
   &.hidden {
-    visibility: hidden;
+    /* visibility: hidden; */
+    opacity: 0%;
+    animation: hiddenAnimate 0.3s ease-out forwards;
+  }
+
+  &.showHint {
+    opacity: 0;
+    animation: showHintAnimate 0.3s ease-out forwards;
+  }
+
+  @keyframes showHintAnimate {
+    0% {
+      opacity: 0%;
+      bottom: 10px;
+    }
+
+    100% {
+      opacity: 100%;
+      bottom: 0;
+    }
+  }
+
+  @keyframes hiddenAnimate {
+    0% {
+      opacity: 100%;
+      bottom: 0px;
+    }
+
+    100% {
+      opacity: 0%;
+      bottom: 10px;
+    }
   }
 }
 

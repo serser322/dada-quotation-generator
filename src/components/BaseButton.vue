@@ -31,6 +31,9 @@ const props = defineProps({
   display: flex;
   justify-content: center;
   box-shadow: var(--element-shadow);
+  position: relative;
+  opacity: 0%;
+  animation: buttonAnimate 0.3s ease-out forwards;
 
   div {
     display: flex;
@@ -48,6 +51,18 @@ const props = defineProps({
   &:active {
     background-color: salmon;
     box-shadow: 0 0 20px rgb(223, 87, 97, 0.7);
+  }
+}
+
+@keyframes buttonAnimate {
+  0% {
+    opacity: 0%;
+    right: 20px;
+  }
+
+  100% {
+    opacity: 100%;
+    right: 0;
   }
 }
 
@@ -80,6 +95,19 @@ const props = defineProps({
     border: 6px solid white;
     padding: 0.8rem 0;
     font-size: 1.4rem;
+    opacity: 0%;
+  }
+
+  @keyframes buttonAnimate {
+    0% {
+      opacity: 0%;
+      right: 20px;
+    }
+
+    100% {
+      opacity: 100%;
+      right: 0;
+    }
   }
 }
 </style>

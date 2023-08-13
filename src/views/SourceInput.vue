@@ -214,6 +214,7 @@ const validate = () => {
         <input
           type="text"
           :value="isSelected ? sourceUrl : '無連結'"
+          :class="isValid ? '' : 'invalid'"
           :placeholder="isSelected ? '直播連結(含秒數連結佳)、推特連結等' : '無連結'"
           :disabled="!isSelected"
           @change="updateSource"
@@ -221,7 +222,7 @@ const validate = () => {
         <div
           v-if="isSelected"
           class="invalid__text"
-          :class="isValid ? 'hidden' : ''"
+          :class="isValid ? 'hidden' : 'showHint'"
         >
           提示：如有勾選「附上來源連結」，請貼上來源連結
         </div>
@@ -258,7 +259,7 @@ const validate = () => {
     <div
       v-if="isSelected"
       class="invalid__hint invalid__text"
-      :class="isValid ? 'hidden' : ''"
+      :class="isValid ? 'hidden' : 'showHint'"
     >
       提示：如有勾選「附上來源連結」，請貼上連結，若無則取消勾選
     </div>
@@ -311,6 +312,10 @@ input[type=text] {
     border-bottom: 3px solid var(--secondary-yellow);
   }
 
+  &.invalid {
+    border-bottom: 3px solid red;
+  }
+
   &:disabled {
     border-bottom: 2px solid gray;
     background-color: rgba(0, 0, 0, 0.1);
@@ -357,9 +362,41 @@ input[type=text] {
   color: red;
   visibility: visible;
   margin-top: 5px;
+  position: relative;
 
   &.hidden {
     visibility: hidden;
+    /* opacity: 0%;
+    animation: hiddenAnimate 0.3s ease-out forwards; */
+  }
+
+  &.showHint {
+    opacity: 0;
+    animation: showHintAnimate 0.3s ease-out forwards;
+  }
+
+  @keyframes showHintAnimate {
+    0% {
+      opacity: 0%;
+      bottom: 10px;
+    }
+
+    100% {
+      opacity: 100%;
+      bottom: 0;
+    }
+  }
+
+  @keyframes hiddenAnimate {
+    0% {
+      opacity: 100%;
+      bottom: 0px;
+    }
+
+    100% {
+      opacity: 0%;
+      bottom: 10px;
+    }
   }
 }
 

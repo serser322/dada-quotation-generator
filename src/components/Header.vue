@@ -216,6 +216,7 @@ header {
 
     .header__logo {
       height: 85%;
+      animation: logoAnimate 0.5s ease-out;
     }
 
     @keyframes logoAnimate {

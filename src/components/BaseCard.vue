@@ -20,7 +20,7 @@
   position: relative;
   top: 30px;
   opacity: 0%;
-  animation: cardAnimate 0.6s ease-in-out 1s forwards;
+  animation: cardAnimate 0.6s ease-in-out forwards;
 
   @keyframes cardAnimate {
     0% {

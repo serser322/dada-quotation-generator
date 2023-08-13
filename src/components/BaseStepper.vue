@@ -65,7 +65,7 @@ const steppers = [
   margin-bottom: 2rem;
   position: relative;
   opacity: 0;
-  animation: stepperAnimate 0.6s ease-out 1s forwards;
+  animation: stepperAnimate 0.6s ease-out forwards;
 
   .stepper__item {
     display: flex;

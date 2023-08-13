@@ -359,10 +359,13 @@ h2 {
 
   &.hidden {
     visibility: hidden;
+    /* opacity: 0%; */
+    /* animation: hiddenAnimate 0.3s ease-out forwards; */
   }
 
   &.showHint {
-    animation: invalidTextAnimate 0.3s ease-out;
+    opacity: 0;
+    animation: showHintAnimate 0.3s ease-out forwards;
   }
 }
 
@@ -370,15 +373,27 @@ h2 {
   margin-left: auto
 }
 
-@keyframes invalidTextAnimate {
+@keyframes showHintAnimate {
   0% {
-    opacity: 0;
+    opacity: 0%;
     bottom: 10px;
   }
 
   100% {
     opacity: 100%;
     bottom: 0;
+  }
+}
+
+@keyframes hiddenAnimate {
+  0% {
+    opacity: 100%;
+    bottom: 0px;
+  }
+
+  100% {
+    opacity: 0%;
+    bottom: 10px;
   }
 }
 
