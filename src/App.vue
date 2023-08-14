@@ -11,6 +11,7 @@
   --secondary-yellow: #fab802;
   --primary-grey: #5E5A6B;
   --secondary-grey: #A29DB3;
+  --tertiary-grey: #414141;
   --primary-red: #DF5761;
   /* --text-color: #373b3e; */
   --text-color: #fab802;
