@@ -1,5 +1,6 @@
 <script setup>
 import Header from '../components/Header.vue'
+import Footer from '../components/Footer.vue'
 // import SidebarMobile from '../components/SidebarMobile.vue'
 // import Sidebar from '../components/Sidebar.vue'
 
@@ -14,27 +15,16 @@ import Header from '../components/Header.vue'
       <div class="container__warp">
         <router-view />
       </div>
+      <Footer />
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-/* @mixin screen-mobile {
-  @media (min-width:var(--screen-mobile)) {
-    @content
-  }
-};
-
-@mixin screen-pad {
-  @media (min-width: var(--screen-pad)) {
-    @content
-  }
-} */
-
 .container {
   display: flex;
   height: auto;
-  min-height: 100%;
+  /* min-height: 100vh; */
 
   .sidebar {
     display: none;
@@ -46,6 +36,7 @@ import Header from '../components/Header.vue'
 
   div {
     width: 100%;
+    min-height: 75vh;
     /* margin-left: 3.5rem; //保留空間給sidebar */
 
     @media (min-width: 576px) {

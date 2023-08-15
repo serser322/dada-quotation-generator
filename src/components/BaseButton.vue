@@ -22,24 +22,47 @@ const props = defineProps({
   padding: 0.4rem 0;
   border: 4px solid white;
   border-radius: 0.8rem;
-  background-color: var(--primary-color);
+  background-color: var(--primary-yellow);
   text-align: center;
   font-size: 1.1rem;
-  font-weight: 800;
+  font-weight: 900;
   margin-top: 1rem;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
+  box-shadow: var(--element-shadow);
+  position: relative;
+  opacity: 0%;
+  animation: buttonAnimate 0.3s ease-out forwards;
 
   div {
     display: flex;
     align-items: center;
-    gap:0.5rem
+    gap: 0.5rem;
+    color: #ffffff;
   }
 
   &:hover {
     cursor: pointer;
-    background-color: aquamarine;
+    background-color: var(--primary-red);
+    box-shadow: 0 0 15px rgb(223, 87, 97, 0.5);
+  }
+
+  &:active {
+    background-color: salmon;
+    box-shadow: 0 0 20px rgb(223, 87, 97, 0.7);
+  }
+}
+
+@keyframes buttonAnimate {
+  0% {
+    opacity: 0%;
+    right: 20px;
+  }
+
+  100% {
+    opacity: 100%;
+    right: 0;
   }
 }
 
@@ -72,8 +95,19 @@ const props = defineProps({
     border: 6px solid white;
     padding: 0.8rem 0;
     font-size: 1.4rem;
+    opacity: 0%;
+  }
+
+  @keyframes buttonAnimate {
+    0% {
+      opacity: 0%;
+      right: 20px;
+    }
+
+    100% {
+      opacity: 100%;
+      right: 0;
+    }
   }
 }
-
-
 </style>

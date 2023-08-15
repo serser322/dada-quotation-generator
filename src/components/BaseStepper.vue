@@ -34,18 +34,19 @@ const steppers = [
       v-for="(stepperItem, index) in steppers"
       :key="stepperItem.title"
       class="stepper__item"
-      :class="{stepper__item__last: index === steppers.length - 1} "
+      :class="{ stepper__item__last: index === steppers.length - 1 }"
     >
-      <div
-        class="stepper"
-      >
+      <div class="stepper">
         <div
           class="stepper__order"
-          :class="{stepper__active: page === stepperItem.key }"
+          :class="{ stepper__active: page === stepperItem.key }"
         >
           {{ index + 1 }}
         </div>
-        <div class="stepper__title">
+        <div
+          class="stepper__title"
+          :class="{ stepper__active: page === stepperItem.key }"
+        >
           {{ stepperItem.title }}
         </div>
       </div>
@@ -54,42 +55,6 @@ const steppers = [
         class="stepper__line"
       />
     </div>
-
-    <!-- <div class="stepper">
-      <div class="stepper__order">
-        1
-      </div>
-      <div class="stepper__title">
-        名言/日期
-      </div>
-    </div>
-    <div class="stepper__line" />
-    <div class="stepper">
-      <div class="stepper__order">
-        2
-      </div>
-      <div class="stepper__title">
-        選擇立繪
-      </div>
-    </div>
-    <div class="stepper__line" />
-    <div class="stepper">
-      <div class="stepper__order">
-        3
-      </div>
-      <div class="stepper__title">
-        輸入來源
-      </div>
-    </div>
-    <div class="stepper__line" />
-    <div class="stepper">
-      <div class="stepper__order">
-        4
-      </div>
-      <div class="stepper__title">
-        完成製圖
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -98,6 +63,9 @@ const steppers = [
   display: flex;
   justify-content: center;
   margin-bottom: 2rem;
+  position: relative;
+  opacity: 0;
+  animation: stepperAnimate 0.6s ease-out forwards;
 
   .stepper__item {
     display: flex;
@@ -109,7 +77,7 @@ const steppers = [
       align-items: center;
       gap: 0.8rem;
       font-size: 0.8rem;
-      width:3rem;
+      width: 3rem;
 
       .stepper__order {
         display: flex;
@@ -117,19 +85,25 @@ const steppers = [
         align-items: center;
         width: 25px;
         height: 25px;
-        background-color: dodgerblue;
+        background-color: var(--primary-grey);
+        color: #fff;
         border-radius: 3rem;
       }
 
       .stepper__order.stepper__active {
-        background-color: green;
+        background-color: var(--primary-red);
       }
     }
 
     .stepper__title {
-      white-space: nowrap
+      white-space: nowrap;
+      font-weight: 600;
+      color: var(--primary-grey);
     }
 
+    .stepper__title.stepper__active {
+      color: var(--primary-red)
+    }
   }
 
   .stepper__item__last {
@@ -139,8 +113,20 @@ const steppers = [
   .stepper__line {
     width: 100%;
     height: 1px;
-    border: 1px solid black;
+    border: 1px solid var(--secondary-grey);
     margin-top: 12.5px
+  }
+}
+
+@keyframes stepperAnimate {
+  0% {
+    bottom: 20px;
+    opacity: 0%;
+  }
+
+  100% {
+    bottom: 0px;
+    opacity: 100%;
   }
 }
 
@@ -150,19 +136,17 @@ const steppers = [
 
     .stepper__item {
       .stepper {
-      font-size: 1.1rem;
+        font-size: 1.1rem;
 
-      .stepper__order {
-        width: 32px;
-        height: 32px;
-        background-color: dodgerblue;
-
+        .stepper__order {
+          width: 32px;
+          height: 32px;
+        }
       }
-    }
 
-    .stepper__line {
-      margin-top: 16px
-    }
+      .stepper__line {
+        margin-top: 16px
+      }
     }
   }
 }

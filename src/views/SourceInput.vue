@@ -97,7 +97,7 @@ const getTextImage = (textContent) => {
   // 日期字串
   if (textContent === 'date') {
     canvasContext.font = '30px Noto Sans CJK TC'
-    const dateString = quotationStore.formatDate(date.value, ' . ')
+    const dateString = date.value ? quotationStore.formatDate(date.value, ' . ') : ''
     canvasContext.fillText(`${dateString}`, 370, 485)
   }
 
@@ -213,20 +213,29 @@ const validate = () => {
         </div>
         <input
           type="text"
-          :value="isSelected ? sourceUrl : '無連結'"
+          :value="isSelected ? sourceUrl : ''"
+          :class="isValid ? '' : 'invalid'"
           :placeholder="isSelected ? '直播連結(含秒數連結佳)、推特連結等' : '無連結'"
           :disabled="!isSelected"
           @change="updateSource"
         >
         <div
+          v-show="isSelected"
           class="invalid__text"
-          :class="isValid ? 'hidden' : ''"
+          :class="isValid ? 'hidden' : 'showHint'"
         >
           提示：如有勾選「附上來源連結」，請貼上來源連結
         </div>
+        <!-- (底下div為若上方因v-show讓element消失後，所預留之空間) -->
+        <div
+          v-show="!isSelected"
+          class="invalid__text hidden"
+        >
+          (預留空間)
+        </div>
       </div>
       <div class="info">
-        <h4>此連結將自動轉為短網址，並附在圖中左下角，如下示意：</h4>
+        <div>此連結將自動轉為短網址，並附在圖中左下角，如下示意：</div>
         <img
           src="../assets/images/source_example.png"
           alt=""
@@ -254,6 +263,13 @@ const validate = () => {
         </span>
       </BaseButton>
     </div>
+    <div
+      v-if="isSelected"
+      class="invalid__hint invalid__text"
+      :class="isValid ? 'hidden' : 'showHint'"
+    >
+      提示：如有勾選「附上來源連結」，請貼上連結，若無則取消勾選
+    </div>
   </main>
 </template>
 
@@ -268,6 +284,8 @@ const validate = () => {
 
 .source__input {
   .title {
+    color: var(--secondary-yellow);
+
     h2 {
       font-size: var(--title-font-size);
     }
@@ -292,21 +310,26 @@ input[type=text] {
   margin-top: 1rem;
   width: 100%;
   font-size: var(--input-font-size);
-  background-color: transparent;
   border: 0;
-  border-bottom: 2px solid white;
+  border-bottom: 2px solid var(--secondary-yellow);
+  color: var(--text-color);
 
   &:focus {
     outline: 0;
-    border-bottom: 3px solid white;
+    border-bottom: 3px solid var(--secondary-yellow);
+  }
+
+  &.invalid {
+    border-bottom: 3px solid red;
   }
 
   &:disabled {
     border-bottom: 2px solid gray;
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(0, 0, 0, 0.06);
   }
 
   &::placeholder {
+    color: var(--placeholder-color);
     font-size: var(--input-font-size);
   }
 
@@ -316,7 +339,10 @@ input[type=text] {
 }
 
 .info {
+  color: var(--secondary-yellow);
   margin-top: 1rem;
+  font-size: 1.2rem;
+  font-weight: 800;
 
   img {
     width: 100%;
@@ -329,7 +355,6 @@ input[type=text] {
 
     li {
       margin-bottom: 1rem;
-      font-weight: bold;
     }
   }
 }
@@ -344,10 +369,47 @@ input[type=text] {
   color: red;
   visibility: visible;
   margin-top: 5px;
+  position: relative;
 
   &.hidden {
     visibility: hidden;
+    /* opacity: 0%;
+    animation: hiddenAnimate 0.3s ease-out forwards; */
   }
+
+  &.showHint {
+    opacity: 0;
+    animation: showHintAnimate 0.3s ease-out forwards;
+  }
+
+  @keyframes showHintAnimate {
+    0% {
+      opacity: 0%;
+      bottom: 10px;
+    }
+
+    100% {
+      opacity: 100%;
+      bottom: 0;
+    }
+  }
+
+  @keyframes hiddenAnimate {
+    0% {
+      opacity: 100%;
+      bottom: 0px;
+    }
+
+    100% {
+      opacity: 0%;
+      bottom: 10px;
+    }
+  }
+}
+
+.invalid__hint.invalid__text {
+  float: right;
+  margin-top: 1rem;
 }
 
 @media (min-width: 576px) {

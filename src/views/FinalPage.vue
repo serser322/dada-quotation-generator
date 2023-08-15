@@ -1,12 +1,20 @@
 <script setup>
 import { saveAs } from 'file-saver'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import JSConfetti from 'js-confetti'
 import { useQuotationDataStore } from '../store/quotationData'
 import BaseStepper from '../components/BaseStepper.vue'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
 import { storeToRefs } from 'pinia'
+
+// 慶祝效果
+const confetti = new JSConfetti()
+
+onMounted(() => {
+  confetti.addConfetti()
+})
 
 // Source input
 const quotationStore = useQuotationDataStore()
@@ -32,11 +40,15 @@ const download = () => {
 
 <template>
   <main>
-    <BaseStepper
-      page="finalPage"
-    />
+    <BaseStepper page="finalPage" />
+
     <BaseCard>
       <div class="final">
+        <div>
+          <h1>
+            🎉 製作完成！
+          </h1>
+        </div>
         <div>
           <h2 for="">
             名言圖完成&下載：
@@ -99,16 +111,19 @@ const download = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: var(--secondary-yellow);
 
   h2 {
     font-size: var(--title-font-size);
   }
+
   .final__image {
     margin-top: 2rem;
 
     img {
       width: 100%;
       display: block;
+      box-shadow: var(--image-shadow)
     }
   }
 }
@@ -125,7 +140,7 @@ const download = () => {
   }
 
   input[type=text] {
-    border: 2px solid white;
+    border: 2px solid var(--secondary-yellow);
     width: 9.5rem;
     font-weight: 600;
   }
@@ -135,9 +150,10 @@ const download = () => {
     align-items: center;
     border: 0;
     border-radius: 5px;
-    background-color: var(--primary-color);
+    background-color: var(--primary-yellow);
     margin-left: 10px;
-    color: var(--text-color);
+    color: var(--primary-grey);
+    box-shadow: 1px 1px 4px rgb(0, 0, 0, 0.2);
     cursor: pointer;
 
     span {
@@ -150,12 +166,12 @@ const download = () => {
     }
 
     &:hover {
-      background-color: gold;
+      background-color: salmon;
     }
 
     &:active {
       color: white;
-      background-color: salmon;
+      background-color: var(--primary-red);
     }
   }
 

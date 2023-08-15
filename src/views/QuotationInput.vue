@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuotationDataStore } from '../store/quotationData'
 import { storeToRefs } from 'pinia'
@@ -17,7 +17,7 @@ const MAX_CHARACTERS_PER_LINE = 12
 
 // Quotation input / textarea
 const { quotation, date } = storeToRefs(quotationStore)
-const isTextarea = ref(false)
+const isTextarea = ref(true)
 
 const isInputValid = ref(true)
 const inputValidateText = ref('')
@@ -72,36 +72,57 @@ const updateQuotation = (event) => {
 const isLineCharactersOver = (textArray) => textArray.some(text => text.length > MAX_CHARACTERS_PER_LINE)
 
 // Date input
+const hasDate = ref(true)
 const isDateValid = ref(true)
 const validateDate = (data) => {
   isDateValid.value = !!data
 }
 const updateDate = (modelData) => {
   date.value = modelData
-  validateDate(modelData)
+  hasDate.value && validateDate(modelData)
   quotationStore.setDate(modelData)
 }
+
+watch(hasDate, newValue => {
+  if (!newValue) {
+    quotationStore.setDate(null)
+    isDateValid.value = true
+  }
+})
 
 // Button router
 const router = useRouter()
 const toImageSelection = () => {
   validateQuotation(quotation.value)
-  validateDate(date.value)
+  hasDate.value && validateDate(date.value)
   if ((isInputValid.value || isTextareaValid.value) && isDateValid.value) { router.push({ name: 'ImagesSelection' }) }
 }
 </script>
 
 <template>
   <main>
-    <BaseStepper
-      page="quotationInput"
-    />
+    <BaseStepper page="quotationInput" />
+    <BaseCard class="example__card">
+      <div class="example">
+        <div class="title">
+          <h2>名言圖範例：</h2>
+        </div>
+        <div class="images">
+          <img src="../assets/images/example1.png">
+          <img src="../assets/images/example2.png">
+        </div>
+      </div>
+    </BaseCard>
     <BaseCard>
       <div class="quotation">
         <div class="title">
-          <h2>
-            請輸入灰妲曾說過的名言：
-          </h2>
+          <div>
+            <h2>
+              請輸入灰妲曾說過的名言：
+            </h2>
+            <small v-if="!isTextarea"><b>(排版緣故，字型會轉全型；字數最多72字)</b></small>
+            <small v-if="isTextarea"><b>(排版緣故，字型會轉全型；行數最多6行；每行最多12字)</b></small>
+          </div>
           <div>
             <input
               id="isTextarea"
@@ -121,12 +142,12 @@ const toImageSelection = () => {
             type="text"
             :class="isInputValid ? '' : 'invalid'"
             :value="quotation"
-            placeholder="請在此輸入名言..."
+            placeholder="請在此輸入名言金句..."
             @input="updateQuotation"
           >
           <div
             class="invalid__text"
-            :class="isInputValid ? 'hidden' : ''"
+            :class="isInputValid ? 'hidden' : 'showHint'"
           >
             提示：{{ inputValidateText }}
           </div>
@@ -144,7 +165,7 @@ const toImageSelection = () => {
           />
           <div
             class="invalid__text"
-            :class="isTextareaValid ? 'hidden' : ''"
+            :class="isTextareaValid ? 'hidden' : 'showHint'"
           >
             提示：{{ textareaValidateText }}
           </div>
@@ -152,27 +173,42 @@ const toImageSelection = () => {
       </div>
 
       <div class="date">
-        <h2>
-          請選擇此名言金句誕生日期：
-        </h2>
+        <div class="title">
+          <h2>
+            請選擇此名言金句誕生日期：
+          </h2>
+          <div>
+            <input
+              id="hasDate"
+              v-model="hasDate"
+              type="checkbox"
+            >
+            <label for="hasDate">
+              附上日期
+            </label>
+          </div>
+        </div>
         <div class="date__select">
           <VueDatePicker
-            :model-value="date"
+            :model-value="hasDate? date: null"
             :enable-time-picker="false"
             auto-apply
             locale="zh-tw"
-            placeholder="請選擇日期"
             dark
             :format="quotationStore.formatDate(date, '/')"
             :day-names="['一', '二', '三', '四', '五', '六', '日']"
+            :disabled="!hasDate"
+            :teleport="true"
             @update:model-value="updateDate"
           >
             <template #dp-input="{ value }">
               <input
                 class="date__input"
                 type="text"
+                readonly
                 :value="value"
-                placeholder="請選擇日期"
+                :placeholder="hasDate ? '請選擇日期' : '無日期'"
+                :disabled="!hasDate"
               >
               <i class="material-symbols-outlined">
                 calendar_month
@@ -181,7 +217,7 @@ const toImageSelection = () => {
           </VueDatePicker>
           <div
             class="invalid__text"
-            :class="isDateValid ? 'hidden' : ''"
+            :class="isDateValid ? 'hidden' : 'showHint'"
           >
             提示：此欄位必填
           </div>
@@ -201,8 +237,41 @@ const toImageSelection = () => {
 </template>
 
 <style lang="scss" scoped>
+.example__card {
+  margin-bottom: 1.5rem;
+
+  .example {
+    .title {
+      color: var(--secondary-yellow);
+      margin-bottom: 1rem;
+    }
+
+    .images {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      row-gap: 1rem;
+
+      img {
+        width: 16rem;
+        box-shadow: var(--image-shadow)
+      }
+    }
+  }
+}
+
 .quotation {
   .title {
+    color: var(--secondary-yellow);
+
+    div {
+      margin-bottom: 0.5rem;
+
+      h2 {
+        margin-bottom: 0.5rem;
+      }
+    }
+
     #isTextarea {
       accent-color: ForestGreen;
     }
@@ -223,20 +292,22 @@ input[type=text] {
   margin-top: 1rem;
   width: 100%;
   font-size: var(--input-font-size);
+  color: var(--text-color);
   background-color: transparent;
   border: 0;
-  border-bottom: 2px solid white;
+  border-bottom: 2px solid var(--secondary-yellow);
 
   &:focus {
     outline: 0;
-    border-bottom: 3px solid white;
+    border-bottom: 3px solid var(--secondary-yellow);
   }
 
   &.invalid {
-    border-bottom: 2px solid red;
+    border-bottom: 3px solid red;
   }
 
   &::placeholder {
+    color: var(--placeholder-color);
     font-size: var(--input-font-size);
   }
 
@@ -249,21 +320,24 @@ textarea {
   margin-top: 1rem;
   width: 100%;
   font-size: var(--input-font-size);
+  color: var(--text-color);
   background-color: transparent;
-  border: 2px solid white;
+  border: 2px solid var(--secondary-yellow);
   border-radius: 10px;
+  padding: 10px;
   resize: none;
 
   &:focus {
     outline: 0;
-    border-bottom: 3px solid white;
+    border: 3px solid var(--secondary-yellow);
   }
 
   &.invalid {
-    border: 2px solid red;
+    border: 3px solid red;
   }
 
   &::placeholder {
+    color: var(--placeholder-color);
     font-size: var(--input-font-size);
   }
 
@@ -274,15 +348,42 @@ textarea {
 
 .date {
   margin-top: 4rem;
+  .title {
+    color: var(--secondary-yellow);
+    h2, div {
+      margin-bottom: 0.5rem;
+    }
+
+    #hasDate {
+      accent-color: ForestGreen;
+    }
+
+    input[type=checkbox] {
+      transform: scale(1.3);
+      margin-right: 2px;
+    }
+
+    label[for=hasDate] {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+  }
 
   .date__select {
     width: 100%;
 
     .date__input {
       padding-left: 2.5rem;
+
+      &:disabled {
+    border-bottom: 2px solid gray;
+    background-color: rgba(0, 0, 0, 0.06);
+  }
+
     }
 
     .material-symbols-outlined {
+      color: var(--secondary-yellow);
       position: absolute;
       top: 13px;
       left: 0;
@@ -299,9 +400,17 @@ h2 {
   color: red;
   visibility: visible;
   margin-top: 3px;
+  position: relative;
 
   &.hidden {
     visibility: hidden;
+    /* opacity: 0%; */
+    /* animation: hiddenAnimate 0.3s ease-out forwards; */
+  }
+
+  &.showHint {
+    opacity: 0;
+    animation: showHintAnimate 0.3s ease-out forwards;
   }
 }
 
@@ -309,7 +418,41 @@ h2 {
   margin-left: auto
 }
 
+@keyframes showHintAnimate {
+  0% {
+    opacity: 0%;
+    bottom: 10px;
+  }
+
+  100% {
+    opacity: 100%;
+    bottom: 0;
+  }
+}
+
+@keyframes hiddenAnimate {
+  0% {
+    opacity: 100%;
+    bottom: 0px;
+  }
+
+  100% {
+    opacity: 0%;
+    bottom: 10px;
+  }
+}
+
 @media (min-width: 576px) {
+  .example__card {
+    .example {
+      .images {
+        img {
+          width: 21rem;
+        }
+      }
+    }
+  }
+
   .quotation {
     .title {
       display: flex;
@@ -342,6 +485,24 @@ h2 {
   }
 
   .date {
+    .title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      div {
+        margin-top: 1.5rem;
+      }
+
+      input[type=checkbox] {
+        transform: scale(1.6);
+        margin-right: 5px;
+      }
+
+      label[for=hasDate] {
+        font-size: 1.2rem;
+      }
+    }
     .date__select {
       .material-symbols-outlined {
         position: absolute;
@@ -360,9 +521,61 @@ h2 {
 }
 
 @media (min-width: 768px) {
+  .example__card {
+    .example {
+      .images {
+        img {
+          width: 16.5rem;
+        }
+      }
+    }
+  }
+
   .date {
     .date__select {
       width: 50%;
+    }
+  }
+}
+
+@media (min-width: 992px) {
+
+  .example__card {
+    .example {
+      .images {
+        img {
+          width: 22rem;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 1200px) {
+  .example__card {
+    .example {
+      .images {
+        justify-content: center;
+        column-gap: 3rem;
+
+        img {
+          width: 24rem;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 1440px) {
+  .example__card {
+    .example {
+      .images {
+        column-gap: 4rem;
+
+        img {
+          width: 25rem;
+        }
+      }
     }
   }
 }
