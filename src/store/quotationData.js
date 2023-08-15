@@ -2,6 +2,12 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useQuotationDataStore = defineStore('quotationData', () => {
+  // Sidebar on mobile
+  const isSidebarOpen = ref(false)
+  const setSidebarOpen = (sidebarStatus) => {
+    isSidebarOpen.value = sidebarStatus
+  }
+
   // Quotation
   const quotation = ref('')
   const setQuotation = (quotationInput) => {
@@ -26,6 +32,17 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
     sourceUrl.value = source
   }
 
+  // source short url
+  const shortUrl = ref('')
+  const setShortUrl = (url) => {
+    shortUrl.value = url
+  }
+
+  const finalImageB64 = ref('')
+  const setFinalImageB64 = (b64) => {
+    finalImageB64.value = b64
+  }
+
   // common functions
   const formatDate = (date, sign) => {
     if (!date) return
@@ -37,6 +54,8 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
   }
 
   return {
+    isSidebarOpen,
+    setSidebarOpen,
     quotation,
     setQuotation,
     date,
@@ -45,6 +64,10 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
     setImage,
     sourceUrl,
     setSourceUrl,
+    shortUrl,
+    setShortUrl,
+    finalImageB64,
+    setFinalImageB64,
     formatDate
   }
 })
