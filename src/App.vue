@@ -8,13 +8,12 @@
 <style lang="scss">
 :root {
   --primary-yellow: rgb(251, 196, 57);
-  --secondary-yellow: #fab802;
+  --secondary-yellow: #fa9b02;
   --primary-grey: #5E5A6B;
   --secondary-grey: #A29DB3;
   --tertiary-grey: #414141;
   --primary-red: #DF5761;
-  /* --text-color: #373b3e; */
-  --text-color: #fab802;
+  --text-color: #fa9b02;
   --placeholder-color: #d4d4d4;
   --sidebar-background-color: rgb(62, 62, 62);
   --title-font-size: 1.2rem;

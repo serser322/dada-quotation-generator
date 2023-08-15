@@ -97,7 +97,7 @@ const getTextImage = (textContent) => {
   // 日期字串
   if (textContent === 'date') {
     canvasContext.font = '30px Noto Sans CJK TC'
-    const dateString = quotationStore.formatDate(date.value, ' . ')
+    const dateString = date.value ? quotationStore.formatDate(date.value, ' . ') : ''
     canvasContext.fillText(`${dateString}`, 370, 485)
   }
 
@@ -213,18 +213,25 @@ const validate = () => {
         </div>
         <input
           type="text"
-          :value="isSelected ? sourceUrl : '無連結'"
+          :value="isSelected ? sourceUrl : ''"
           :class="isValid ? '' : 'invalid'"
           :placeholder="isSelected ? '直播連結(含秒數連結佳)、推特連結等' : '無連結'"
           :disabled="!isSelected"
           @change="updateSource"
         >
         <div
-          v-if="isSelected"
+          v-show="isSelected"
           class="invalid__text"
           :class="isValid ? 'hidden' : 'showHint'"
         >
           提示：如有勾選「附上來源連結」，請貼上來源連結
+        </div>
+        <!-- (底下div為若上方因v-show讓element消失後，所預留之空間) -->
+        <div
+          v-show="!isSelected"
+          class="invalid__text hidden"
+        >
+          (預留空間)
         </div>
       </div>
       <div class="info">
@@ -318,7 +325,7 @@ input[type=text] {
 
   &:disabled {
     border-bottom: 2px solid gray;
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.06);
   }
 
   &::placeholder {

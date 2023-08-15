@@ -9,9 +9,6 @@ const isTruthShow = ref(false)
     <div class="footer">
       <div class="dada">
         <div class="image">
-          <div class="title">
-            簡介灰妲
-          </div>
           <img
             v-show="!isTruthShow"
             src="../assets/images/footer_image1.png"
@@ -82,12 +79,12 @@ const isTruthShow = ref(false)
       </div>
       <div class="about">
         <div class="title">
-          關於
+          關於本站
         </div>
         <div class="containt">
-          本站由<span class="secret">雞腿幫成員</span>小魯蛇蛇製作，無任何營利，歡迎大家多加紀錄灰妲的名言錦句<sapn class="secret">
+          本站由<span class="secret">雞腿幫成員</span>小魯蛇蛇製作，無任何營利，歡迎大家多加紀錄灰妲的名言錦句<span class="secret">
             或混沌發言
-          </sapn>。
+          </span>。
         </div>
         <div class="github">
           <!-- Place this tag where you want the button to render. -->
@@ -98,7 +95,7 @@ const isTruthShow = ref(false)
             data-size="large"
             aria-label="Star serser322/vtuber-quotation-generator on GitHub"
           >
-            銘謝Github給顆星QQ
+            Github給我顆星QQ
           </github-button>
         </div>
       </div>
@@ -112,8 +109,6 @@ const isTruthShow = ref(false)
 
 <style lang="scss" scoped>
 .footer {
-  /* display: grid;
-  grid-template-columns: 1fr 1fr; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -121,17 +116,18 @@ const isTruthShow = ref(false)
   background-color: var(--tertiary-grey);
   padding: 1rem 2rem;
   gap: 2rem;
+  position: relative;
+  opacity: 0;
+  animation: footerAnimate 0.6s ease-in-out 0.2s forwards;
 
   .dada {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.6rem;
+    gap: 1rem;
+    margin-top:1rem;
 
     .image {
-      display: flex;
-    flex-direction: column;
-    align-items: center;
       width: 100%;
       max-width: 8.5rem;
 
@@ -156,13 +152,13 @@ const isTruthShow = ref(false)
 
       a {
         display: flex;
-        align-items: center;
+        align-items: end;
         gap: 5px;
         color: white;
         margin-bottom: 0.7rem;
 
         img {
-          width: 1.6rem;
+          width: 18px;
         }
 
       }
@@ -241,7 +237,18 @@ button {
   &:active {
     background-color: var(--primary-yellow);
   }
+}
 
+@keyframes footerAnimate {
+  0% {
+      opacity: 0%;
+      top: 30px;
+    }
+
+    100% {
+      opacity: 100%;
+      top: 0;
+    }
 }
 
 @media (min-width:576px) {

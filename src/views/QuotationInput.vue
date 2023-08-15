@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuotationDataStore } from '../store/quotationData'
 import { storeToRefs } from 'pinia'
@@ -72,21 +72,29 @@ const updateQuotation = (event) => {
 const isLineCharactersOver = (textArray) => textArray.some(text => text.length > MAX_CHARACTERS_PER_LINE)
 
 // Date input
+const hasDate = ref(true)
 const isDateValid = ref(true)
 const validateDate = (data) => {
   isDateValid.value = !!data
 }
 const updateDate = (modelData) => {
   date.value = modelData
-  validateDate(modelData)
+  hasDate.value && validateDate(modelData)
   quotationStore.setDate(modelData)
 }
+
+watch(hasDate, newValue => {
+  if (!newValue) {
+    quotationStore.setDate(null)
+    isDateValid.value = true
+  }
+})
 
 // Button router
 const router = useRouter()
 const toImageSelection = () => {
   validateQuotation(quotation.value)
-  validateDate(date.value)
+  hasDate.value && validateDate(date.value)
   if ((isInputValid.value || isTextareaValid.value) && isDateValid.value) { router.push({ name: 'ImagesSelection' }) }
 }
 </script>
@@ -165,27 +173,42 @@ const toImageSelection = () => {
       </div>
 
       <div class="date">
-        <h2>
-          請選擇此名言金句誕生日期：
-        </h2>
+        <div class="title">
+          <h2>
+            請選擇此名言金句誕生日期：
+          </h2>
+          <div>
+            <input
+              id="hasDate"
+              v-model="hasDate"
+              type="checkbox"
+            >
+            <label for="hasDate">
+              附上日期
+            </label>
+          </div>
+        </div>
         <div class="date__select">
           <VueDatePicker
-            :model-value="date"
+            :model-value="hasDate? date: null"
             :enable-time-picker="false"
             auto-apply
             locale="zh-tw"
-            placeholder="請選擇日期"
             dark
             :format="quotationStore.formatDate(date, '/')"
             :day-names="['一', '二', '三', '四', '五', '六', '日']"
+            :disabled="!hasDate"
+            :teleport="true"
             @update:model-value="updateDate"
           >
             <template #dp-input="{ value }">
               <input
                 class="date__input"
                 type="text"
+                readonly
                 :value="value"
-                placeholder="請選擇日期"
+                :placeholder="hasDate ? '請選擇日期' : '無日期'"
+                :disabled="!hasDate"
               >
               <i class="material-symbols-outlined">
                 calendar_month
@@ -325,9 +348,25 @@ textarea {
 
 .date {
   margin-top: 4rem;
+  .title {
+    color: var(--secondary-yellow);
+    h2, div {
+      margin-bottom: 0.5rem;
+    }
 
-  h2 {
-    color: var(--secondary-yellow)
+    #hasDate {
+      accent-color: ForestGreen;
+    }
+
+    input[type=checkbox] {
+      transform: scale(1.3);
+      margin-right: 2px;
+    }
+
+    label[for=hasDate] {
+      font-size: 1rem;
+      font-weight: bold;
+    }
   }
 
   .date__select {
@@ -335,6 +374,12 @@ textarea {
 
     .date__input {
       padding-left: 2.5rem;
+
+      &:disabled {
+    border-bottom: 2px solid gray;
+    background-color: rgba(0, 0, 0, 0.06);
+  }
+
     }
 
     .material-symbols-outlined {
@@ -440,6 +485,24 @@ h2 {
   }
 
   .date {
+    .title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      div {
+        margin-top: 1.5rem;
+      }
+
+      input[type=checkbox] {
+        transform: scale(1.6);
+        margin-right: 5px;
+      }
+
+      label[for=hasDate] {
+        font-size: 1.2rem;
+      }
+    }
     .date__select {
       .material-symbols-outlined {
         position: absolute;

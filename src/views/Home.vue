@@ -21,22 +21,10 @@ import Footer from '../components/Footer.vue'
 </template>
 
 <style lang="scss" scoped>
-/* @mixin screen-mobile {
-  @media (min-width:var(--screen-mobile)) {
-    @content
-  }
-};
-
-@mixin screen-pad {
-  @media (min-width: var(--screen-pad)) {
-    @content
-  }
-} */
-
 .container {
   display: flex;
   height: auto;
-  min-height: 100%;
+  /* min-height: 100vh; */
 
   .sidebar {
     display: none;
@@ -48,6 +36,7 @@ import Footer from '../components/Footer.vue'
 
   div {
     width: 100%;
+    min-height: 75vh;
     /* margin-left: 3.5rem; //保留空間給sidebar */
 
     @media (min-width: 576px) {
