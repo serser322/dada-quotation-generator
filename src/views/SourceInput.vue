@@ -9,6 +9,7 @@ import BaseStepper from '../components/BaseStepper.vue'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
 import mergeImages from 'merge-images'
+import image1 from '../assets/images/vts-2021-10-30_20h51_41.png'
 
 const router = useRouter()
 const isSelected = ref(true)
@@ -37,6 +38,7 @@ const toImageSelection = () => {
 const makeImage = async () => {
   validate()
   if (!isValid.value) return
+
   try {
     loading.value = true
 
@@ -46,7 +48,6 @@ const makeImage = async () => {
     // 取得圖片
     const baseImage = new URL('./../assets/images/image_base.jpg', import.meta.url).href // 尺寸 1080 * 574
     // const dadaImage = new URL(dadaImagePath.value, import.meta.url).href
-    const dadaImage = await import(`./../assets/images/${image.value}`)
     const frameImage = new URL('./../assets/images/frame.png', import.meta.url).href
     const quotationImage = new URL(getTextImage('quotation'), import.meta.url).href
     const nameImage = new URL(getTextImage('name'), import.meta.url).href
@@ -56,7 +57,7 @@ const makeImage = async () => {
     // 合成圖片
     const b64 = await mergeImages([
       baseImage,
-      { src: dadaImage.default, x: 0, y: 44 },
+      { src: image1, x: 0, y: 44 },
       frameImage,
       { src: quotationImage, x: 480, y: 0 }, // 506px為canvas圖，距離圖左邊界的距離
       { src: nameImage, x: 480, y: 0 },

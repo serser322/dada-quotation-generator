@@ -27,6 +27,10 @@ const routes = [
         name: 'FinalPage',
         component: () => import('../views/FinalPage.vue')
       }
+      // {
+      //   path: '/:catchAll(.*)',
+      //   redirect: { name: 'QuotationInput' }
+      // }
     ]
   },
   {
