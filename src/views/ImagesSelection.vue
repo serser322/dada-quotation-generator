@@ -20,90 +20,23 @@ const secondHalfImagesLoad = () => {
   secondHalfImagesNum.value++
 }
 
-// Images list
-const imagesData = ref([
-  {
-    imageName: 'vts-2023-04-06_01h59_42.png',
-    isSelected: false
-  },
-  {
-    imageName: 'vts-2023-04-06_17h45_46.png',
-    isSelected: false
-  },
-  {
-    imageName: 'vts-2023-04-06_17h47_23.png',
-    isSelected: false
-  },
-  {
-    imageName: 'vts-2023-04-06_17h40_52.png',
-    isSelected: false
-  },
-  {
-    imageName: 'vts-2023-04-06_17h42_42.png',
-    isSelected: false
-  },
-  {
-    imageName: 'vts-2022-11-02_06h44_01.png',
-    isSelected: false
-  },
-  {
-    imageName: 'vts-2022-11-02_06h54_15.png',
-    isSelected: false
-  },
-  {
-    imageName: 'vts-2022-11-02_06h49_12.png',
-    isSelected: false
-  },
-
-  {
-    imageName: 'vts-2022-11-02_06h48_44.png',
-    isSelected: false
-  },
-  {
-    imageName: 'vts-2022-02-22_01h03_51.png',
-    isSelected: false
-  },
-  {
-    imageName: 'vts-2022-01-24_06h58_47.png',
-    isSelected: false
-  },
-  {
-    imageName: 'vts-2021-10-30_20h51_41.png',
-    isSelected: false
-  },
-  {
-    imageName: 'vts-2021-11-15_18h23_24.png',
-    isSelected: false
-  },
-  {
-    imageName: 'vts-2021-12-25_22h52_13.png',
-    isSelected: false
-  },
-  {
-    imageName: 'vts-2021-12-24_04h22_39.png',
-    isSelected: false
-  },
-  {
-    imageName: 'vts-2021-12-26_13h12_24.png',
-    isSelected: false
-  }
-])
-
 const quotationStore = useQuotationDataStore()
-const selectImage = (img) => {
-  imagesData.value.forEach(image => {
-    image.isSelected = false
+const selectImage = (event) => {
+  document.querySelectorAll('.image').forEach(element => {
+    element.classList.remove('selected')
   })
-  img.isSelected = true
-  quotationStore.setImage(img.imageName)
+  event.target.parentElement.classList.add('selected')
+  quotationStore.setImage(event.target.dataset.img)
   isValid.value = true
 }
 
 // 標記已選擇的立繪
 const { image } = storeToRefs(quotationStore)
 onMounted(() => {
-  imagesData.value.forEach(img => {
-    img.isSelected = (img.imageName === image.value)
+  document.querySelectorAll('.image').forEach(element => {
+    if (element.firstChild.dataset.img === image.value) {
+      element.classList.add('selected')
+    }
   })
 })
 
@@ -124,10 +57,6 @@ const toSourceInput = () => {
   isValid.value && router.push({ name: 'SourceInput' })
 }
 
-const getImgUrl = function (img) {
-  const imgPath = '../assets/images/' + img
-  return new URL(imgPath, import.meta.url).href
-}
 </script>
 
 <template>
@@ -150,34 +79,196 @@ const getImgUrl = function (img) {
       >
         <!-- 為避免一次load 16張圖時間過久，前6張load完先顯示 -->
         <div
-          v-for="(img, index) in imagesData.slice(0, 6)"
-          :key="img"
           class="image"
-          :class="{ selected: img.isSelected }"
-          @click="selectImage(img)"
+          @click="selectImage($event)"
         >
           <img
-            :src="getImgUrl(img.imageName)"
+            src="../assets/images/vts-2023-04-06_01h59_42.png"
             alt=""
-            v-on="{ load: firstHalfImagesLoad }"
+            data-img="vts-2023-04-06_01h59_42.png"
+            @load="firstHalfImagesLoad"
+          >
+        </div>
+        <div
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/vts-2023-04-06_17h45_46.png"
+            alt=""
+            data-img="vts-2023-04-06_17h45_46.png"
+            @load="firstHalfImagesLoad"
+          >
+        </div>
+        <div
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/vts-2023-04-06_17h47_23.png"
+            alt=""
+            data-img="vts-2023-04-06_17h47_23.png"
+            @load="firstHalfImagesLoad"
+          >
+        </div>
+        <div
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/vts-2023-04-06_17h40_52.png"
+            alt=""
+            data-img="vts-2023-04-06_17h40_52.png"
+            @load="firstHalfImagesLoad"
+          >
+        </div>
+        <div
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/vts-2023-04-06_17h42_42.png"
+            alt=""
+            data-img="vts-2023-04-06_17h42_42.png"
+            @load="firstHalfImagesLoad"
+          >
+        </div>
+        <div
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/vts-2022-11-02_06h44_01.png"
+            alt=""
+            data-img="vts-2022-11-02_06h44_01.png"
+            @load="firstHalfImagesLoad"
           >
         </div>
         <!-- 繼續等待後10張load -->
-        <div>
-          <BaseLoader v-show="!isSecondHalfLoadDown" />
+        <div
+          v-if="!isSecondHalfLoadDown"
+          class="img__loader"
+        >
+          <BaseLoader />
         </div>
         <div
-          v-for="(img) in imagesData.slice(6)"
           v-show="isSecondHalfLoadDown"
-          :key="img"
           class="image"
-          :class="{ selected: img.isSelected }"
-          @click="selectImage(img)"
+          @click="selectImage($event)"
         >
           <img
-            :src="getImgUrl(img.imageName)"
+            src="../assets/images/vts-2022-11-02_06h54_15.png"
             alt=""
-            v-on="{ load: secondHalfImagesLoad }"
+            data-img="vts-2022-11-02_06h54_15.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/vts-2022-11-02_06h49_12.png"
+            alt=""
+            data-img="vts-2022-11-02_06h49_12.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/vts-2022-11-02_06h48_44.png"
+            alt=""
+            data-img="vts-2022-11-02_06h48_44.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/vts-2022-02-22_01h03_51.png"
+            alt=""
+            data-img="vts-2022-02-22_01h03_51.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/vts-2022-01-24_06h58_47.png"
+            alt=""
+            data-img="vts-2022-01-24_06h58_47.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/vts-2021-10-30_20h51_41.png"
+            alt=""
+            data-img="vts-2021-10-30_20h51_41.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/vts-2021-11-15_18h23_24.png"
+            alt=""
+            data-img="vts-2021-11-15_18h23_24.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/vts-2021-12-25_22h52_13.png"
+            alt=""
+            data-img="vts-2021-12-25_22h52_13.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/vts-2021-12-24_04h22_39.png"
+            alt=""
+            data-img="vts-2021-12-24_04h22_39.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/vts-2021-12-26_13h12_24.png"
+            alt=""
+            data-img="vts-2021-12-26_13h12_24.png"
+            @load="secondHalfImagesLoad"
           >
         </div>
       </div>
@@ -354,6 +445,24 @@ h2 {
       height: 12rem;
       margin: 0.6rem;
     }
+  }
+}
+
+.img__loader {
+  width: 9rem;
+  height: 9rem;
+  /* margin: 0.4rem; */
+
+  @media (min-width: 768px) {
+    width: 11rem;
+    height: 11rem;
+    margin: 0.5rem;
+  }
+
+  @media (min-width: 992px) {
+    width: 12rem;
+    height: 12rem;
+    margin: 0.6rem;
   }
 }
 </style>

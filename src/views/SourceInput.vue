@@ -352,7 +352,7 @@ input[type=text] {
 .info {
   color: var(--secondary-yellow);
   margin-top: 1rem;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 800;
 
   img {
@@ -460,6 +460,7 @@ input[type=text] {
 
   .info {
     margin-top: 2rem;
+    font-size: 1.2rem;
 
     img {
       margin: 2rem auto;
