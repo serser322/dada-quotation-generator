@@ -1,12 +1,26 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuotationDataStore } from '../store/quotationData'
 import { storeToRefs } from 'pinia'
+import BaseLoader from '../components/BaseLoader.vue'
 import BaseStepper from '../components/BaseStepper.vue'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
 
+// Loading (為避免一次load 16張圖時間過久，分兩次顯示)
+const firstHalfImagesNum = ref(0)
+const secondHalfImagesNum = ref(0)
+const isFirstHalfLoadDown = computed(() => firstHalfImagesNum.value === 6)
+const isSecondHalfLoadDown = computed(() => secondHalfImagesNum.value === 10)
+const firstHalfImagesLoad = () => {
+  firstHalfImagesNum.value++
+}
+const secondHalfImagesLoad = () => {
+  secondHalfImagesNum.value++
+}
+
+// Images list
 const imagesData = ref([
   {
     imageName: 'vts-2023-04-06_01h59_42.png',
@@ -119,7 +133,8 @@ const getImgUrl = function (img) {
 <template>
   <main>
     <BaseStepper page="imagesSelection" />
-    <BaseCard>
+    <BaseLoader v-show="!isFirstHalfLoadDown" />
+    <BaseCard v-show="isFirstHalfLoadDown">
       <h2 for="">
         請選擇此名言圖的立繪：
       </h2>
@@ -133,20 +148,44 @@ const getImgUrl = function (img) {
         class="images"
         :class="{ invalid__border: !isValid, invalid__border__space: isValid }"
       >
+        <!-- 為避免一次load 16張圖時間過久，前6張load完先顯示 -->
         <div
-          v-for="img in imagesData"
+          v-for="(img, index) in imagesData.slice(0, 6)"
           :key="img"
+          class="image"
           :class="{ selected: img.isSelected }"
           @click="selectImage(img)"
         >
           <img
             :src="getImgUrl(img.imageName)"
             alt=""
+            v-on="{ load: firstHalfImagesLoad }"
+          >
+        </div>
+        <!-- 繼續等待後10張load -->
+        <div>
+          <BaseLoader v-show="!isSecondHalfLoadDown" />
+        </div>
+        <div
+          v-for="(img) in imagesData.slice(6)"
+          v-show="isSecondHalfLoadDown"
+          :key="img"
+          class="image"
+          :class="{ selected: img.isSelected }"
+          @click="selectImage(img)"
+        >
+          <img
+            :src="getImgUrl(img.imageName)"
+            alt=""
+            v-on="{ load: secondHalfImagesLoad }"
           >
         </div>
       </div>
     </BaseCard>
-    <div class="btn__group">
+    <div
+      v-show="isFirstHalfLoadDown"
+      class="btn__group"
+    >
       <BaseButton @click="toQuotationInput">
         <span class="material-symbols-outlined">
           arrow_back
@@ -230,7 +269,7 @@ h2 {
     border: 2px solid transparent;
   }
 
-  div {
+  .image {
     width: 7rem;
     height: 7rem;
     margin: 0.2rem;
@@ -258,14 +297,14 @@ h2 {
       border: 5px solid salmon;
     }
   }
+}
 
-  div.selected {
+.selected {
+  border: 5px solid var(--primary-yellow);
+  box-shadow: 0 0 20px 2px var(--primary-yellow);
+
+  &:active {
     border: 5px solid var(--primary-yellow);
-    box-shadow: 0 0 20px 2px var(--primary-yellow);
-
-    &:active {
-      border: 5px solid var(--primary-yellow);
-    }
   }
 }
 
@@ -284,7 +323,7 @@ h2 {
   }
 
   .images {
-    div {
+    .image {
       width: 9rem;
       height: 9rem;
       margin: 0.4rem;
@@ -300,7 +339,7 @@ h2 {
 
 @media (min-width: 768px) {
   .images {
-    div {
+    .image {
       width: 11rem;
       height: 11rem;
       margin: 0.5rem;
@@ -310,7 +349,7 @@ h2 {
 
 @media (min-width: 992px) {
   .images {
-    div {
+    .image {
       width: 12rem;
       height: 12rem;
       margin: 0.6rem;

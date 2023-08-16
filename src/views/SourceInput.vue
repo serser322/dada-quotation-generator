@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { useQuotationDataStore } from '../store/quotationData'
 import { storeToRefs } from 'pinia'
 import sweetAlert from 'sweetalert2'
+import BaseLoader from '../components/BaseLoader.vue'
 import BaseStepper from '../components/BaseStepper.vue'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
@@ -13,6 +14,12 @@ const router = useRouter()
 const isSelected = ref(true)
 const canvasEl = ref(null)
 const loading = ref(false)
+
+// Loading
+const isLoadDown = ref(false)
+const contentImageLoad = () => {
+  isLoadDown.value = true
+}
 
 // Source input
 const quotationStore = useQuotationDataStore()
@@ -188,87 +195,91 @@ const validate = () => {
 <template>
   <main>
     <BaseStepper page="sourceInput" />
+    <BaseLoader v-show="!isLoadDown" />
     <canvas
       ref="canvasEl"
       class="hide"
       width="600"
       height="574"
     />
-    <BaseCard>
-      <div class="source__input">
-        <div class="title">
-          <h2>
-            請輸入該句名言出處：
-          </h2>
-          <div>
-            <input
-              id="hasSource"
-              v-model="isSelected"
-              type="checkbox"
-            >
-            <label for="hasSource">
-              附上來源連結
-            </label>
+    <div v-show="isLoadDown">
+      <BaseCard>
+        <div class="source__input">
+          <div class="title">
+            <h2>
+              請輸入該句名言出處：
+            </h2>
+            <div>
+              <input
+                id="hasSource"
+                v-model="isSelected"
+                type="checkbox"
+              >
+              <label for="hasSource">
+                附上來源連結
+              </label>
+            </div>
+          </div>
+          <input
+            type="text"
+            :value="isSelected ? sourceUrl : ''"
+            :class="isValid ? '' : 'invalid'"
+            :placeholder="isSelected ? '直播連結(含秒數連結佳)、推特連結等' : '無連結'"
+            :disabled="!isSelected"
+            @change="updateSource"
+          >
+          <div
+            v-show="isSelected"
+            class="invalid__text"
+            :class="isValid ? 'hidden' : 'showHint'"
+          >
+            提示：如有勾選「附上來源連結」，請貼上來源連結
+          </div>
+          <!-- (底下div為若上方因v-show讓element消失後，所預留之空間) -->
+          <div
+            v-show="!isSelected"
+            class="invalid__text hidden"
+          >
+            (預留空間)
           </div>
         </div>
-        <input
-          type="text"
-          :value="isSelected ? sourceUrl : ''"
-          :class="isValid ? '' : 'invalid'"
-          :placeholder="isSelected ? '直播連結(含秒數連結佳)、推特連結等' : '無連結'"
-          :disabled="!isSelected"
-          @change="updateSource"
-        >
-        <div
-          v-show="isSelected"
-          class="invalid__text"
-          :class="isValid ? 'hidden' : 'showHint'"
-        >
-          提示：如有勾選「附上來源連結」，請貼上來源連結
+        <div class="info">
+          <div>此連結將自動轉為短網址，並附在圖中左下角，如下示意：</div>
+          <img
+            src="../assets/images/source_example.png"
+            alt=""
+            @load="contentImageLoad"
+          >
+          <ul>
+            <li>附上來源連結，除證明該名言之真實性，也方便有興趣的觀眾或烤肉man，能快速輸入短連結觀看內容。</li>
+            <li>若覺得短連結影響名言圖的美觀性，或不便查找來源，也可取消勾選右上角的「附上來源連結」。</li>
+          </ul>
         </div>
-        <!-- (底下div為若上方因v-show讓element消失後，所預留之空間) -->
-        <div
-          v-show="!isSelected"
-          class="invalid__text hidden"
+      </BaseCard>
+      <div class="btn__group">
+        <BaseButton @click="toImageSelection">
+          <span class="material-symbols-outlined">
+            arrow_back
+          </span>
+          上一步
+        </BaseButton>
+        <BaseButton
+          :loading="loading"
+          @click="makeImage"
         >
-          (預留空間)
-        </div>
+          製作成圖
+          <span class="material-symbols-outlined">
+            arrow_forward
+          </span>
+        </BaseButton>
       </div>
-      <div class="info">
-        <div>此連結將自動轉為短網址，並附在圖中左下角，如下示意：</div>
-        <img
-          src="../assets/images/source_example.png"
-          alt=""
-        >
-        <ul>
-          <li>附上來源連結，除證明該名言之真實性，也方便有興趣的觀眾或烤肉man，能快速輸入短連結觀看內容。</li>
-          <li>若覺得短連結影響名言圖的美觀性，或不便查找來源，也可取消勾選右上角的「附上來源連結」。</li>
-        </ul>
-      </div>
-    </BaseCard>
-    <div class="btn__group">
-      <BaseButton @click="toImageSelection">
-        <span class="material-symbols-outlined">
-          arrow_back
-        </span>
-        上一步
-      </BaseButton>
-      <BaseButton
-        :loading="loading"
-        @click="makeImage"
+      <div
+        v-if="isSelected"
+        class="invalid__hint invalid__text"
+        :class="isValid ? 'hidden' : 'showHint'"
       >
-        製作成圖
-        <span class="material-symbols-outlined">
-          arrow_forward
-        </span>
-      </BaseButton>
-    </div>
-    <div
-      v-if="isSelected"
-      class="invalid__hint invalid__text"
-      :class="isValid ? 'hidden' : 'showHint'"
-    >
-      提示：如有勾選「附上來源連結」，請貼上連結，若無則取消勾選
+        提示：如有勾選「附上來源連結」，請貼上連結，若無則取消勾選
+      </div>
     </div>
   </main>
 </template>

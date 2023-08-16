@@ -1,11 +1,20 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import GithubButton from 'vue-github-button'
+import BaseLoader from '../components/BaseLoader.vue'
 const isTruthShow = ref(false)
+
+// Loading
+const footerImagesNum = ref(0)
+const isLoadDown = computed(() => footerImagesNum.value === 2)
+const footerImagesLoad = () => {
+  footerImagesNum.value++
+}
 </script>
 
 <template>
-  <footer>
+  <BaseLoader v-show="!isLoadDown" />
+  <footer v-show="isLoadDown">
     <div class="footer">
       <div class="dada">
         <div class="image">
@@ -13,11 +22,13 @@ const isTruthShow = ref(false)
             v-show="!isTruthShow"
             src="../assets/images/footer_image1.png"
             alt=""
+            @load="footerImagesLoad"
           >
           <img
             v-show="isTruthShow"
             src="../assets/images/footer_image2.png"
             alt=""
+            @load="footerImagesLoad"
           >
         </div>
         <div class="info">
@@ -125,7 +136,7 @@ const isTruthShow = ref(false)
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    margin-top:1rem;
+    margin-top: 1rem;
 
     .image {
       width: 100%;
@@ -140,7 +151,7 @@ const isTruthShow = ref(false)
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap:0.6rem;
+      gap: 0.6rem;
     }
   }
 
@@ -183,14 +194,16 @@ const isTruthShow = ref(false)
   }
 
 }
+
 .copyright {
   font-size: 0.8rem;
-  color:white;
+  color: white;
   background-color: var(--tertiary-grey);
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-bottom: 0.5rem;
+
   .line {
     height: 1px;
     width: 95vw;
@@ -241,20 +254,21 @@ button {
 
 @keyframes footerAnimate {
   0% {
-      opacity: 0%;
-      top: 30px;
-    }
+    opacity: 0%;
+    top: 30px;
+  }
 
-    100% {
-      opacity: 100%;
-      top: 0;
-    }
+  100% {
+    opacity: 100%;
+    top: 0;
+  }
 }
 
 @media (min-width:576px) {
   .footer {
     padding: 1rem 2rem;
     align-items: start;
+
     .dada {
       display: flex;
       flex-direction: row;
@@ -265,19 +279,22 @@ button {
 
       .info {
         display: block;
+
         button {
-          margin-top:1rem;
+          margin-top: 1rem;
           float: right;
         }
       }
     }
+
     .link {
       .link__list {
         /* display: block; */
-      flex-direction: row;
-      align-items: start;
-      gap: 1rem;
-        a{
+        flex-direction: row;
+        align-items: start;
+        gap: 1rem;
+
+        a {
           margin-bottom: 0;
         }
       }
@@ -300,17 +317,18 @@ button {
     grid-template-rows: 1fr 0.6fr;
     gap: 2rem 4rem;
 
-  .link {
+    .link {
 
       .link__list {
         flex-direction: column;
         gap: 10px;
 
         a {
-        gap: 10px;
+          gap: 10px;
         }
       }
     }
+
     .source {
       order: 4;
     }
@@ -321,7 +339,7 @@ button {
 @media (min-width: 992px) {
   .footer {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr ;
+    grid-template-columns: 2fr 1fr 1fr;
     grid-template-rows: 1fr 0.4fr;
 
   }
@@ -333,6 +351,7 @@ button {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
     grid-template-rows: 0.4fr;
+
     .source {
       order: 0;
     }
