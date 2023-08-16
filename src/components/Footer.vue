@@ -100,11 +100,11 @@ const footerImagesLoad = () => {
         <div class="github">
           <!-- Place this tag where you want the button to render. -->
           <github-button
-            href="https://github.com/serser322/vtuber-quotation-generator"
+            href="https://github.com/serser322/dada-quotation-generator"
             data-color-scheme="no-preference: light_high_contrast; light: light; dark: light;"
             data-icon="octicon-star"
             data-size="large"
-            aria-label="Star serser322/vtuber-quotation-generator on GitHub"
+            aria-label="Star serser322/dada-quotation-generator on GitHub"
           >
             Github給我顆星QQ
           </github-button>
