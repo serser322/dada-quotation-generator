@@ -54,7 +54,8 @@ const toQuotationInput = () => {
 
 const toSourceInput = () => {
   validate()
-  isValid.value && router.push({ name: 'SourceInput' })
+  // isValid.value && router.push({ name: 'SourceInput' })
+  isValid.value && router.push('/dada-quotation-generator/source-input')
 }
 
 </script>
