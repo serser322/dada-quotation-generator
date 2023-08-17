@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { useQuotationDataStore } from '../store/quotationData'
 import { storeToRefs } from 'pinia'
 import sweetAlert from 'sweetalert2'
+import BaseLoader from '../components/BaseLoader.vue'
 import BaseStepper from '../components/BaseStepper.vue'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
@@ -13,6 +14,12 @@ const router = useRouter()
 const isSelected = ref(true)
 const canvasEl = ref(null)
 const loading = ref(false)
+
+// Loading
+const isLoadDown = ref(false)
+const contentImageLoad = () => {
+  isLoadDown.value = true
+}
 
 // Source input
 const quotationStore = useQuotationDataStore()
@@ -39,7 +46,7 @@ const makeImage = async () => {
 
     // 取得圖片
     const baseImage = new URL('./../assets/images/image_base.jpg', import.meta.url).href // 尺寸 1080 * 574
-    const dadaImage = new URL(dadaImagePath.value, import.meta.url).href
+    const dadaImage = getImage.value
     const frameImage = new URL('./../assets/images/frame.png', import.meta.url).href
     const quotationImage = new URL(getTextImage('quotation'), import.meta.url).href
     const nameImage = new URL(getTextImage('name'), import.meta.url).href
@@ -66,7 +73,7 @@ const makeImage = async () => {
     const errorText = error?.error?.includes('URL is invalid') ? '輸入的網址好像無效QQ，請確認是否輸入有誤' : error
     sweetAlert.fire({
       icon: 'error',
-      title: '<div style=\'display: flex; justify-content:center; align-items:center\'><span style=\'padding-right:5px\'>出錯惹</span><img width=60 src=\'src/assets/images/error_image.png\'></div>',
+      title: '<div style=\'display: flex; justify-content:center; align-items:center\'><span style=\'padding-right:5px\'>出錯惹</span></div>',
       text: errorText,
       confirmButtonText: '好喔！'
     })
@@ -74,8 +81,6 @@ const makeImage = async () => {
     loading.value = false
   }
 }
-
-const dadaImagePath = computed(() => `./../assets/images/${image.value}`)
 
 const getTextImage = (textContent) => {
   const canvasContext = canvasEl.value.getContext('2d')
@@ -109,11 +114,6 @@ const getTextImage = (textContent) => {
   }
 
   return canvasContext.canvas.toDataURL()
-
-  // 輔助線
-  // canvasContext.strokeStyle = 'yellow'
-  // canvasContext.lineWidth = 2
-  // canvasContext.strokeRect(0, 0, canvasEl.value.width, canvasEl.value.height)
 }
 
 const setTextOnImage = (text, canvas) => {
@@ -183,92 +183,136 @@ const validate = () => {
   isValid.value = isSelected.value ? !!sourceUrl.value : true
 }
 
+// 取得圖片(需使用靜態路由)
+const getImage = computed(() => {
+  switch (image.value) {
+    case 'vts-2023-04-06_01h59_42.png':
+      return new URL('./../assets/images/vts-2023-04-06_01h59_42.png', import.meta.url).href
+    case 'vts-2023-04-06_17h45_46.png':
+      return new URL('./../assets/images/vts-2023-04-06_17h45_46.png', import.meta.url).href
+    case 'vts-2023-04-06_17h47_23.png':
+      return new URL('./../assets/images/vts-2023-04-06_17h47_23.png', import.meta.url).href
+    case 'vts-2023-04-06_17h40_52.png':
+      return new URL('./../assets/images/vts-2023-04-06_17h40_52.png', import.meta.url).href
+    case 'vts-2023-04-06_17h42_42.png':
+      return new URL('./../assets/images/vts-2023-04-06_17h42_42.png', import.meta.url).href
+    case 'vts-2022-11-02_06h44_01.png':
+      return new URL('./../assets/images/vts-2022-11-02_06h44_01.png', import.meta.url).href
+    case 'vts-2022-11-02_06h54_15.png':
+      return new URL('./../assets/images/vts-2022-11-02_06h54_15.png', import.meta.url).href
+    case 'vts-2022-11-02_06h49_12.png':
+      return new URL('./../assets/images/vts-2022-11-02_06h49_12.png', import.meta.url).href
+    case 'vts-2022-11-02_06h48_44.png':
+      return new URL('./../assets/images/vts-2022-11-02_06h48_44.png', import.meta.url).href
+    case 'vts-2022-02-22_01h03_51.png':
+      return new URL('./../assets/images/vts-2022-02-22_01h03_51.png', import.meta.url).href
+    case 'vts-2022-01-24_06h58_47.png':
+      return new URL('./../assets/images/vts-2022-01-24_06h58_47.png', import.meta.url).href
+    case 'vts-2021-10-30_20h51_41.png':
+      return new URL('./../assets/images/vts-2021-10-30_20h51_41.png', import.meta.url).href
+    case 'vts-2021-11-15_18h23_24.png':
+      return new URL('./../assets/images/vts-2021-11-15_18h23_24.png', import.meta.url).href
+    case 'vts-2021-12-25_22h52_13.png':
+      return new URL('./../assets/images/vts-2021-12-25_22h52_13.png', import.meta.url).href
+    case 'vts-2021-12-24_04h22_39.png':
+      return new URL('./../assets/images/vts-2021-12-24_04h22_39.png', import.meta.url).href
+    case 'vts-2021-12-26_13h12_24.png':
+      return new URL('./../assets/images/vts-2021-12-26_13h12_24.png', import.meta.url).href
+    default:
+      return ''
+  }
+})
+
 </script>
 
 <template>
   <main>
     <BaseStepper page="sourceInput" />
+    <BaseLoader v-show="!isLoadDown" />
     <canvas
       ref="canvasEl"
       class="hide"
       width="600"
       height="574"
     />
-    <BaseCard>
-      <div class="source__input">
-        <div class="title">
-          <h2>
-            請輸入該句名言出處：
-          </h2>
-          <div>
-            <input
-              id="hasSource"
-              v-model="isSelected"
-              type="checkbox"
-            >
-            <label for="hasSource">
-              附上來源連結
-            </label>
+    <div v-show="isLoadDown">
+      <BaseCard>
+        <div class="source__input">
+          <div class="title">
+            <h2>
+              請輸入該句名言出處：
+            </h2>
+            <div>
+              <input
+                id="hasSource"
+                v-model="isSelected"
+                type="checkbox"
+              >
+              <label for="hasSource">
+                附上來源連結
+              </label>
+            </div>
+          </div>
+          <input
+            type="text"
+            :value="isSelected ? sourceUrl : ''"
+            :class="isValid ? '' : 'invalid'"
+            :placeholder="isSelected ? '直播連結(含秒數連結佳)、推特連結等' : '無連結'"
+            :disabled="!isSelected"
+            @change="updateSource"
+          >
+          <div
+            v-show="isSelected"
+            class="invalid__text"
+            :class="isValid ? 'hidden' : 'showHint'"
+          >
+            提示：如有勾選「附上來源連結」，請貼上來源連結
+          </div>
+          <!-- (底下div為若上方因v-show讓element消失後，所預留之空間) -->
+          <div
+            v-show="!isSelected"
+            class="invalid__text hidden"
+          >
+            (預留空間)
           </div>
         </div>
-        <input
-          type="text"
-          :value="isSelected ? sourceUrl : ''"
-          :class="isValid ? '' : 'invalid'"
-          :placeholder="isSelected ? '直播連結(含秒數連結佳)、推特連結等' : '無連結'"
-          :disabled="!isSelected"
-          @change="updateSource"
-        >
-        <div
-          v-show="isSelected"
-          class="invalid__text"
-          :class="isValid ? 'hidden' : 'showHint'"
-        >
-          提示：如有勾選「附上來源連結」，請貼上來源連結
+        <div class="info">
+          <div>此連結將自動轉為短網址，並附在圖中左下角，如下示意：</div>
+          <img
+            src="../assets/images/source_example.png"
+            alt=""
+            @load="contentImageLoad"
+          >
+          <ul>
+            <li>附上來源連結，除證明該名言之真實性，也方便有興趣的觀眾或烤肉man，能快速輸入短連結觀看內容。</li>
+            <li>若覺得短連結影響名言圖的美觀性，或不便查找來源，也可取消勾選右上角的「附上來源連結」。</li>
+          </ul>
         </div>
-        <!-- (底下div為若上方因v-show讓element消失後，所預留之空間) -->
-        <div
-          v-show="!isSelected"
-          class="invalid__text hidden"
+      </BaseCard>
+      <div class="btn__group">
+        <BaseButton @click="toImageSelection">
+          <span class="material-symbols-outlined">
+            arrow_back
+          </span>
+          上一步
+        </BaseButton>
+        <BaseButton
+          :loading="loading"
+          @click="makeImage"
         >
-          (預留空間)
-        </div>
+          製作成圖
+          <span class="material-symbols-outlined">
+            arrow_forward
+          </span>
+        </BaseButton>
       </div>
-      <div class="info">
-        <div>此連結將自動轉為短網址，並附在圖中左下角，如下示意：</div>
-        <img
-          src="../assets/images/source_example.png"
-          alt=""
-        >
-        <ul>
-          <li>附上來源連結，除證明該名言之真實性，也方便有興趣的觀眾或烤肉man，能快速輸入短連結觀看內容。</li>
-          <li>若覺得短連結影響名言圖的美觀性，或不便查找來源，也可取消勾選右上角的「附上來源連結」。</li>
-        </ul>
-      </div>
-    </BaseCard>
-    <div class="btn__group">
-      <BaseButton @click="toImageSelection">
-        <span class="material-symbols-outlined">
-          arrow_back
-        </span>
-        上一步
-      </BaseButton>
-      <BaseButton
-        :loading="loading"
-        @click="makeImage"
+      <div
+        v-if="isSelected"
+        class="invalid__hint invalid__text"
+        :class="isValid ? 'hidden' : 'showHint'"
       >
-        製作成圖
-        <span class="material-symbols-outlined">
-          arrow_forward
-        </span>
-      </BaseButton>
-    </div>
-    <div
-      v-if="isSelected"
-      class="invalid__hint invalid__text"
-      :class="isValid ? 'hidden' : 'showHint'"
-    >
-      提示：如有勾選「附上來源連結」，請貼上連結，若無則取消勾選
+        提示：如有勾選「附上來源連結」，請貼上連結，若無則取消勾選
+      </div>
     </div>
   </main>
 </template>
@@ -341,7 +385,7 @@ input[type=text] {
 .info {
   color: var(--secondary-yellow);
   margin-top: 1rem;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 800;
 
   img {
@@ -449,6 +493,7 @@ input[type=text] {
 
   .info {
     margin-top: 2rem;
+    font-size: 1.2rem;
 
     img {
       margin: 2rem auto;

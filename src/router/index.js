@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
-    path: '/',
+    path: '/dada-quotation-generator',
     name: 'Index',
     component: () => import('../views/Home.vue'),
     redirect: '/quotation-input',
@@ -26,13 +26,17 @@ const routes = [
         path: 'final-page',
         name: 'FinalPage',
         component: () => import('../views/FinalPage.vue')
+      },
+      {
+        path: '/:catchAll(.*)',
+        redirect: { name: 'QuotationInput' }
       }
     ]
-  },
-  {
-    path: '/:catchAll(.*)',
-    redirect: { name: 'QuotationInput' }
   }
+  // {
+  //   path: '/:catchAll(.*)',
+  //   redirect: { name: 'QuotationInput' }
+  // }
 ]
 
 const router = createRouter(

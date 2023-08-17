@@ -1,8 +1,9 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuotationDataStore } from '../store/quotationData'
 import { storeToRefs } from 'pinia'
+import BaseLoader from '../components/BaseLoader.vue'
 import BaseStepper from '../components/BaseStepper.vue'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
@@ -14,6 +15,13 @@ const quotationStore = useQuotationDataStore()
 const MAX_CHARACTERS = 72
 const MAX_LINES = 6
 const MAX_CHARACTERS_PER_LINE = 12
+
+// Loading
+const contentImagesNum = ref(0)
+const isLoadDown = computed(() => (contentImagesNum.value === 2 && quotationStore.headerLoadDown))
+const contentImageLoad = () => {
+  contentImagesNum.value++
+}
 
 // Quotation input / textarea
 const { quotation, date } = storeToRefs(quotationStore)
@@ -101,138 +109,147 @@ const toImageSelection = () => {
 
 <template>
   <main>
-    <BaseStepper page="quotationInput" />
-    <BaseCard class="example__card">
-      <div class="example">
-        <div class="title">
-          <h2>名言圖範例：</h2>
-        </div>
-        <div class="images">
-          <img src="../assets/images/example1.png">
-          <img src="../assets/images/example2.png">
-        </div>
-      </div>
-    </BaseCard>
-    <BaseCard>
-      <div class="quotation">
-        <div class="title">
-          <div>
-            <h2>
-              請輸入灰妲曾說過的名言：
-            </h2>
-            <small v-if="!isTextarea"><b>(排版緣故，字型會轉全型；字數最多72字)</b></small>
-            <small v-if="isTextarea"><b>(排版緣故，字型會轉全型；行數最多6行；每行最多12字)</b></small>
+    <BaseLoader v-show="!isLoadDown" />
+    <div v-show="isLoadDown">
+      <BaseStepper page="quotationInput" />
+      <BaseCard class="example__card">
+        <div class="example">
+          <div class="title">
+            <h2>名言圖範例：</h2>
           </div>
-          <div>
-            <input
-              id="isTextarea"
-              v-model="isTextarea"
-              type="checkbox"
+          <div class="images">
+            <img
+              src="../assets/images/example1.png"
+              @load="contentImageLoad"
             >
-            <label for="isTextarea">
-              自行分段
-            </label>
-          </div>
-        </div>
-        <div
-          v-if="!isTextarea"
-          class="quotation__input"
-        >
-          <input
-            type="text"
-            :class="isInputValid ? '' : 'invalid'"
-            :value="quotation"
-            placeholder="請在此輸入名言金句..."
-            @input="updateQuotation"
-          >
-          <div
-            class="invalid__text"
-            :class="isInputValid ? 'hidden' : 'showHint'"
-          >
-            提示：{{ inputValidateText }}
-          </div>
-        </div>
-        <div
-          v-if="isTextarea"
-          class="quotation__textarea"
-        >
-          <textarea
-            :value="quotation"
-            rows="5"
-            :class="isTextareaValid ? '' : 'invalid'"
-            placeholder="請在此輸入名言..."
-            @input="updateQuotation"
-          />
-          <div
-            class="invalid__text"
-            :class="isTextareaValid ? 'hidden' : 'showHint'"
-          >
-            提示：{{ textareaValidateText }}
-          </div>
-        </div>
-      </div>
-
-      <div class="date">
-        <div class="title">
-          <h2>
-            請選擇此名言金句誕生日期：
-          </h2>
-          <div>
-            <input
-              id="hasDate"
-              v-model="hasDate"
-              type="checkbox"
+            <img
+              src="../assets/images/example2.png"
+              @load="contentImageLoad"
             >
-            <label for="hasDate">
-              附上日期
-            </label>
           </div>
         </div>
-        <div class="date__select">
-          <VueDatePicker
-            :model-value="hasDate? date: null"
-            :enable-time-picker="false"
-            auto-apply
-            locale="zh-tw"
-            dark
-            :format="quotationStore.formatDate(date, '/')"
-            :day-names="['一', '二', '三', '四', '五', '六', '日']"
-            :disabled="!hasDate"
-            :teleport="true"
-            @update:model-value="updateDate"
-          >
-            <template #dp-input="{ value }">
+      </BaseCard>
+      <BaseCard>
+        <div class="quotation">
+          <div class="title">
+            <div>
+              <h2>
+                請輸入灰妲曾說過的名言：
+              </h2>
+              <small v-if="!isTextarea"><b>(排版緣故，字型會轉全型；字數最多72字)</b></small>
+              <small v-if="isTextarea"><b>(排版緣故，字型會轉全型；行數最多6行；每行最多12字)</b></small>
+            </div>
+            <div>
               <input
-                class="date__input"
-                type="text"
-                readonly
-                :value="value"
-                :placeholder="hasDate ? '請選擇日期' : '無日期'"
-                :disabled="!hasDate"
+                id="isTextarea"
+                v-model="isTextarea"
+                type="checkbox"
               >
-              <i class="material-symbols-outlined">
-                calendar_month
-              </i>
-            </template>
-          </VueDatePicker>
+              <label for="isTextarea">
+                自行分段
+              </label>
+            </div>
+          </div>
           <div
-            class="invalid__text"
-            :class="isDateValid ? 'hidden' : 'showHint'"
+            v-if="!isTextarea"
+            class="quotation__input"
           >
-            提示：此欄位必填
+            <input
+              type="text"
+              :class="isInputValid ? '' : 'invalid'"
+              :value="quotation"
+              placeholder="請在此輸入名言金句..."
+              @input="updateQuotation"
+            >
+            <div
+              class="invalid__text"
+              :class="isInputValid ? 'hidden' : 'showHint'"
+            >
+              提示：{{ inputValidateText }}
+            </div>
+          </div>
+          <div
+            v-if="isTextarea"
+            class="quotation__textarea"
+          >
+            <textarea
+              :value="quotation"
+              rows="5"
+              :class="isTextareaValid ? '' : 'invalid'"
+              placeholder="請在此輸入名言..."
+              @input="updateQuotation"
+            />
+            <div
+              class="invalid__text"
+              :class="isTextareaValid ? 'hidden' : 'showHint'"
+            >
+              提示：{{ textareaValidateText }}
+            </div>
           </div>
         </div>
-      </div>
-    </BaseCard>
-    <BaseButton
-      class="btn-next"
-      @click="toImageSelection"
-    >
-      下一步
-      <span class="material-symbols-outlined">
-        arrow_forward
-      </span>
-    </BaseButton>
+
+        <div class="date">
+          <div class="title">
+            <h2>
+              請選擇此名言金句誕生日期：
+            </h2>
+            <div>
+              <input
+                id="hasDate"
+                v-model="hasDate"
+                type="checkbox"
+              >
+              <label for="hasDate">
+                附上日期
+              </label>
+            </div>
+          </div>
+          <div class="date__select">
+            <VueDatePicker
+              :model-value="hasDate ? date : null"
+              :enable-time-picker="false"
+              auto-apply
+              locale="zh-tw"
+              dark
+              :format="quotationStore.formatDate(date, '/')"
+              :day-names="['一', '二', '三', '四', '五', '六', '日']"
+              :disabled="!hasDate"
+              :teleport="true"
+              @update:model-value="updateDate"
+            >
+              <template #dp-input="{ value }">
+                <input
+                  class="date__input"
+                  type="text"
+                  readonly
+                  :value="value"
+                  :placeholder="hasDate ? '請選擇日期' : '無日期'"
+                  :disabled="!hasDate"
+                >
+                <i class="material-symbols-outlined">
+                  calendar_month
+                </i>
+              </template>
+            </VueDatePicker>
+            <div
+              class="invalid__text"
+              :class="isDateValid ? 'hidden' : 'showHint'"
+            >
+              提示：此欄位必填
+            </div>
+          </div>
+        </div>
+      </BaseCard>
+      <BaseButton
+        class="btn-next"
+        @click="toImageSelection"
+      >
+        下一步
+        <span class="material-symbols-outlined">
+          arrow_forward
+        </span>
+      </BaseButton>
+    </div>
   </main>
 </template>
 
@@ -348,9 +365,12 @@ textarea {
 
 .date {
   margin-top: 4rem;
+
   .title {
     color: var(--secondary-yellow);
-    h2, div {
+
+    h2,
+    div {
       margin-bottom: 0.5rem;
     }
 
@@ -376,9 +396,9 @@ textarea {
       padding-left: 2.5rem;
 
       &:disabled {
-    border-bottom: 2px solid gray;
-    background-color: rgba(0, 0, 0, 0.06);
-  }
+        border-bottom: 2px solid gray;
+        background-color: rgba(0, 0, 0, 0.06);
+      }
 
     }
 
@@ -503,6 +523,7 @@ h2 {
         font-size: 1.2rem;
       }
     }
+
     .date__select {
       .material-symbols-outlined {
         position: absolute;

@@ -8,6 +8,12 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
     isSidebarOpen.value = sidebarStatus
   }
 
+  // Header load
+  const headerLoadDown = ref(false)
+  const setHeaderLoadDown = (status) => {
+    headerLoadDown.value = status
+  }
+
   // Quotation
   const quotation = ref('')
   const setQuotation = (quotationInput) => {
@@ -56,6 +62,8 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
   return {
     isSidebarOpen,
     setSidebarOpen,
+    headerLoadDown,
+    setHeaderLoadDown,
     quotation,
     setQuotation,
     date,
