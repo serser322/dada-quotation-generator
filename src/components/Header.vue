@@ -1,13 +1,29 @@
 <script setup>
+import { ref, computed } from 'vue'
 import { useQuotationDataStore } from '../store/quotationData'
+import BaseLoader from './BaseLoader.vue'
+
 const quotationStore = useQuotationDataStore()
-const openSidebar = () => {
-  quotationStore.setSidebarOpen(true)
+// const openSidebar = () => {
+//   quotationStore.setSidebarOpen(true)
+// }
+
+const headerLoadedImagesNum = ref(0)
+const isLoadDown = computed(() => headerLoadedImagesNum.value === 3)
+const headerImageLoad = () => {
+  headerLoadedImagesNum.value++
+  isLoadDown.value && quotationStore.setHeaderLoadDown(true)
 }
 </script>
 
 <template>
-  <header>
+  <div
+    v-show="!isLoadDown"
+    class="loader"
+  >
+    <BaseLoader />
+  </div>
+  <header v-show="isLoadDown">
     <!-- <div
       class="header__sidebar__toggler"
       @click="openSidebar"
@@ -16,10 +32,12 @@ const openSidebar = () => {
         menu
       </span>
     </div> -->
+
     <div class="header__image1">
       <img
         src="../assets/header_image.png"
         alt=""
+        @load="headerImageLoad"
       >
     </div>
 
@@ -27,18 +45,37 @@ const openSidebar = () => {
       <img
         src="../assets/logo.png"
         alt=""
+        @load="headerImageLoad"
       >
     </div>
+
     <div class="header__image2">
       <img
         src="../assets/vts-2022-11-02_06h45_09.png"
         alt=""
+        @load="headerImageLoad"
       >
     </div>
   </header>
 </template>
 
 <style lang="scss" scoped>
+.loader {
+  height: 7rem;
+
+  @media (min-width: 576px) {
+    height: 9rem;
+  }
+
+  @media (min-width: 768px) {
+    height: 9.5rem;
+  }
+
+  @media (min-width: 992px) {
+    height: 11rem;
+  }
+}
+
 header {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -234,6 +271,5 @@ header {
     }
 
   }
-
 }
 </style>
