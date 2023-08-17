@@ -9,7 +9,6 @@ import BaseStepper from '../components/BaseStepper.vue'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
 import mergeImages from 'merge-images'
-import image1 from '../assets/images/vts-2021-10-30_20h51_41.png'
 
 const router = useRouter()
 const isSelected = ref(true)
@@ -47,7 +46,7 @@ const makeImage = async () => {
 
     // 取得圖片
     const baseImage = new URL('./../assets/images/image_base.jpg', import.meta.url).href // 尺寸 1080 * 574
-    // const dadaImage = new URL(dadaImagePath.value, import.meta.url).href
+    const dadaImage = getImage.value
     const frameImage = new URL('./../assets/images/frame.png', import.meta.url).href
     const quotationImage = new URL(getTextImage('quotation'), import.meta.url).href
     const nameImage = new URL(getTextImage('name'), import.meta.url).href
@@ -57,7 +56,7 @@ const makeImage = async () => {
     // 合成圖片
     const b64 = await mergeImages([
       baseImage,
-      { src: image1, x: 0, y: 44 },
+      { src: dadaImage, x: 0, y: 44 },
       frameImage,
       { src: quotationImage, x: 480, y: 0 }, // 506px為canvas圖，距離圖左邊界的距離
       { src: nameImage, x: 480, y: 0 },
@@ -74,7 +73,7 @@ const makeImage = async () => {
     const errorText = error?.error?.includes('URL is invalid') ? '輸入的網址好像無效QQ，請確認是否輸入有誤' : error
     sweetAlert.fire({
       icon: 'error',
-      title: '<div style=\'display: flex; justify-content:center; align-items:center\'><span style=\'padding-right:5px\'>出錯惹</span><img width=60 src=\'src/assets/images/error_image.png\'></div>',
+      title: '<div style=\'display: flex; justify-content:center; align-items:center\'><span style=\'padding-right:5px\'>出錯惹</span></div>',
       text: errorText,
       confirmButtonText: '好喔！'
     })
@@ -82,8 +81,6 @@ const makeImage = async () => {
     loading.value = false
   }
 }
-
-const dadaImagePath = computed(() => `./../assets/images/${image.value}`)
 
 const getTextImage = (textContent) => {
   const canvasContext = canvasEl.value.getContext('2d')
@@ -117,11 +114,6 @@ const getTextImage = (textContent) => {
   }
 
   return canvasContext.canvas.toDataURL()
-
-  // 輔助線
-  // canvasContext.strokeStyle = 'yellow'
-  // canvasContext.lineWidth = 2
-  // canvasContext.strokeRect(0, 0, canvasEl.value.width, canvasEl.value.height)
 }
 
 const setTextOnImage = (text, canvas) => {
@@ -190,6 +182,46 @@ const isValid = ref(true)
 const validate = () => {
   isValid.value = isSelected.value ? !!sourceUrl.value : true
 }
+
+// 取得圖片(需使用靜態路由)
+const getImage = computed(() => {
+  switch (image.value) {
+    case 'vts-2023-04-06_01h59_42.png':
+      return new URL('./../assets/images/vts-2023-04-06_01h59_42.png', import.meta.url).href
+    case 'vts-2023-04-06_17h45_46.png':
+      return new URL('./../assets/images/vts-2023-04-06_17h45_46.png', import.meta.url).href
+    case 'vts-2023-04-06_17h47_23.png':
+      return new URL('./../assets/images/vts-2023-04-06_17h47_23.png', import.meta.url).href
+    case 'vts-2023-04-06_17h40_52.png':
+      return new URL('./../assets/images/vts-2023-04-06_17h40_52.png', import.meta.url).href
+    case 'vts-2023-04-06_17h42_42.png':
+      return new URL('./../assets/images/vts-2023-04-06_17h42_42.png', import.meta.url).href
+    case 'vts-2022-11-02_06h44_01.png':
+      return new URL('./../assets/images/vts-2022-11-02_06h44_01.png', import.meta.url).href
+    case 'vts-2022-11-02_06h54_15.png':
+      return new URL('./../assets/images/vts-2022-11-02_06h54_15.png', import.meta.url).href
+    case 'vts-2022-11-02_06h49_12.png':
+      return new URL('./../assets/images/vts-2022-11-02_06h49_12.png', import.meta.url).href
+    case 'vts-2022-11-02_06h48_44.png':
+      return new URL('./../assets/images/vts-2022-11-02_06h48_44.png', import.meta.url).href
+    case 'vts-2022-02-22_01h03_51.png':
+      return new URL('./../assets/images/vts-2022-02-22_01h03_51.png', import.meta.url).href
+    case 'vts-2022-01-24_06h58_47.png':
+      return new URL('./../assets/images/vts-2022-01-24_06h58_47.png', import.meta.url).href
+    case 'vts-2021-10-30_20h51_41.png':
+      return new URL('./../assets/images/vts-2021-10-30_20h51_41.png', import.meta.url).href
+    case 'vts-2021-11-15_18h23_24.png':
+      return new URL('./../assets/images/vts-2021-11-15_18h23_24.png', import.meta.url).href
+    case 'vts-2021-12-25_22h52_13.png':
+      return new URL('./../assets/images/vts-2021-12-25_22h52_13.png', import.meta.url).href
+    case 'vts-2021-12-24_04h22_39.png':
+      return new URL('./../assets/images/vts-2021-12-24_04h22_39.png', import.meta.url).href
+    case 'vts-2021-12-26_13h12_24.png':
+      return new URL('./../assets/images/vts-2021-12-26_13h12_24.png', import.meta.url).href
+    default:
+      return ''
+  }
+})
 
 </script>
 

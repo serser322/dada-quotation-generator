@@ -26,17 +26,17 @@ const routes = [
         path: 'final-page',
         name: 'FinalPage',
         component: () => import('../views/FinalPage.vue')
+      },
+      {
+        path: '/:catchAll(.*)',
+        redirect: { name: 'QuotationInput' }
       }
-      // {
-      //   path: '/:catchAll(.*)',
-      //   redirect: { name: 'QuotationInput' }
-      // }
     ]
-  },
-  {
-    path: '/:catchAll(.*)',
-    redirect: { name: 'QuotationInput' }
   }
+  // {
+  //   path: '/:catchAll(.*)',
+  //   redirect: { name: 'QuotationInput' }
+  // }
 ]
 
 const router = createRouter(
