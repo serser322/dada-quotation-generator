@@ -96,7 +96,7 @@ const getTextImage = (textContent) => {
   // 署名字串
   if (textContent === 'name') {
     canvasContext.font = '37px Noto Sans CJK TC'
-    canvasContext.fillText('──  灰妲', 170, 485)
+    canvasContext.fillText(`${image.value.includes('yoda') ? '──  幼妲' : '──  灰妲'}`, 170, 485)
   }
 
   // 日期字串
@@ -112,7 +112,6 @@ const getTextImage = (textContent) => {
     canvasContext.font = '500 13px Noto Sans CJK TC'
     canvasContext.fillText(`${isSelected.value ? '名言來源：' + shortUrl.value : ''}`, 16, 571)
   }
-
   return canvasContext.canvas.toDataURL()
 }
 
@@ -212,12 +211,16 @@ const getImage = computed(() => {
       return new URL('./../assets/images/vts-2021-10-30_20h51_41.png', import.meta.url).href
     case 'vts-2021-11-15_18h23_24.png':
       return new URL('./../assets/images/vts-2021-11-15_18h23_24.png', import.meta.url).href
-    case 'vts-2021-12-25_22h52_13.png':
-      return new URL('./../assets/images/vts-2021-12-25_22h52_13.png', import.meta.url).href
-    case 'vts-2021-12-24_04h22_39.png':
-      return new URL('./../assets/images/vts-2021-12-24_04h22_39.png', import.meta.url).href
-    case 'vts-2021-12-26_13h12_24.png':
-      return new URL('./../assets/images/vts-2021-12-26_13h12_24.png', import.meta.url).href
+    case 'yoda_01.png':
+      return new URL('./../assets/images/yoda_01.png', import.meta.url).href
+    case 'yoda_02.png':
+      return new URL('./../assets/images/yoda_02.png', import.meta.url).href
+    case 'yoda_03.png':
+      return new URL('./../assets/images/yoda_03.png', import.meta.url).href
+    case 'yoda_04.png':
+      return new URL('./../assets/images/yoda_04.png', import.meta.url).href
+    case 'yoda_05.png':
+      return new URL('./../assets/images/yoda_05.png', import.meta.url).href
     default:
       return ''
   }

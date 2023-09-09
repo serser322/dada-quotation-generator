@@ -12,7 +12,7 @@ import BaseButton from '../components/BaseButton.vue'
 const firstHalfImagesNum = ref(0)
 const secondHalfImagesNum = ref(0)
 const isFirstHalfLoadDown = computed(() => firstHalfImagesNum.value === 6)
-const isSecondHalfLoadDown = computed(() => secondHalfImagesNum.value === 10)
+const isSecondHalfLoadDown = computed(() => secondHalfImagesNum.value === 12)
 const firstHalfImagesLoad = () => {
   firstHalfImagesNum.value++
 }
@@ -242,9 +242,9 @@ const toSourceInput = () => {
           @click="selectImage($event)"
         >
           <img
-            src="../assets/images/vts-2021-12-25_22h52_13.png"
+            src="../assets/images/yoda_01.png"
             alt=""
-            data-img="vts-2021-12-25_22h52_13.png"
+            data-img="yoda_01.png"
             @load="secondHalfImagesLoad"
           >
         </div>
@@ -254,9 +254,9 @@ const toSourceInput = () => {
           @click="selectImage($event)"
         >
           <img
-            src="../assets/images/vts-2021-12-24_04h22_39.png"
+            src="../assets/images/yoda_02.png"
             alt=""
-            data-img="vts-2021-12-24_04h22_39.png"
+            data-img="yoda_02.png"
             @load="secondHalfImagesLoad"
           >
         </div>
@@ -266,9 +266,33 @@ const toSourceInput = () => {
           @click="selectImage($event)"
         >
           <img
-            src="../assets/images/vts-2021-12-26_13h12_24.png"
+            src="../assets/images/yoda_03.png"
             alt=""
-            data-img="vts-2021-12-26_13h12_24.png"
+            data-img="yoda_03.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/yoda_04.png"
+            alt=""
+            data-img="yoda_04.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/yoda_05.png"
+            alt=""
+            data-img="yoda_05.png"
             @load="secondHalfImagesLoad"
           >
         </div>
