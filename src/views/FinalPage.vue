@@ -9,30 +9,29 @@ import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
 import { storeToRefs } from 'pinia'
 
-// 慶祝效果
+/** 慶祝效果 */
 const confetti = new JSConfetti()
 
 onMounted(() => {
   confetti.addConfetti()
 })
 
-// Source input
+/** Source input */
 const quotationStore = useQuotationDataStore()
 const { shortUrl, finalImageB64 } = storeToRefs(quotationStore)
 
-// Copy
+/** Copy */
 const shortUrlInput = ref(null)
 const copyToClipboard = () => {
   navigator.clipboard.writeText(shortUrlInput.value.value)
 }
 
-// Button router
+/** Button router */
 const router = useRouter()
 const toQuotationInput = () => {
   router.push({ name: 'QuotationInput' })
 }
 
-// Download
 const download = () => {
   saveAs(finalImageB64.value, '灰妲名言圖.png')
 }
