@@ -8,11 +8,11 @@ import BaseStepper from '../components/BaseStepper.vue'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
 
-// Loading (為避免一次load 16張圖時間過久，分兩次顯示)
+// Loading (為避免一次load 24張圖時間過久，分兩次顯示)
 const firstHalfImagesNum = ref(0)
 const secondHalfImagesNum = ref(0)
-const isFirstHalfLoadDown = computed(() => firstHalfImagesNum.value === 6)
-const isSecondHalfLoadDown = computed(() => secondHalfImagesNum.value === 12)
+const isFirstHalfLoadDown = computed(() => firstHalfImagesNum.value === 10)
+const isSecondHalfLoadDown = computed(() => secondHalfImagesNum.value === 14)
 const firstHalfImagesLoad = () => {
   firstHalfImagesNum.value++
 }
@@ -78,15 +78,15 @@ const toSourceInput = () => {
         class="images"
         :class="{ invalid__border: !isValid, invalid__border__space: isValid }"
       >
-        <!-- 為避免一次load 16張圖時間過久，前6張load完先顯示 -->
+        <!-- 為避免一次load 24張圖時間過久，前10張load完先顯示 -->
         <div
           class="image"
           @click="selectImage($event)"
         >
           <img
-            src="../assets/images/vts-2023-04-06_01h59_42.png"
+            src="../assets/images/dada_01.png"
             alt=""
-            data-img="vts-2023-04-06_01h59_42.png"
+            data-img="dada_01.png"
             @load="firstHalfImagesLoad"
           >
         </div>
@@ -95,9 +95,9 @@ const toSourceInput = () => {
           @click="selectImage($event)"
         >
           <img
-            src="../assets/images/vts-2023-04-06_17h45_46.png"
+            src="../assets/images/dada_02.png"
             alt=""
-            data-img="vts-2023-04-06_17h45_46.png"
+            data-img="dada_02.png"
             @load="firstHalfImagesLoad"
           >
         </div>
@@ -106,9 +106,9 @@ const toSourceInput = () => {
           @click="selectImage($event)"
         >
           <img
-            src="../assets/images/vts-2023-04-06_17h47_23.png"
+            src="../assets/images/dada_03.png"
             alt=""
-            data-img="vts-2023-04-06_17h47_23.png"
+            data-img="dada_03.png"
             @load="firstHalfImagesLoad"
           >
         </div>
@@ -117,9 +117,9 @@ const toSourceInput = () => {
           @click="selectImage($event)"
         >
           <img
-            src="../assets/images/vts-2023-04-06_17h40_52.png"
+            src="../assets/images/dada_04.png"
             alt=""
-            data-img="vts-2023-04-06_17h40_52.png"
+            data-img="dada_04.png"
             @load="firstHalfImagesLoad"
           >
         </div>
@@ -128,9 +128,9 @@ const toSourceInput = () => {
           @click="selectImage($event)"
         >
           <img
-            src="../assets/images/vts-2023-04-06_17h42_42.png"
+            src="../assets/images/dada_05.png"
             alt=""
-            data-img="vts-2023-04-06_17h42_42.png"
+            data-img="dada_05.png"
             @load="firstHalfImagesLoad"
           >
         </div>
@@ -139,13 +139,59 @@ const toSourceInput = () => {
           @click="selectImage($event)"
         >
           <img
-            src="../assets/images/vts-2022-11-02_06h44_01.png"
+            src="../assets/images/dada_06.png"
             alt=""
-            data-img="vts-2022-11-02_06h44_01.png"
+            data-img="dada_06.png"
             @load="firstHalfImagesLoad"
           >
         </div>
-        <!-- 繼續等待後10張load -->
+
+        <div
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/dada_07.png"
+            alt=""
+            data-img="dada_07.png"
+            @load="firstHalfImagesLoad"
+          >
+        </div>
+        <div
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/dada_08.png"
+            alt=""
+            data-img="dada_08.png"
+            @load="firstHalfImagesLoad"
+          >
+        </div>
+        <div
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/dada_09.png"
+            alt=""
+            data-img="dada_09.png"
+            @load="firstHalfImagesLoad"
+          >
+        </div>
+        <div
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/dada_10.png"
+            alt=""
+            data-img="dada_10.png"
+            @load="firstHalfImagesLoad"
+          >
+        </div>
+
+        <!-- 繼續等待後14張load -->
         <div
           v-if="!isSecondHalfLoadDown"
           class="img__loader"
@@ -158,9 +204,9 @@ const toSourceInput = () => {
           @click="selectImage($event)"
         >
           <img
-            src="../assets/images/vts-2022-11-02_06h54_15.png"
+            src="../assets/images/dada_11.png"
             alt=""
-            data-img="vts-2022-11-02_06h54_15.png"
+            data-img="dada_11.png"
             @load="secondHalfImagesLoad"
           >
         </div>
@@ -170,9 +216,9 @@ const toSourceInput = () => {
           @click="selectImage($event)"
         >
           <img
-            src="../assets/images/vts-2022-11-02_06h49_12.png"
+            src="../assets/images/dada_12.png"
             alt=""
-            data-img="vts-2022-11-02_06h49_12.png"
+            data-img="dada_12.png"
             @load="secondHalfImagesLoad"
           >
         </div>
@@ -182,9 +228,9 @@ const toSourceInput = () => {
           @click="selectImage($event)"
         >
           <img
-            src="../assets/images/vts-2022-11-02_06h48_44.png"
+            src="../assets/images/dada_13.png"
             alt=""
-            data-img="vts-2022-11-02_06h48_44.png"
+            data-img="dada_13.png"
             @load="secondHalfImagesLoad"
           >
         </div>
@@ -194,45 +240,9 @@ const toSourceInput = () => {
           @click="selectImage($event)"
         >
           <img
-            src="../assets/images/vts-2022-02-22_01h03_51.png"
+            src="../assets/images/dada_14.png"
             alt=""
-            data-img="vts-2022-02-22_01h03_51.png"
-            @load="secondHalfImagesLoad"
-          >
-        </div>
-        <div
-          v-show="isSecondHalfLoadDown"
-          class="image"
-          @click="selectImage($event)"
-        >
-          <img
-            src="../assets/images/vts-2022-01-24_06h58_47.png"
-            alt=""
-            data-img="vts-2022-01-24_06h58_47.png"
-            @load="secondHalfImagesLoad"
-          >
-        </div>
-        <div
-          v-show="isSecondHalfLoadDown"
-          class="image"
-          @click="selectImage($event)"
-        >
-          <img
-            src="../assets/images/vts-2021-10-30_20h51_41.png"
-            alt=""
-            data-img="vts-2021-10-30_20h51_41.png"
-            @load="secondHalfImagesLoad"
-          >
-        </div>
-        <div
-          v-show="isSecondHalfLoadDown"
-          class="image"
-          @click="selectImage($event)"
-        >
-          <img
-            src="../assets/images/vts-2021-11-15_18h23_24.png"
-            alt=""
-            data-img="vts-2021-11-15_18h23_24.png"
+            data-img="dada_14.png"
             @load="secondHalfImagesLoad"
           >
         </div>
@@ -293,6 +303,66 @@ const toSourceInput = () => {
             src="../assets/images/yoda_05.png"
             alt=""
             data-img="yoda_05.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/chenda_01.png"
+            alt=""
+            data-img="chenda_01.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/dage_01.png"
+            alt=""
+            data-img="dage_01.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/dabird_01.png"
+            alt=""
+            data-img="dabird_01.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/dabird_02.png"
+            alt=""
+            data-img="dabird_02.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/dabird_03.png"
+            alt=""
+            data-img="dabird_03.png"
             @load="secondHalfImagesLoad"
           >
         </div>

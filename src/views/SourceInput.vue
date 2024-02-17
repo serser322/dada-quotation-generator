@@ -15,25 +15,25 @@ const isSelected = ref(true)
 const canvasEl = ref(null)
 const loading = ref(false)
 
-// Loading
+/** Loading */
 const isLoadDown = ref(false)
 const contentImageLoad = () => {
   isLoadDown.value = true
 }
 
-// Source input
+/** Source input */
 const quotationStore = useQuotationDataStore()
 const { sourceUrl, quotation, image, date, shortUrl } = storeToRefs(quotationStore)
 const updateSource = (event) => {
   quotationStore.setSourceUrl(event.target.value)
 }
 
-// 回上頁 (照片選擇頁)
+/** 回上頁 (照片選擇頁) */
 const toImageSelection = () => {
   router.push({ name: 'ImagesSelection' })
 }
 
-// 名言圖合成製作
+/** 名言圖合成製作 */
 const makeImage = async () => {
   validate()
   if (!isValid.value) return
@@ -95,8 +95,10 @@ const getTextImage = (textContent) => {
 
   // 署名字串
   if (textContent === 'name') {
+    const name = getName()
     canvasContext.font = '37px Noto Sans CJK TC'
-    canvasContext.fillText(`${image.value.includes('yoda') ? '──  幼妲' : '──  灰妲'}`, 170, 485)
+    // canvasContext.fillText(`${image.value.includes('yoda') ? '──  幼妲' : '──  灰妲'}`, 170, 485)
+    canvasContext.fillText(name, 170, 485)
   }
 
   // 日期字串
@@ -159,7 +161,7 @@ const setRainbowText = (canvas, startPosition, textWidth) => {
 // 轉為全形字體
 const convertToFull = (text) => text.replace(/[!-~]/g, matchedChar => String.fromCharCode(matchedChar.charCodeAt(0) + 0xfee0))
 
-// 找出最長字串
+/** 找出最長字串 */
 const getLongestString = (strArray) => {
   let longestStr = ''
   strArray.forEach(string => {
@@ -168,7 +170,7 @@ const getLongestString = (strArray) => {
   return longestStr
 }
 
-// 建立短網址，並儲存之
+/** 建立短網址，並儲存 */
 const setShortUrl = async (originUrl) => {
   // 121~133行是 URL Shortener Service API提供之 url 與 options 設置
   const url = 'https://url-shortener-service.p.rapidapi.com/shorten'
@@ -195,41 +197,62 @@ const setShortUrl = async (originUrl) => {
   }
 }
 
-// 驗證
+/** 驗證 */
 const isValid = ref(true)
 const validate = () => {
   isValid.value = isSelected.value ? !!sourceUrl.value : true
 }
 
-// 取得圖片(需使用靜態路由)
+/** 取得對應署名 */
+const getName = () => {
+  const name = image.value.split('_')[0]
+  switch (name) {
+    case 'dada':
+      return '──  灰妲'
+    case 'yoda':
+      return '──  幼妲'
+    case 'chenda':
+      return '──  真妲'
+    case 'dage':
+      return '──  妲哥'
+    case 'dabird':
+      return '──  鳥球'
+    default:
+      return '──  灰妲'
+  }
+}
+
+/** 取得圖片(需使用靜態路由) */
 const getImage = computed(() => {
   switch (image.value) {
-    case 'vts-2023-04-06_01h59_42.png':
-      return new URL('./../assets/images/vts-2023-04-06_01h59_42.png', import.meta.url).href
-    case 'vts-2023-04-06_17h45_46.png':
-      return new URL('./../assets/images/vts-2023-04-06_17h45_46.png', import.meta.url).href
-    case 'vts-2023-04-06_17h47_23.png':
-      return new URL('./../assets/images/vts-2023-04-06_17h47_23.png', import.meta.url).href
-    case 'vts-2023-04-06_17h40_52.png':
-      return new URL('./../assets/images/vts-2023-04-06_17h40_52.png', import.meta.url).href
-    case 'vts-2023-04-06_17h42_42.png':
-      return new URL('./../assets/images/vts-2023-04-06_17h42_42.png', import.meta.url).href
-    case 'vts-2022-11-02_06h44_01.png':
-      return new URL('./../assets/images/vts-2022-11-02_06h44_01.png', import.meta.url).href
-    case 'vts-2022-11-02_06h54_15.png':
-      return new URL('./../assets/images/vts-2022-11-02_06h54_15.png', import.meta.url).href
-    case 'vts-2022-11-02_06h49_12.png':
-      return new URL('./../assets/images/vts-2022-11-02_06h49_12.png', import.meta.url).href
-    case 'vts-2022-11-02_06h48_44.png':
-      return new URL('./../assets/images/vts-2022-11-02_06h48_44.png', import.meta.url).href
-    case 'vts-2022-02-22_01h03_51.png':
-      return new URL('./../assets/images/vts-2022-02-22_01h03_51.png', import.meta.url).href
-    case 'vts-2022-01-24_06h58_47.png':
-      return new URL('./../assets/images/vts-2022-01-24_06h58_47.png', import.meta.url).href
-    case 'vts-2021-10-30_20h51_41.png':
-      return new URL('./../assets/images/vts-2021-10-30_20h51_41.png', import.meta.url).href
-    case 'vts-2021-11-15_18h23_24.png':
-      return new URL('./../assets/images/vts-2021-11-15_18h23_24.png', import.meta.url).href
+    case 'dada_01.png':
+      return new URL('./../assets/images/dada_01.png', import.meta.url).href
+    case 'dada_02.png':
+      return new URL('./../assets/images/dada_02.png', import.meta.url).href
+    case 'dada_03.png':
+      return new URL('./../assets/images/dada_03.png', import.meta.url).href
+    case 'dada_04.png':
+      return new URL('./../assets/images/dada_04.png', import.meta.url).href
+    case 'dada_05.png':
+      return new URL('./../assets/images/dada_05.png', import.meta.url).href
+    case 'dada_06.png':
+      return new URL('./../assets/images/dada_06.png', import.meta.url).href
+    case 'dada_07.png':
+      return new URL('./../assets/images/dada_07.png', import.meta.url).href
+    case 'dada_08.png':
+      return new URL('./../assets/images/dada_08.png', import.meta.url).href
+    case 'dada_09.png':
+      return new URL('./../assets/images/dada_09.png', import.meta.url).href
+    case 'dada_10.png':
+      return new URL('./../assets/images/dada_10.png', import.meta.url).href
+    case 'dada_11.png':
+      return new URL('./../assets/images/dada_11.png', import.meta.url).href
+    case 'dada_12.png':
+      return new URL('./../assets/images/dada_12.png', import.meta.url).href
+    case 'dada_13.png':
+      return new URL('./../assets/images/dada_13.png', import.meta.url).href
+    case 'dada_14.png':
+      return new URL('./../assets/images/dada_14.png', import.meta.url).href
     case 'yoda_01.png':
       return new URL('./../assets/images/yoda_01.png', import.meta.url).href
     case 'yoda_02.png':
@@ -240,6 +263,16 @@ const getImage = computed(() => {
       return new URL('./../assets/images/yoda_04.png', import.meta.url).href
     case 'yoda_05.png':
       return new URL('./../assets/images/yoda_05.png', import.meta.url).href
+    case 'chenda_01.png':
+      return new URL('./../assets/images/chenda_01.png', import.meta.url).href
+    case 'dage_01.png':
+      return new URL('./../assets/images/dage_01.png', import.meta.url).href
+    case 'dabird_01.png':
+      return new URL('./../assets/images/dabird_01.png', import.meta.url).href
+    case 'dabird_02.png':
+      return new URL('./../assets/images/dabird_02.png', import.meta.url).href
+    case 'dabird_03.png':
+      return new URL('./../assets/images/dabird_03.png', import.meta.url).href
     default:
       return ''
   }
