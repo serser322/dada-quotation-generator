@@ -26,19 +26,29 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
     date.value = value
   }
 
-  // image
+  // Style
+  const hasRainbowText = ref(false)
+  const setRainbowText = (checkValue) => {
+    hasRainbowText.value = checkValue
+  }
+  const hasPMingLiU = ref(false)
+  const setPMingLiU = (checkValue) => {
+    hasPMingLiU.value = checkValue
+  }
+
+  // Image
   const image = ref('')
   const setImage = (imageName) => {
     image.value = imageName
   }
 
-  // source
+  // Source
   const sourceUrl = ref('')
   const setSourceUrl = (source) => {
     sourceUrl.value = source
   }
 
-  // source short url
+  // Source short url
   const shortUrl = ref('')
   const setShortUrl = (url) => {
     shortUrl.value = url
@@ -68,6 +78,10 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
     setQuotation,
     date,
     setDate,
+    hasRainbowText,
+    setRainbowText,
+    hasPMingLiU,
+    setPMingLiU,
     image,
     setImage,
     sourceUrl,

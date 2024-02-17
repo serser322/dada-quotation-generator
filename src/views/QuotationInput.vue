@@ -98,6 +98,17 @@ watch(hasDate, newValue => {
   }
 })
 
+// Style select
+const hasRainbowText = ref(quotationStore.hasRainbowText)
+const setRainbowText = (event) => {
+  quotationStore.setRainbowText(event.target.checked)
+}
+
+const hasPMingLiU = ref(quotationStore.hasPMingLiU)
+const setPMingLiU = (event) => {
+  quotationStore.setPMingLiU(event.target.checked)
+}
+
 // Button router
 const router = useRouter()
 const toImageSelection = () => {
@@ -238,6 +249,39 @@ const toImageSelection = () => {
               提示：此欄位必填
             </div>
           </div>
+          <div class="style">
+            <div class="title">
+              <div>
+                <h2>特殊風格選項：</h2>
+                <small>(溫馨提醒：以下設計，有中風風險，請謹慎勾選)</small>
+              </div>
+            </div>
+
+            <div class="style__select">
+              <div>
+                <input
+                  id="hasRainbowText"
+                  v-model="hasRainbowText"
+                  type="checkbox"
+                  @change="setRainbowText"
+                >
+                <label for="hasRainbowText">
+                  彩虹色字體
+                </label>
+              </div>
+              <div>
+                <input
+                  id="hasPMingLiU"
+                  v-model="hasPMingLiU"
+                  type="checkbox"
+                  @change="setPMingLiU"
+                >
+                <label for="hasPMingLiU">
+                  新細明體
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
       </BaseCard>
       <BaseButton
@@ -254,12 +298,14 @@ const toImageSelection = () => {
 </template>
 
 <style lang="scss" scoped>
+main {
+  color: var(--secondary-yellow);
+}
 .example__card {
   margin-bottom: 1.5rem;
 
   .example {
     .title {
-      color: var(--secondary-yellow);
       margin-bottom: 1rem;
     }
 
@@ -279,23 +325,12 @@ const toImageSelection = () => {
 
 .quotation {
   .title {
-    color: var(--secondary-yellow);
-
     div {
       margin-bottom: 0.5rem;
 
       h2 {
         margin-bottom: 0.5rem;
       }
-    }
-
-    #isTextarea {
-      accent-color: ForestGreen;
-    }
-
-    input[type=checkbox] {
-      transform: scale(1.3);
-      margin-right: 2px;
     }
 
     label[for=isTextarea] {
@@ -363,24 +398,19 @@ textarea {
   }
 }
 
+input[type=checkbox] {
+      transform: scale(1.3);
+      margin-right: 2px;
+      accent-color: ForestGreen;
+}
 .date {
   margin-top: 4rem;
 
   .title {
-    color: var(--secondary-yellow);
 
     h2,
     div {
       margin-bottom: 0.5rem;
-    }
-
-    #hasDate {
-      accent-color: ForestGreen;
-    }
-
-    input[type=checkbox] {
-      transform: scale(1.3);
-      margin-right: 2px;
     }
 
     label[for=hasDate] {
@@ -403,11 +433,28 @@ textarea {
     }
 
     .material-symbols-outlined {
-      color: var(--secondary-yellow);
       position: absolute;
       top: 13px;
       left: 0;
     }
+  }
+}
+
+.style {
+  margin-top: 4rem;
+  .title {
+    div {
+      margin-bottom: 1rem;
+
+      h2 {
+        margin-bottom: 0.5rem;
+      }
+    }
+
+  }
+  .style__select {
+    display: flex;
+    gap: 2rem;
   }
 }
 
@@ -479,11 +526,6 @@ h2 {
       align-items: center;
       justify-content: space-between;
 
-      input[type=checkbox] {
-        transform: scale(1.6);
-        margin-right: 5px;
-      }
-
       label[for=isTextarea] {
         font-size: 1.2rem;
       }
@@ -504,6 +546,10 @@ h2 {
     }
   }
 
+  input[type=checkbox] {
+        transform: scale(1.6);
+        margin-right: 5px;
+  }
   .date {
     .title {
       display: flex;
@@ -512,11 +558,6 @@ h2 {
 
       div {
         margin-top: 1.5rem;
-      }
-
-      input[type=checkbox] {
-        transform: scale(1.6);
-        margin-right: 5px;
       }
 
       label[for=hasDate] {

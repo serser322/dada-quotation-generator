@@ -15,6 +15,11 @@ const isSelected = ref(true)
 const canvasEl = ref(null)
 const loading = ref(false)
 
+const quotationStore = useQuotationDataStore()
+const { sourceUrl, quotation, hasRainbowText, hasPMingLiU, image, date, shortUrl } = storeToRefs(quotationStore)
+
+const fontStyle = ref(hasPMingLiU.value ? 'PMingLiU' : 'Noto Sans CJK TC')
+
 /** Loading */
 const isLoadDown = ref(false)
 const contentImageLoad = () => {
@@ -22,8 +27,6 @@ const contentImageLoad = () => {
 }
 
 /** Source input */
-const quotationStore = useQuotationDataStore()
-const { sourceUrl, quotation, image, date, shortUrl } = storeToRefs(quotationStore)
 const updateSource = (event) => {
   quotationStore.setSourceUrl(event.target.value)
 }
@@ -95,16 +98,19 @@ const getTextImage = (textContent) => {
 
   // 署名字串
   if (textContent === 'name') {
+    canvasContext.font = `37px ${fontStyle.value}`
     const name = getName()
-    canvasContext.font = '37px Noto Sans CJK TC'
-    // canvasContext.fillText(`${image.value.includes('yoda') ? '──  幼妲' : '──  灰妲'}`, 170, 485)
+    const textWidth = canvasContext.measureText(name).width
+    hasRainbowText.value && setRainbowText(canvasContext, 170, textWidth)
     canvasContext.fillText(name, 170, 485)
   }
 
   // 日期字串
   if (textContent === 'date') {
-    canvasContext.font = '30px Noto Sans CJK TC'
+    canvasContext.font = `30px ${fontStyle.value}`
     const dateString = date.value ? quotationStore.formatDate(date.value, ' . ') : ''
+    const textWidth = canvasContext.measureText(dateString).width
+    hasRainbowText.value && setRainbowText(canvasContext, 370, textWidth)
     canvasContext.fillText(`${dateString}`, 370, 485)
   }
 
@@ -118,7 +124,7 @@ const getTextImage = (textContent) => {
 }
 
 const setTextOnImage = (text, canvas) => {
-  canvas.font = 'bold 40px Noto Sans CJK TC'
+  canvas.font = `bold 40px ${fontStyle.value}`
   const textArray = convertToFull(text).match(/.{1,12}/g) // 先轉為全形字體，而後每12字組成一字串，再依序放入陣列中
   const lineHeight = (canvas.measureText(textArray[0]).fontBoundingBoxAscent + canvas.measureText(textArray[0]).fontBoundingBoxDescent) * 1.2 // *1.3行高
   const totalLines = textArray.length
@@ -128,7 +134,7 @@ const setTextOnImage = (text, canvas) => {
   if (totalLines === 1) {
     const textWidth = canvas.measureText(textArray[0]).width
     const startPosition = (canvasEl.value.width - textWidth) / 2 - 20 // 20為x軸位置(留白)，因此計算上須扣除
-    setRainbowText(canvas, startPosition, textWidth)
+    hasRainbowText.value && setRainbowText(canvas, startPosition, textWidth)
     canvas.fillText(textArray[0], startPosition, startYPosition) // 20為x軸位置(留白)，因此計算上須扣除
   }
 
@@ -136,7 +142,7 @@ const setTextOnImage = (text, canvas) => {
   if (totalLines > 1) {
     const longestTextWidth = canvas.measureText(getLongestString(textArray)).width
     const startPosition = (canvasEl.value.width - longestTextWidth) / 2 - 20 // 20為x軸位置(留白)，因此計算上須扣除
-    setRainbowText(canvas, startPosition, longestTextWidth)
+    hasRainbowText.value && setRainbowText(canvas, startPosition, longestTextWidth)
     textArray.forEach((element, i) => {
       canvas.fillText(element, startPosition, startYPosition + i * lineHeight)
     })
@@ -146,7 +152,7 @@ const setTextOnImage = (text, canvas) => {
 // 設定彩虹字
 const setRainbowText = (canvas, startPosition, textWidth) => {
   // Create gradient
-  const gradient = canvas.createLinearGradient(startPosition, 0, startPosition + textWidth, 0)
+  const gradient = canvas.createLinearGradient(startPosition, 10, startPosition + textWidth, 0)
   gradient.addColorStop('0', 'red')
   gradient.addColorStop('0.166', 'orange')
   gradient.addColorStop('0.332', 'yellow')
@@ -284,7 +290,12 @@ const getImage = computed(() => {
   <main>
     <BaseStepper page="sourceInput" />
     <BaseLoader v-show="!isLoadDown" />
-    <canvas ref="canvasEl" class="hide" width="600" height="574" />
+    <canvas
+      ref="canvasEl"
+      class="hide"
+      width="600"
+      height="574"
+    />
     <div v-show="isLoadDown">
       <BaseCard>
         <div class="source__input">
@@ -293,25 +304,46 @@ const getImage = computed(() => {
               請輸入該句名言出處：
             </h2>
             <div>
-              <input id="hasSource" v-model="isSelected" type="checkbox">
+              <input
+                id="hasSource"
+                v-model="isSelected"
+                type="checkbox"
+              >
               <label for="hasSource">
                 附上來源連結
               </label>
             </div>
           </div>
-          <input type="text" :value="isSelected ? sourceUrl : ''" :class="isValid ? '' : 'invalid'"
-            :placeholder="isSelected ? '直播連結(含秒數連結佳)、推特連結等' : '無連結'" :disabled="!isSelected" @change="updateSource">
-          <div v-show="isSelected" class="invalid__text" :class="isValid ? 'hidden' : 'showHint'">
+          <input
+            type="text"
+            :value="isSelected ? sourceUrl : ''"
+            :class="isValid ? '' : 'invalid'"
+            :placeholder="isSelected ? '直播連結(含秒數連結佳)、推特連結等' : '無連結'"
+            :disabled="!isSelected"
+            @change="updateSource"
+          >
+          <div
+            v-show="isSelected"
+            class="invalid__text"
+            :class="isValid ? 'hidden' : 'showHint'"
+          >
             提示：如有勾選「附上來源連結」，請貼上來源連結
           </div>
           <!-- (底下div為若上方因v-show讓element消失後，所預留之空間) -->
-          <div v-show="!isSelected" class="invalid__text hidden">
+          <div
+            v-show="!isSelected"
+            class="invalid__text hidden"
+          >
             (預留空間)
           </div>
         </div>
         <div class="info">
           <div>此連結將自動轉為短網址，並附在圖中左下角，如下示意：</div>
-          <img src="../assets/images/source_example.png" alt="" @load="contentImageLoad">
+          <img
+            src="../assets/images/source_example.png"
+            alt=""
+            @load="contentImageLoad"
+          >
           <ul>
             <li>附上來源連結，除證明該名言之真實性，也方便有興趣的觀眾或烤肉man，能快速輸入短連結觀看內容。</li>
             <li>若覺得短連結影響名言圖的美觀性，或不便查找來源，也可取消勾選右上角的「附上來源連結」。</li>
@@ -325,14 +357,21 @@ const getImage = computed(() => {
           </span>
           上一步
         </BaseButton>
-        <BaseButton :loading="loading" @click="makeImage">
+        <BaseButton
+          :loading="loading"
+          @click="makeImage"
+        >
           製作成圖
           <span class="material-symbols-outlined">
             arrow_forward
           </span>
         </BaseButton>
       </div>
-      <div v-if="isSelected" class="invalid__hint invalid__text" :class="isValid ? 'hidden' : 'showHint'">
+      <div
+        v-if="isSelected"
+        class="invalid__hint invalid__text"
+        :class="isValid ? 'hidden' : 'showHint'"
+      >
         提示：如有勾選「附上來源連結」，請貼上連結，若無則取消勾選
       </div>
     </div>
