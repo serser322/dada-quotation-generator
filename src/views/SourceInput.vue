@@ -98,20 +98,24 @@ const getTextImage = (textContent) => {
 
   // 署名字串
   if (textContent === 'name') {
-    canvasContext.font = `37px ${fontStyle.value}`
+    const fontSize = 37
+    const xStartPosition = 170
+    const yStartPosition = 485
     const name = getName()
-    const textWidth = canvasContext.measureText(name).width
-    hasRainbowText.value && setRainbowText(canvasContext, 170, textWidth)
-    canvasContext.fillText(name, 170, 485)
+    canvasContext.font = `${fontSize}px ${fontStyle.value}`
+    hasRainbowText.value && setRainbowText(canvasContext, yStartPosition, fontSize)
+    canvasContext.fillText(name, xStartPosition, yStartPosition)
   }
 
   // 日期字串
   if (textContent === 'date') {
-    canvasContext.font = `30px ${fontStyle.value}`
+    const fontSize = 30
+    const xStartPosition = 370
+    const yStartPosition = 485
+    canvasContext.font = `${fontSize}px ${fontStyle.value}`
     const dateString = date.value ? quotationStore.formatDate(date.value, ' . ') : ''
-    const textWidth = canvasContext.measureText(dateString).width
-    hasRainbowText.value && setRainbowText(canvasContext, 370, textWidth)
-    canvasContext.fillText(`${dateString}`, 370, 485)
+    hasRainbowText.value && setRainbowText(canvasContext, yStartPosition, fontSize)
+    canvasContext.fillText(`${dateString}`, xStartPosition, yStartPosition)
   }
 
   // 來源短網址字串
@@ -124,7 +128,9 @@ const getTextImage = (textContent) => {
 }
 
 const setTextOnImage = (text, canvas) => {
-  canvas.font = `bold 40px ${fontStyle.value}`
+  const fontSize = 40
+  const boldStyle = hasPMingLiU.value ? '' : 'bold'
+  canvas.font = `${boldStyle} ${fontSize}px ${fontStyle.value}`
   const textArray = convertToFull(text).match(/.{1,12}/g) // 先轉為全形字體，而後每12字組成一字串，再依序放入陣列中
   const lineHeight = (canvas.measureText(textArray[0]).fontBoundingBoxAscent + canvas.measureText(textArray[0]).fontBoundingBoxDescent) * 1.2 // *1.3行高
   const totalLines = textArray.length
@@ -134,7 +140,7 @@ const setTextOnImage = (text, canvas) => {
   if (totalLines === 1) {
     const textWidth = canvas.measureText(textArray[0]).width
     const startPosition = (canvasEl.value.width - textWidth) / 2 - 20 // 20為x軸位置(留白)，因此計算上須扣除
-    hasRainbowText.value && setRainbowText(canvas, startPosition, textWidth)
+    hasRainbowText.value && setRainbowText(canvas, startYPosition, fontSize)
     canvas.fillText(textArray[0], startPosition, startYPosition) // 20為x軸位置(留白)，因此計算上須扣除
   }
 
@@ -142,24 +148,21 @@ const setTextOnImage = (text, canvas) => {
   if (totalLines > 1) {
     const longestTextWidth = canvas.measureText(getLongestString(textArray)).width
     const startPosition = (canvasEl.value.width - longestTextWidth) / 2 - 20 // 20為x軸位置(留白)，因此計算上須扣除
-    hasRainbowText.value && setRainbowText(canvas, startPosition, longestTextWidth)
     textArray.forEach((element, i) => {
+      hasRainbowText.value && setRainbowText(canvas, startYPosition + i * lineHeight, fontSize)
       canvas.fillText(element, startPosition, startYPosition + i * lineHeight)
     })
   }
 }
 
 // 設定彩虹字
-const setRainbowText = (canvas, startPosition, textWidth) => {
+const setRainbowText = (canvas, yPosition, textHeight) => {
   // Create gradient
-  const gradient = canvas.createLinearGradient(startPosition, 10, startPosition + textWidth, 0)
-  gradient.addColorStop('0', 'red')
-  gradient.addColorStop('0.166', 'orange')
-  gradient.addColorStop('0.332', 'yellow')
-  gradient.addColorStop('0.498', 'green')
-  gradient.addColorStop('0.665', 'blue')
-  gradient.addColorStop('0.832', 'indigo')
-  gradient.addColorStop('1', 'purple')
+  const gradient = canvas.createLinearGradient(0, yPosition - textHeight + 11, 0, yPosition) // +11 做微調
+  const rainbowColor = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'purple']
+  rainbowColor.forEach((color, index) => {
+    gradient.addColorStop(String(index * 0.1666), color)
+  })
   // Fill with gradient
   canvas.fillStyle = gradient
 }

@@ -252,8 +252,8 @@ const toImageSelection = () => {
           <div class="style">
             <div class="title">
               <div>
-                <h2>特殊風格選項：</h2>
-                <small>(溫馨提醒：以下設計，有中風風險，請謹慎勾選)</small>
+                <h2>特殊風格選則：</h2>
+                <small>(溫馨提醒：勾選任一種，中風你和我)</small>
               </div>
             </div>
 
