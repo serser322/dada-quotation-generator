@@ -11,12 +11,12 @@ import BaseButton from '../components/BaseButton.vue'
 import mergeImages from 'merge-images'
 
 const router = useRouter()
-const isSelected = ref(true)
+const isSelected = ref(false)
 const canvasEl = ref(null)
 const loading = ref(false)
 
 const quotationStore = useQuotationDataStore()
-const { sourceUrl, quotation, hasRainbowText, hasPMingLiU, image, date, shortUrl } = storeToRefs(quotationStore)
+const { sourceUrl, quotation, hasRainbowText, hasPMingLiU, hasMixFontStyle, image, date, shortUrl } = storeToRefs(quotationStore)
 
 const fontStyle = ref(hasPMingLiU.value ? 'PMingLiU' : 'Noto Sans CJK TC')
 
@@ -99,12 +99,14 @@ const getTextImage = (textContent) => {
   // 署名字串
   if (textContent === 'name') {
     const fontSize = 37
-    const xStartPosition = 170
+    const dashXStartPosition = 170
+    const xStartPosition = 260
     const yStartPosition = 485
     const name = getName()
     canvasContext.font = `${fontSize}px ${fontStyle.value}`
     hasRainbowText.value && setRainbowText(canvasContext, yStartPosition, fontSize)
-    canvasContext.fillText(name, xStartPosition, yStartPosition)
+    setText(canvasContext, '——', fontSize, dashXStartPosition, yStartPosition)
+    setText(canvasContext, name, fontSize, xStartPosition, yStartPosition)
   }
 
   // 日期字串
@@ -115,7 +117,7 @@ const getTextImage = (textContent) => {
     canvasContext.font = `${fontSize}px ${fontStyle.value}`
     const dateString = date.value ? quotationStore.formatDate(date.value, ' . ') : ''
     hasRainbowText.value && setRainbowText(canvasContext, yStartPosition, fontSize)
-    canvasContext.fillText(`${dateString}`, xStartPosition, yStartPosition)
+    canvasContext.fillText(dateString, xStartPosition, yStartPosition)
   }
 
   // 來源短網址字串
@@ -139,18 +141,18 @@ const setTextOnImage = (text, canvas) => {
   // 若字體僅一行，水平置中
   if (totalLines === 1) {
     const textWidth = canvas.measureText(textArray[0]).width
-    const startPosition = (canvasEl.value.width - textWidth) / 2 - 20 // 20為x軸位置(留白)，因此計算上須扣除
+    const startXPosition = (canvasEl.value.width - textWidth) / 2 - 20 // 20為x軸位置(留白)，因此計算上須扣除
     hasRainbowText.value && setRainbowText(canvas, startYPosition, fontSize)
-    canvas.fillText(textArray[0], startPosition, startYPosition) // 20為x軸位置(留白)，因此計算上須扣除
+    setText(canvas, textArray[0], fontSize, startXPosition, startYPosition)
   }
 
   // 超過一行，多行排列
   if (totalLines > 1) {
     const longestTextWidth = canvas.measureText(getLongestString(textArray)).width
-    const startPosition = (canvasEl.value.width - longestTextWidth) / 2 - 20 // 20為x軸位置(留白)，因此計算上須扣除
+    const startXPosition = (canvasEl.value.width - longestTextWidth) / 2 - 20 // 20為x軸位置(留白)，因此計算上須扣除
     textArray.forEach((element, i) => {
       hasRainbowText.value && setRainbowText(canvas, startYPosition + i * lineHeight, fontSize)
-      canvas.fillText(element, startPosition, startYPosition + i * lineHeight)
+      setText(canvas, element, fontSize, startXPosition, startYPosition + i * lineHeight)
     })
   }
 }
@@ -165,6 +167,21 @@ const setRainbowText = (canvas, yPosition, textHeight) => {
   })
   // Fill with gradient
   canvas.fillStyle = gradient
+}
+
+// 判斷是否套用混搭字體，並填上文字
+const setText = (canvas, text, fontSize, xPosition, yPosition) => {
+  const fontArray = ['PMingLiU', 'Noto Sans CJK TC', 'DFKai-SB', 'Microsoft YaHei', 'Microsoft JhengHei']
+
+  if (hasMixFontStyle.value) {
+    for (let i = 0; i < text.length; i++) {
+      const randomNum = Math.floor(Math.random() * fontArray.length)
+      canvas.font = `${fontSize}px ${fontArray[randomNum]}`
+      canvas.fillText(text[i], xPosition + (fontSize * i), yPosition)
+    }
+  } else {
+    canvas.fillText(text, xPosition, yPosition)
+  }
 }
 
 // 轉為全形字體
@@ -217,17 +234,17 @@ const getName = () => {
   const name = image.value.split('_')[0]
   switch (name) {
     case 'dada':
-      return '──  灰妲'
+      return '灰妲'
     case 'yoda':
-      return '──  幼妲'
+      return '幼妲'
     case 'chenda':
-      return '──  真妲'
+      return '真妲'
     case 'dage':
-      return '──  妲哥'
+      return '妲哥'
     case 'dabird':
-      return '──  鳥球'
+      return '鳥球'
     default:
-      return '──  灰妲'
+      return '灰妲'
   }
 }
 
@@ -580,4 +597,10 @@ input[type=text] {
     max-width: 40rem;
   }
 }
+
+@font-face {
+  font-family: "cwTeXYen";
+  src: url(https://fonts.googleapis.com/earlyaccess/cwtexyen.css)
+}
+
 </style>

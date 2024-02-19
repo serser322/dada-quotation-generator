@@ -109,6 +109,11 @@ const setPMingLiU = (event) => {
   quotationStore.setPMingLiU(event.target.checked)
 }
 
+const hasMixFontStyle = ref(quotationStore.hasMixFontStyle)
+const setMixFontStyle = (event) => {
+  quotationStore.setMixFontStyle(event.target.checked)
+}
+
 // Button router
 const router = useRouter()
 const toImageSelection = () => {
@@ -278,6 +283,17 @@ const toImageSelection = () => {
                 >
                 <label for="hasPMingLiU">
                   新細明體
+                </label>
+              </div>
+              <div>
+                <input
+                  id="hasMixFontStyle"
+                  v-model="hasMixFontStyle"
+                  type="checkbox"
+                  @change="setMixFontStyle"
+                >
+                <label for="hasMixFontStyle">
+                  混搭字體
                 </label>
               </div>
             </div>
@@ -454,7 +470,8 @@ input[type=checkbox] {
   }
   .style__select {
     display: flex;
-    gap: 2rem;
+    flex-wrap: wrap;
+    gap:1rem 2rem;
   }
 }
 

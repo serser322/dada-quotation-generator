@@ -31,9 +31,15 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
   const setRainbowText = (checkValue) => {
     hasRainbowText.value = checkValue
   }
+
   const hasPMingLiU = ref(false)
   const setPMingLiU = (checkValue) => {
     hasPMingLiU.value = checkValue
+  }
+
+  const hasMixFontStyle = ref(false)
+  const setMixFontStyle = (checkValue) => {
+    hasMixFontStyle.value = checkValue
   }
 
   // Image
@@ -82,6 +88,8 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
     setRainbowText,
     hasPMingLiU,
     setPMingLiU,
+    hasMixFontStyle,
+    setMixFontStyle,
     image,
     setImage,
     sourceUrl,
