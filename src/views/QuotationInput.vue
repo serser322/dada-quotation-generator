@@ -24,7 +24,15 @@ const contentImageLoad = () => {
 }
 
 // Quotation input / textarea
-const { quotation, date, fontColorValue, fontStyleValue } = storeToRefs(quotationStore)
+const {
+  quotation,
+  date,
+  fontColorValue,
+  fontStyleValue,
+  hasTextShadow,
+  backgroundImageValue
+} = storeToRefs(quotationStore)
+
 const isTextarea = ref(true)
 
 const isInputValid = ref(true)
@@ -99,14 +107,24 @@ watch(hasDate, newValue => {
 })
 
 // Style select radio
-const fontColor = ref(fontColorValue)
-const setFontColor = (event) => {
-  quotationStore.setFontColor = fontColor.value
+const fontStyle = ref(fontStyleValue.value)
+const setFontStyle = (event) => {
+  quotationStore.setFontStyleValue(fontStyle.value)
 }
 
-const fontStyle = ref(fontStyleValue)
-const setFontStyle = (event) => {
-  quotationStore.setFontStyle = fontStyle.value
+const fontColor = ref(fontColorValue.value)
+const setFontColor = (event) => {
+  quotationStore.setFontColorValue(fontColor.value)
+}
+
+const hasShadow = ref(hasTextShadow.value)
+const setHasShadow = (event) => {
+  quotationStore.setHasTextShadow(hasShadow.value)
+}
+
+const backgroundImage = ref(backgroundImageValue.value)
+const setBackgroundImage = (event) => {
+  quotationStore.setBackgroundImageValue(backgroundImage.value)
 }
 
 // Button router
@@ -260,6 +278,51 @@ const toImageSelection = () => {
             <div class="style__select">
               <div>
                 <div class="subtitle">
+                  字型：
+                </div>
+                <div class="options">
+                  <div>
+                    <input
+                      id="Noto Sans CJK TC"
+                      v-model="fontStyle"
+                      type="radio"
+                      value="Noto Sans CJK TC"
+                      @change="setFontStyle"
+                    >
+                    <label for="Noto Sans CJK TC">
+                      無
+                      <small>(真誠建議)</small>
+                    </label>
+                  </div>
+                  <div>
+                    <input
+                      id="PMingLiU"
+                      v-model="fontStyle"
+                      type="radio"
+                      value="PMingLiU"
+                      @change="setFontStyle"
+                    >
+                    <label for="PMingLiU">
+                      新細明體
+                    </label>
+                  </div>
+                  <div>
+                    <input
+                      id="mixStyle"
+                      v-model="fontStyle"
+                      type="radio"
+                      value="mixStyle"
+                      @change="setFontStyle"
+                    >
+                    <label for="mixStyle">
+                      雞尾酒字體 (字體混搭)
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div class="subtitle">
                   字體顏色：
                 </div>
                 <div class="options">
@@ -305,44 +368,77 @@ const toImageSelection = () => {
 
               <div>
                 <div class="subtitle">
-                  字體：
+                  文字陰影：
                 </div>
                 <div class="options">
                   <div>
                     <input
-                      id="Noto Sans CJK TC"
-                      v-model="fontStyle"
+                      id="no"
+                      v-model="hasShadow"
                       type="radio"
-                      value="Noto Sans CJK TC"
-                      @change="setFontStyle"
+                      :value="false"
+                      @change="setHasShadow"
                     >
-                    <label for="Noto Sans CJK TC">
+                    <label for="no">
                       無
                       <small>(真誠建議)</small>
                     </label>
                   </div>
                   <div>
                     <input
-                      id="PMingLiU"
-                      v-model="fontStyle"
+                      id="hasShadow"
+                      v-model="hasShadow"
                       type="radio"
-                      value="PMingLiU"
-                      @change="setFontStyle"
+                      :value="true"
+                      @change="setHasShadow"
                     >
-                    <label for="PMingLiU">
-                      新細明體
+                    <label for="hasShadow">
+                      加陰影
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div class="subtitle">
+                  背景顏色：
+                </div>
+                <div class="options">
+                  <div>
+                    <input
+                      id="image_base"
+                      v-model="backgroundImage"
+                      type="radio"
+                      value="image_base"
+                      @change="setBackgroundImage"
+                    >
+                    <label for="image_base">
+                      無
+                      <small>(真誠建議)</small>
                     </label>
                   </div>
                   <div>
                     <input
-                      id="mixStyle"
-                      v-model="fontStyle"
+                      id="image_base_rainbow_1"
+                      v-model="backgroundImage"
                       type="radio"
-                      value="mixStyle"
-                      @change="setFontStyle"
+                      value="image_base_rainbow_1"
+                      @change="setBackgroundImage"
                     >
-                    <label for="mixStyle">
-                      雞尾酒字體 (字體混搭)
+                    <label for="image_base_rainbow_1">
+                      彩虹背景1
+                    </label>
+                  </div>
+                  <div>
+                    <input
+                      id="image_base_rainbow_2"
+                      v-model="backgroundImage"
+                      type="radio"
+                      value="image_base_rainbow_2"
+                      @change="setBackgroundImage"
+                    >
+                    <label for="image_base_rainbow_2">
+                      彩虹背景2
                     </label>
                   </div>
                 </div>

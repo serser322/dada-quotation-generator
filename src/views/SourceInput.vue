@@ -17,7 +17,17 @@ const loading = ref(false)
 const rainbowColor = ['red', 'orange', 'yellow', 'ForestGreen', 'RoyalBlue', 'BlueViolet', 'DarkMagenta']
 
 const quotationStore = useQuotationDataStore()
-const { sourceUrl, quotation, fontColorValue, fontStyleValue, image, date, shortUrl } = storeToRefs(quotationStore)
+const {
+  sourceUrl,
+  quotation,
+  fontColorValue,
+  fontStyleValue,
+  hasTextShadow,
+  backgroundImageValue,
+  image,
+  date,
+  shortUrl
+} = storeToRefs(quotationStore)
 
 const fontStyle = ref(fontStyleValue.value)
 
@@ -49,7 +59,7 @@ const makeImage = async () => {
     isSelected.value && await setShortUrl(sourceUrl.value)
 
     // 取得圖片
-    const baseImage = new URL('./../assets/images/image_base.jpg', import.meta.url).href // 尺寸 1080 * 574
+    const baseImage = getBackgroundImage.value // 尺寸 1080 * 574
     const dadaImage = getImage.value
     const frameImage = new URL('./../assets/images/frame.png', import.meta.url).href
     const quotationImage = new URL(getTextImage('quotation'), import.meta.url).href
@@ -154,6 +164,16 @@ const setTextOnImage = (text, canvas) => {
   }
 }
 
+// 設定字體陰影
+const setCanvasTextShadow = (canvas) => {
+  canvas.shadowOffsetX = 4
+  canvas.shadowOffsetY = 4
+  canvas.shadowBlur = 3
+  canvas.shadowColor = fontColorValue.value === 'white'
+    ? 'darkgray'
+    : 'white'
+}
+
 // 設定彩虹字
 const setRainbowText = (canvas, textHeight, yPosition) => {
   // Create gradient
@@ -184,6 +204,8 @@ const setText = (canvas, text, fontSize, xPosition, yPosition, type) => {
     ? setRainbowText(canvas, fontSize, yPosition)
     : 'white'
 
+  hasTextShadow.value && setCanvasTextShadow(canvas)
+
   if (!hasMixStyle && !hasRandomColor) {
     canvas.fillText(text, xPosition, yPosition)
   } else {
@@ -199,7 +221,6 @@ const setText = (canvas, text, fontSize, xPosition, yPosition, type) => {
       // 日期處理
       if (type === 'date') {
         canvas.fillText(text[i], xPosition + dateXPos, yPosition)
-
         dateXPos = dateXPos + ((text[i] === '.' || text[i] === ' ')
           ? (fontSize / 4)
           : (fontSize / 2 + 1))
@@ -271,6 +292,20 @@ const getName = () => {
       return '灰妲'
   }
 }
+
+/** 取得背景圖(需使用靜態路由) */
+const getBackgroundImage = computed(() => {
+  switch (backgroundImageValue.value) {
+    case 'image_base':
+      return new URL('./../assets/images/image_base.jpg', import.meta.url).href
+    case 'image_base_rainbow_1':
+      return new URL('./../assets/images/image_base_rainbow_1.jpg', import.meta.url).href
+    case 'image_base_rainbow_2':
+      return new URL('./../assets/images/image_base_rainbow_2.jpg', import.meta.url).href
+    default:
+      return new URL('./../assets/images/image_base.jpg', import.meta.url).href
+  }
+})
 
 /** 取得圖片(需使用靜態路由) */
 const getImage = computed(() => {
