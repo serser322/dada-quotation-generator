@@ -27,19 +27,14 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
   }
 
   // Style
-  const hasRainbowText = ref(false)
-  const setRainbowText = (checkValue) => {
-    hasRainbowText.value = checkValue
+  const fontColorValue = ref('white')
+  const setFontColorValue = (newValue) => {
+    fontColorValue.value = newValue
   }
 
-  const hasPMingLiU = ref(false)
-  const setPMingLiU = (checkValue) => {
-    hasPMingLiU.value = checkValue
-  }
-
-  const hasMixFontStyle = ref(false)
-  const setMixFontStyle = (checkValue) => {
-    hasMixFontStyle.value = checkValue
+  const fontStyleValue = ref('Noto Sans CJK TC')
+  const setFontStyleValue = (newValue) => {
+    fontStyleValue.value = newValue
   }
 
   // Image
@@ -84,12 +79,10 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
     setQuotation,
     date,
     setDate,
-    hasRainbowText,
-    setRainbowText,
-    hasPMingLiU,
-    setPMingLiU,
-    hasMixFontStyle,
-    setMixFontStyle,
+    fontColorValue,
+    setFontColorValue,
+    fontStyleValue,
+    setFontStyleValue,
     image,
     setImage,
     sourceUrl,

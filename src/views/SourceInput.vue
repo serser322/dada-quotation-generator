@@ -14,11 +14,12 @@ const router = useRouter()
 const isSelected = ref(false)
 const canvasEl = ref(null)
 const loading = ref(false)
+const rainbowColor = ['red', 'orange', 'yellow', 'ForestGreen', 'RoyalBlue', 'BlueViolet', 'DarkMagenta']
 
 const quotationStore = useQuotationDataStore()
-const { sourceUrl, quotation, hasRainbowText, hasPMingLiU, hasMixFontStyle, image, date, shortUrl } = storeToRefs(quotationStore)
+const { sourceUrl, quotation, fontColorValue, fontStyleValue, image, date, shortUrl } = storeToRefs(quotationStore)
 
-const fontStyle = ref(hasPMingLiU.value ? 'PMingLiU' : 'Noto Sans CJK TC')
+const fontStyle = ref(fontStyleValue.value)
 
 /** Loading */
 const isLoadDown = ref(false)
@@ -104,7 +105,6 @@ const getTextImage = (textContent) => {
     const yStartPosition = 485
     const name = getName()
     canvasContext.font = `${fontSize}px ${fontStyle.value}`
-    hasRainbowText.value && setRainbowText(canvasContext, yStartPosition, fontSize)
     setText(canvasContext, '——', fontSize, dashXStartPosition, yStartPosition)
     setText(canvasContext, name, fontSize, xStartPosition, yStartPosition)
   }
@@ -116,8 +116,7 @@ const getTextImage = (textContent) => {
     const yStartPosition = 485
     canvasContext.font = `${fontSize}px ${fontStyle.value}`
     const dateString = date.value ? quotationStore.formatDate(date.value, ' . ') : ''
-    hasRainbowText.value && setRainbowText(canvasContext, yStartPosition, fontSize)
-    canvasContext.fillText(dateString, xStartPosition, yStartPosition)
+    setText(canvasContext, dateString, fontSize, xStartPosition, yStartPosition, 'date')
   }
 
   // 來源短網址字串
@@ -131,7 +130,7 @@ const getTextImage = (textContent) => {
 
 const setTextOnImage = (text, canvas) => {
   const fontSize = 40
-  const boldStyle = hasPMingLiU.value ? '' : 'bold'
+  const boldStyle = fontStyleValue.value === 'Noto Sans CJK TC' ? 'bold' : ''
   canvas.font = `${boldStyle} ${fontSize}px ${fontStyle.value}`
   const textArray = convertToFull(text).match(/.{1,12}/g) // 先轉為全形字體，而後每12字組成一字串，再依序放入陣列中
   const lineHeight = (canvas.measureText(textArray[0]).fontBoundingBoxAscent + canvas.measureText(textArray[0]).fontBoundingBoxDescent) * 1.2 // *1.3行高
@@ -142,7 +141,6 @@ const setTextOnImage = (text, canvas) => {
   if (totalLines === 1) {
     const textWidth = canvas.measureText(textArray[0]).width
     const startXPosition = (canvasEl.value.width - textWidth) / 2 - 20 // 20為x軸位置(留白)，因此計算上須扣除
-    hasRainbowText.value && setRainbowText(canvas, startYPosition, fontSize)
     setText(canvas, textArray[0], fontSize, startXPosition, startYPosition)
   }
 
@@ -151,36 +149,62 @@ const setTextOnImage = (text, canvas) => {
     const longestTextWidth = canvas.measureText(getLongestString(textArray)).width
     const startXPosition = (canvasEl.value.width - longestTextWidth) / 2 - 20 // 20為x軸位置(留白)，因此計算上須扣除
     textArray.forEach((element, i) => {
-      hasRainbowText.value && setRainbowText(canvas, startYPosition + i * lineHeight, fontSize)
       setText(canvas, element, fontSize, startXPosition, startYPosition + i * lineHeight)
     })
   }
 }
 
 // 設定彩虹字
-const setRainbowText = (canvas, yPosition, textHeight) => {
+const setRainbowText = (canvas, textHeight, yPosition) => {
   // Create gradient
   const gradient = canvas.createLinearGradient(0, yPosition - textHeight + 11, 0, yPosition) // +11 做微調
-  const rainbowColor = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'purple']
   rainbowColor.forEach((color, index) => {
     gradient.addColorStop(String(index * 0.1666), color)
   })
-  // Fill with gradient
-  canvas.fillStyle = gradient
+  return gradient
 }
 
-// 判斷是否套用混搭字體，並填上文字
-const setText = (canvas, text, fontSize, xPosition, yPosition) => {
-  const fontArray = ['PMingLiU', 'Noto Sans CJK TC', 'DFKai-SB', 'Microsoft YaHei', 'Microsoft JhengHei']
+const getRandomFontStyle = () => {
+  const fontArray = ['PMingLiU', 'Noto Sans CJK TC', 'DFKai-SB', 'SimSun', 'Microsoft YaHei', 'Microsoft JhengHei']
+  const randomIndex = Math.floor(Math.random() * fontArray.length)
+  return fontArray[randomIndex]
+}
 
-  if (hasMixFontStyle.value) {
-    for (let i = 0; i < text.length; i++) {
-      const randomNum = Math.floor(Math.random() * fontArray.length)
-      canvas.font = `${fontSize}px ${fontArray[randomNum]}`
-      canvas.fillText(text[i], xPosition + (fontSize * i), yPosition)
-    }
-  } else {
+const getRandomColor = () => {
+  const randomIndex = Math.floor(Math.random() * rainbowColor.length)
+  return rainbowColor[randomIndex]
+}
+
+// 判斷套用風格，並填上文字
+const setText = (canvas, text, fontSize, xPosition, yPosition, type) => {
+  const hasMixStyle = fontStyleValue.value === 'mixStyle'
+  const hasRandomColor = fontColorValue.value === 'randomColor'
+
+  canvas.fillStyle = fontColorValue.value === 'rainbow'
+    ? setRainbowText(canvas, fontSize, yPosition)
+    : 'white'
+
+  if (!hasMixStyle && !hasRandomColor) {
     canvas.fillText(text, xPosition, yPosition)
+  } else {
+    let dateXPos = 0
+    for (let i = 0; i < text.length; i++) {
+      const fontName = hasMixStyle ? getRandomFontStyle() : fontStyle.value
+      canvas.fillStyle = hasRandomColor ? getRandomColor() : canvas.fillStyle
+      canvas.font = `${fontSize}px ${fontName}`
+
+      // 非日期處理
+      type !== 'date' && canvas.fillText(text[i], xPosition + (fontSize * i), yPosition)
+
+      // 日期處理
+      if (type === 'date') {
+        canvas.fillText(text[i], xPosition + dateXPos, yPosition)
+
+        dateXPos = dateXPos + ((text[i] === '.' || text[i] === ' ')
+          ? (fontSize / 4)
+          : (fontSize / 2 + 1))
+      }
+    }
   }
 }
 

@@ -24,7 +24,7 @@ const contentImageLoad = () => {
 }
 
 // Quotation input / textarea
-const { quotation, date } = storeToRefs(quotationStore)
+const { quotation, date, fontColorValue, fontStyleValue } = storeToRefs(quotationStore)
 const isTextarea = ref(true)
 
 const isInputValid = ref(true)
@@ -98,20 +98,15 @@ watch(hasDate, newValue => {
   }
 })
 
-// Style select
-const hasRainbowText = ref(quotationStore.hasRainbowText)
-const setRainbowText = (event) => {
-  quotationStore.setRainbowText(event.target.checked)
+// Style select radio
+const fontColor = ref(fontColorValue)
+const setFontColor = (event) => {
+  quotationStore.setFontColor = fontColor.value
 }
 
-const hasPMingLiU = ref(quotationStore.hasPMingLiU)
-const setPMingLiU = (event) => {
-  quotationStore.setPMingLiU(event.target.checked)
-}
-
-const hasMixFontStyle = ref(quotationStore.hasMixFontStyle)
-const setMixFontStyle = (event) => {
-  quotationStore.setMixFontStyle(event.target.checked)
+const fontStyle = ref(fontStyleValue)
+const setFontStyle = (event) => {
+  quotationStore.setFontStyle = fontStyle.value
 }
 
 // Button router
@@ -257,44 +252,100 @@ const toImageSelection = () => {
           <div class="style">
             <div class="title">
               <div>
-                <h2>特殊風格選則：</h2>
+                <h2>特殊風格選擇：</h2>
                 <small>(溫馨提醒：勾選任一種，中風你和我)</small>
               </div>
             </div>
 
             <div class="style__select">
               <div>
-                <input
-                  id="hasRainbowText"
-                  v-model="hasRainbowText"
-                  type="checkbox"
-                  @change="setRainbowText"
-                >
-                <label for="hasRainbowText">
-                  彩虹色字體
-                </label>
+                <div class="subtitle">
+                  字體顏色：
+                </div>
+                <div class="options">
+                  <div>
+                    <input
+                      id="white"
+                      v-model="fontColor"
+                      type="radio"
+                      value="white"
+                      @change="setFontColor"
+                    >
+                    <label for="white">
+                      無
+                      <small>(真誠建議)</small>
+                    </label>
+                  </div>
+                  <div>
+                    <input
+                      id="rainbow"
+                      v-model="fontColor"
+                      type="radio"
+                      value="rainbow"
+                      @change="setFontColor"
+                    >
+                    <label for="rainbow">
+                      彩虹色
+                    </label>
+                  </div>
+                  <div>
+                    <input
+                      id="randomColor"
+                      v-model="fontColor"
+                      type="radio"
+                      value="randomColor"
+                      @change="setFontColor"
+                    >
+                    <label for="randomColor">
+                      MM巧克力風 (隨機配色)
+                    </label>
+                  </div>
+                </div>
               </div>
+
               <div>
-                <input
-                  id="hasPMingLiU"
-                  v-model="hasPMingLiU"
-                  type="checkbox"
-                  @change="setPMingLiU"
-                >
-                <label for="hasPMingLiU">
-                  新細明體
-                </label>
-              </div>
-              <div>
-                <input
-                  id="hasMixFontStyle"
-                  v-model="hasMixFontStyle"
-                  type="checkbox"
-                  @change="setMixFontStyle"
-                >
-                <label for="hasMixFontStyle">
-                  混搭字體
-                </label>
+                <div class="subtitle">
+                  字體：
+                </div>
+                <div class="options">
+                  <div>
+                    <input
+                      id="Noto Sans CJK TC"
+                      v-model="fontStyle"
+                      type="radio"
+                      value="Noto Sans CJK TC"
+                      @change="setFontStyle"
+                    >
+                    <label for="Noto Sans CJK TC">
+                      無
+                      <small>(真誠建議)</small>
+                    </label>
+                  </div>
+                  <div>
+                    <input
+                      id="PMingLiU"
+                      v-model="fontStyle"
+                      type="radio"
+                      value="PMingLiU"
+                      @change="setFontStyle"
+                    >
+                    <label for="PMingLiU">
+                      新細明體
+                    </label>
+                  </div>
+                  <div>
+                    <input
+                      id="mixStyle"
+                      v-model="fontStyle"
+                      type="radio"
+                      value="mixStyle"
+                      @change="setFontStyle"
+                    >
+                    <label for="mixStyle">
+                      雞尾酒字體 (字體混搭)
+                    </label>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -458,6 +509,7 @@ input[type=checkbox] {
 
 .style {
   margin-top: 4rem;
+  font-weight: 600;
   .title {
     div {
       margin-bottom: 1rem;
@@ -470,13 +522,47 @@ input[type=checkbox] {
   }
   .style__select {
     display: flex;
-    flex-wrap: wrap;
-    gap:1rem 2rem;
+    flex-direction: column;
+    gap:2rem;
+
+    & > div {
+      /* display: flex;
+      flex-wrap: wrap;
+      gap:1rem 2rem; */
+
+      .subtitle {
+        /* transform: scale(1.3); */
+        margin-bottom: 0.5rem;
+      }
+
+      .options {
+        display: grid;
+        grid-template-columns: 8rem 8rem 8rem;
+        /* gap: 1rem 2rem; */
+      }
+    }
   }
 }
 
 h2 {
   font-size: var(--title-font-size);
+}
+
+input[type=radio] {
+      transform: scale(1.2);
+      margin-right: 2px;
+      accent-color: ForestGreen;
+
+  &:checked + label {
+    color: ForestGreen;
+  }
+}
+
+label[for=none] {
+  small {
+    margin-left: 3px;
+    font-size: 12px;
+  }
 }
 
 .invalid__text {
