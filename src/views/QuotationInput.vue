@@ -18,7 +18,9 @@ const MAX_CHARACTERS_PER_LINE = 12
 
 // Loading
 const contentImagesNum = ref(0)
-const isLoadDown = computed(() => (contentImagesNum.value === 2 && quotationStore.headerLoadDown))
+const isLoadDown = computed(
+  () => contentImagesNum.value === 2 && quotationStore.headerLoadDown
+)
 const contentImageLoad = () => {
   contentImagesNum.value++
 }
@@ -85,7 +87,8 @@ const updateQuotation = (event) => {
   quotationStore.setQuotation(inputValue)
 }
 
-const isLineCharactersOver = (textArray) => textArray.some(text => text.length > MAX_CHARACTERS_PER_LINE)
+const isLineCharactersOver = (textArray) =>
+  textArray.some((text) => text.length > MAX_CHARACTERS_PER_LINE)
 
 // Date input
 const hasDate = ref(true)
@@ -99,7 +102,7 @@ const updateDate = (modelData) => {
   quotationStore.setDate(modelData)
 }
 
-watch(hasDate, newValue => {
+watch(hasDate, (newValue) => {
   if (!newValue) {
     quotationStore.setDate(null)
     isDateValid.value = true
@@ -132,7 +135,9 @@ const router = useRouter()
 const toImageSelection = () => {
   validateQuotation(quotation.value)
   hasDate.value && validateDate(date.value)
-  if ((isInputValid.value || isTextareaValid.value) && isDateValid.value) { router.push({ name: 'ImagesSelection' }) }
+  if ((isInputValid.value || isTextareaValid.value) && isDateValid.value) {
+    router.push({ name: 'ImagesSelection' })
+  }
 }
 </script>
 
@@ -162,9 +167,7 @@ const toImageSelection = () => {
         <div class="quotation">
           <div class="title">
             <div>
-              <h2>
-                請輸入灰妲曾說過的名言：
-              </h2>
+              <h2>請輸入灰妲曾說過的名言：</h2>
               <small v-if="!isTextarea"><b>(排版緣故，字型會轉全型；字數最多72字)</b></small>
               <small v-if="isTextarea"><b>(排版緣故，字型會轉全型；行數最多6行；每行最多12字)</b></small>
             </div>
@@ -174,9 +177,7 @@ const toImageSelection = () => {
                 v-model="isTextarea"
                 type="checkbox"
               >
-              <label for="isTextarea">
-                自行分段
-              </label>
+              <label for="isTextarea"> 自行分段 </label>
             </div>
           </div>
           <div
@@ -219,18 +220,14 @@ const toImageSelection = () => {
 
         <div class="date">
           <div class="title">
-            <h2>
-              請選擇此名言金句誕生日期：
-            </h2>
+            <h2>請選擇此名言金句誕生日期：</h2>
             <div>
               <input
                 id="hasDate"
                 v-model="hasDate"
                 type="checkbox"
               >
-              <label for="hasDate">
-                附上日期
-              </label>
+              <label for="hasDate"> 附上日期 </label>
             </div>
           </div>
           <div class="date__select">
@@ -255,9 +252,7 @@ const toImageSelection = () => {
                   :placeholder="hasDate ? '請選擇日期' : '無日期'"
                   :disabled="!hasDate"
                 >
-                <i class="material-symbols-outlined">
-                  calendar_month
-                </i>
+                <i class="material-symbols-outlined"> calendar_month </i>
               </template>
             </VueDatePicker>
             <div
@@ -271,7 +266,7 @@ const toImageSelection = () => {
             <div class="title">
               <div>
                 <h2>特殊風格選擇：</h2>
-                <small>(溫馨提醒：勾選任一種，中風你和我)</small>
+                <small>(溫馨提醒：挑選任一種，中風你和我)</small>
               </div>
             </div>
 
@@ -290,8 +285,8 @@ const toImageSelection = () => {
                       @change="setFontStyle"
                     >
                     <label for="Noto Sans CJK TC">
-                      無
-                      <small>(真誠建議)</small>
+                      預設
+                      <small>(誠心建議)</small>
                     </label>
                   </div>
                   <div>
@@ -302,9 +297,7 @@ const toImageSelection = () => {
                       value="PMingLiU"
                       @change="setFontStyle"
                     >
-                    <label for="PMingLiU">
-                      新細明體
-                    </label>
+                    <label for="PMingLiU"> 酷酷新細明體 </label>
                   </div>
                   <div>
                     <input
@@ -314,16 +307,14 @@ const toImageSelection = () => {
                       value="mixStyle"
                       @change="setFontStyle"
                     >
-                    <label for="mixStyle">
-                      雞尾酒字體 (字體混搭)
-                    </label>
+                    <label for="mixStyle"> 炫炮雞尾酒 (字體混搭) </label>
                   </div>
                 </div>
               </div>
 
               <div>
                 <div class="subtitle">
-                  字體顏色：
+                  文字顏色：
                 </div>
                 <div class="options">
                   <div>
@@ -335,8 +326,8 @@ const toImageSelection = () => {
                       @change="setFontColor"
                     >
                     <label for="white">
-                      無
-                      <small>(真誠建議)</small>
+                      預設
+                      <small>(強烈建議)</small>
                     </label>
                   </div>
                   <div>
@@ -347,9 +338,7 @@ const toImageSelection = () => {
                       value="rainbow"
                       @change="setFontColor"
                     >
-                    <label for="rainbow">
-                      彩虹色
-                    </label>
+                    <label for="rainbow"> 華麗彩虹色 </label>
                   </div>
                   <div>
                     <input
@@ -360,7 +349,7 @@ const toImageSelection = () => {
                       @change="setFontColor"
                     >
                     <label for="randomColor">
-                      MM巧克力風 (隨機配色)
+                      水晶寶寶缸 (隨機配色)
                     </label>
                   </div>
                 </div>
@@ -380,8 +369,8 @@ const toImageSelection = () => {
                       @change="setHasShadow"
                     >
                     <label for="no">
-                      無
-                      <small>(真誠建議)</small>
+                      無陰影
+                      <small>(建議)</small>
                     </label>
                   </div>
                   <div>
@@ -392,16 +381,14 @@ const toImageSelection = () => {
                       :value="true"
                       @change="setHasShadow"
                     >
-                    <label for="hasShadow">
-                      加陰影
-                    </label>
+                    <label for="hasShadow"> 有陰影才有型 </label>
                   </div>
                 </div>
               </div>
 
               <div>
                 <div class="subtitle">
-                  背景顏色：
+                  背景圖：
                 </div>
                 <div class="options">
                   <div>
@@ -413,8 +400,8 @@ const toImageSelection = () => {
                       @change="setBackgroundImage"
                     >
                     <label for="image_base">
-                      無
-                      <small>(真誠建議)</small>
+                      預設
+                      <small>(下跪建議)</small>
                     </label>
                   </div>
                   <div>
@@ -425,9 +412,7 @@ const toImageSelection = () => {
                       value="image_base_rainbow_1"
                       @change="setBackgroundImage"
                     >
-                    <label for="image_base_rainbow_1">
-                      彩虹背景1
-                    </label>
+                    <label for="image_base_rainbow_1"> 豪華彩虹 </label>
                   </div>
                   <div>
                     <input
@@ -437,9 +422,7 @@ const toImageSelection = () => {
                       value="image_base_rainbow_2"
                       @change="setBackgroundImage"
                     >
-                    <label for="image_base_rainbow_2">
-                      彩虹背景2
-                    </label>
+                    <label for="image_base_rainbow_2"> 魔幻彩虹 </label>
                   </div>
                 </div>
               </div>
@@ -452,9 +435,7 @@ const toImageSelection = () => {
         @click="toImageSelection"
       >
         下一步
-        <span class="material-symbols-outlined">
-          arrow_forward
-        </span>
+        <span class="material-symbols-outlined"> arrow_forward </span>
       </BaseButton>
     </div>
   </main>
@@ -480,7 +461,7 @@ main {
 
       img {
         width: 16rem;
-        box-shadow: var(--image-shadow)
+        box-shadow: var(--image-shadow);
       }
     }
   }
@@ -496,14 +477,14 @@ main {
       }
     }
 
-    label[for=isTextarea] {
+    label[for="isTextarea"] {
       font-size: 1rem;
       font-weight: bold;
     }
   }
 }
 
-input[type=text] {
+input[type="text"] {
   margin-top: 1rem;
   width: 100%;
   font-size: var(--input-font-size);
@@ -561,22 +542,21 @@ textarea {
   }
 }
 
-input[type=checkbox] {
-      transform: scale(1.3);
-      margin-right: 2px;
-      accent-color: ForestGreen;
+input[type="checkbox"] {
+  transform: scale(1.3);
+  margin-right: 2px;
+  accent-color: ForestGreen;
 }
 .date {
   margin-top: 4rem;
 
   .title {
-
     h2,
     div {
       margin-bottom: 0.5rem;
     }
 
-    label[for=hasDate] {
+    label[for="hasDate"] {
       font-size: 1rem;
       font-weight: bold;
     }
@@ -592,7 +572,6 @@ input[type=checkbox] {
         border-bottom: 2px solid gray;
         background-color: rgba(0, 0, 0, 0.06);
       }
-
     }
 
     .material-symbols-outlined {
@@ -614,27 +593,31 @@ input[type=checkbox] {
         margin-bottom: 0.5rem;
       }
     }
-
   }
   .style__select {
     display: flex;
     flex-direction: column;
-    gap:2rem;
+    gap: 2rem;
 
     & > div {
-      /* display: flex;
-      flex-wrap: wrap;
-      gap:1rem 2rem; */
-
       .subtitle {
-        /* transform: scale(1.3); */
         margin-bottom: 0.5rem;
       }
 
       .options {
         display: grid;
-        grid-template-columns: 8rem 8rem 8rem;
-        /* gap: 1rem 2rem; */
+        grid-template-columns: auto;
+        grid-row-gap: 10px;
+
+        & > div {
+          margin-left: 1rem;
+        }
+
+        label {
+          small {
+            font-size: 11px;
+          }
+        }
       }
     }
   }
@@ -644,17 +627,17 @@ h2 {
   font-size: var(--title-font-size);
 }
 
-input[type=radio] {
-      transform: scale(1.2);
-      margin-right: 2px;
-      accent-color: ForestGreen;
+input[type="radio"] {
+  transform: scale(1.2);
+  margin-right: 2px;
+  accent-color: ForestGreen;
 
   &:checked + label {
-    color: ForestGreen;
+    color: MediumSeaGreen;
   }
 }
 
-label[for=none] {
+label[for="none"] {
   small {
     margin-left: 3px;
     font-size: 12px;
@@ -681,7 +664,7 @@ label[for=none] {
 }
 
 .btn-next {
-  margin-left: auto
+  margin-left: auto;
 }
 
 @keyframes showHintAnimate {
@@ -725,13 +708,13 @@ label[for=none] {
       align-items: center;
       justify-content: space-between;
 
-      label[for=isTextarea] {
+      label[for="isTextarea"] {
         font-size: 1.2rem;
       }
     }
   }
 
-  input[type=text],
+  input[type="text"],
   textarea {
     margin-top: 0;
     font-size: var(--input-font-size-pad);
@@ -745,9 +728,9 @@ label[for=none] {
     }
   }
 
-  input[type=checkbox] {
-        transform: scale(1.6);
-        margin-right: 5px;
+  input[type="checkbox"] {
+    transform: scale(1.6);
+    margin-right: 5px;
   }
   .date {
     .title {
@@ -759,7 +742,7 @@ label[for=none] {
         margin-top: 1.5rem;
       }
 
-      label[for=hasDate] {
+      label[for="hasDate"] {
         font-size: 1.2rem;
       }
     }
@@ -768,6 +751,16 @@ label[for=none] {
       .material-symbols-outlined {
         position: absolute;
         top: 1px;
+      }
+    }
+  }
+
+  .style {
+    .style__select {
+      & > div {
+        .options {
+          grid-template-columns: 1fr 1fr ;
+        }
       }
     }
   }
@@ -797,10 +790,19 @@ label[for=none] {
       width: 50%;
     }
   }
+
+  .style {
+    .style__select {
+      & > div {
+        .options {
+          grid-template-columns: 9rem 9rem auto;
+        }
+      }
+    }
+  }
 }
 
 @media (min-width: 992px) {
-
   .example__card {
     .example {
       .images {

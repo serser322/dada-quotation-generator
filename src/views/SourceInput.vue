@@ -11,7 +11,7 @@ import BaseButton from '../components/BaseButton.vue'
 import mergeImages from 'merge-images'
 
 const router = useRouter()
-const isSelected = ref(false)
+const isSelected = ref(true)
 const canvasEl = ref(null)
 const loading = ref(false)
 const rainbowColor = ['red', 'orange', 'yellow', 'ForestGreen', 'RoyalBlue', 'BlueViolet', 'DarkMagenta']
