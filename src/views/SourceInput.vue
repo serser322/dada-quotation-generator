@@ -303,6 +303,8 @@ const getImage = computed(() => {
       return new URL('./../assets/images/dada_13.png', import.meta.url).href
     case 'dada_14.png':
       return new URL('./../assets/images/dada_14.png', import.meta.url).href
+    case 'dada_15.png':
+      return new URL('./../assets/images/dada_15.png', import.meta.url).href
     case 'yoda_01.png':
       return new URL('./../assets/images/yoda_01.png', import.meta.url).href
     case 'yoda_02.png':
@@ -311,8 +313,6 @@ const getImage = computed(() => {
       return new URL('./../assets/images/yoda_03.png', import.meta.url).href
     case 'yoda_04.png':
       return new URL('./../assets/images/yoda_04.png', import.meta.url).href
-    case 'yoda_05.png':
-      return new URL('./../assets/images/yoda_05.png', import.meta.url).href
     case 'chenda_01.png':
       return new URL('./../assets/images/chenda_01.png', import.meta.url).href
     case 'dage_01.png':
