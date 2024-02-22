@@ -19,14 +19,9 @@ const imageLoad = () => {
     :navigation="true"
     :pagination="true"
     :pagination-clickable="true"
-    :center-insufficient-slides="true"
-    :centered-slides="false"
-    :centered-slides-bounds="false"
-    :slides-per-group="1"
-    :loop="true"
     :slides-per-view="1"
     :autoplay="{
-      delay: 3500,
+      delay: 4000,
     }"
     :breakpoints="{
       768: {
