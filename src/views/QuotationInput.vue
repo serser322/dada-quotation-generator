@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { useQuotationDataStore } from '../store/quotationData'
 import { storeToRefs } from 'pinia'
 import BaseLoader from '../components/BaseLoader.vue'
+import Carousel from '../components/Carousel.vue'
 import BaseStepper from '../components/BaseStepper.vue'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
@@ -17,12 +18,12 @@ const MAX_LINES = 6
 const MAX_CHARACTERS_PER_LINE = 12
 
 // Loading
-const contentImagesNum = ref(0)
-const isLoadDown = computed(
-  () => contentImagesNum.value === 2 && quotationStore.headerLoadDown
+const isExampleImagesLoadDown = ref(false)
+const isLoadDown = computed(() =>
+  isExampleImagesLoadDown.value && quotationStore.headerLoadDown
 )
-const contentImageLoad = () => {
-  contentImagesNum.value++
+const exampleImageLoaded = () => {
+  isExampleImagesLoadDown.value = true
 }
 
 // Quotation input / textarea
@@ -143,10 +144,15 @@ const toImageSelection = () => {
 
 <template>
   <main>
-    <BaseLoader v-show="!isLoadDown" />
+    <BaseLoader v-if="!isLoadDown" />
     <div v-show="isLoadDown">
+      <Carousel
+        class="carousel"
+        @on-image-loaded="exampleImageLoaded"
+      />
+
       <BaseStepper page="quotationInput" />
-      <BaseCard class="example__card">
+      <!-- <BaseCard class="example__card">
         <div class="example">
           <div class="title">
             <h2>名言圖範例：</h2>
@@ -162,7 +168,7 @@ const toImageSelection = () => {
             >
           </div>
         </div>
-      </BaseCard>
+      </BaseCard> -->
       <BaseCard>
         <div class="quotation">
           <div class="title">
@@ -234,9 +240,9 @@ const toImageSelection = () => {
             <VueDatePicker
               :model-value="hasDate ? date : null"
               :enable-time-picker="false"
-              auto-apply
+              :auto-apply="true"
               locale="zh-tw"
-              dark
+              :dark="true"
               :format="quotationStore.formatDate(date, '/')"
               :day-names="['一', '二', '三', '四', '五', '六', '日']"
               :disabled="!hasDate"
@@ -445,26 +451,9 @@ const toImageSelection = () => {
 main {
   color: var(--secondary-yellow);
 }
-.example__card {
-  margin-bottom: 1.5rem;
 
-  .example {
-    .title {
-      margin-bottom: 1rem;
-    }
-
-    .images {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-      row-gap: 1rem;
-
-      img {
-        width: 16rem;
-        box-shadow: var(--image-shadow);
-      }
-    }
-  }
+.carousel {
+  margin-bottom: 2.5rem;
 }
 
 .quotation {
@@ -653,8 +642,6 @@ label[for="none"] {
 
   &.hidden {
     visibility: hidden;
-    /* opacity: 0%; */
-    /* animation: hiddenAnimate 0.3s ease-out forwards; */
   }
 
   &.showHint {
@@ -692,16 +679,6 @@ label[for="none"] {
 }
 
 @media (min-width: 576px) {
-  .example__card {
-    .example {
-      .images {
-        img {
-          width: 21rem;
-        }
-      }
-    }
-  }
-
   .quotation {
     .title {
       display: flex;
@@ -775,16 +752,6 @@ label[for="none"] {
 }
 
 @media (min-width: 768px) {
-  .example__card {
-    .example {
-      .images {
-        img {
-          width: 16.5rem;
-        }
-      }
-    }
-  }
-
   .date {
     .date__select {
       width: 50%;
@@ -796,47 +763,6 @@ label[for="none"] {
       & > div {
         .options {
           grid-template-columns: 9rem 9rem auto;
-        }
-      }
-    }
-  }
-}
-
-@media (min-width: 992px) {
-  .example__card {
-    .example {
-      .images {
-        img {
-          width: 22rem;
-        }
-      }
-    }
-  }
-}
-
-@media (min-width: 1200px) {
-  .example__card {
-    .example {
-      .images {
-        justify-content: center;
-        column-gap: 3rem;
-
-        img {
-          width: 24rem;
-        }
-      }
-    }
-  }
-}
-
-@media (min-width: 1440px) {
-  .example__card {
-    .example {
-      .images {
-        column-gap: 4rem;
-
-        img {
-          width: 25rem;
         }
       }
     }
