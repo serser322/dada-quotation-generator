@@ -26,19 +26,40 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
     date.value = value
   }
 
-  // image
+  // Style
+  const fontStyleValue = ref('Noto Sans CJK TC')
+  const setFontStyleValue = (newValue) => {
+    fontStyleValue.value = newValue
+  }
+
+  const fontColorValue = ref('white')
+  const setFontColorValue = (newValue) => {
+    fontColorValue.value = newValue
+  }
+
+  const hasTextShadow = ref(false)
+  const setHasTextShadow = (newValue) => {
+    hasTextShadow.value = newValue
+  }
+
+  const backgroundImageValue = ref('image_base')
+  const setBackgroundImageValue = (newValue) => {
+    backgroundImageValue.value = newValue
+  }
+
+  // Image
   const image = ref('')
   const setImage = (imageName) => {
     image.value = imageName
   }
 
-  // source
+  // Source
   const sourceUrl = ref('')
   const setSourceUrl = (source) => {
     sourceUrl.value = source
   }
 
-  // source short url
+  // Source short url
   const shortUrl = ref('')
   const setShortUrl = (url) => {
     shortUrl.value = url
@@ -68,6 +89,14 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
     setQuotation,
     date,
     setDate,
+    fontColorValue,
+    setFontColorValue,
+    fontStyleValue,
+    setFontStyleValue,
+    hasTextShadow,
+    setHasTextShadow,
+    backgroundImageValue,
+    setBackgroundImageValue,
     image,
     setImage,
     sourceUrl,

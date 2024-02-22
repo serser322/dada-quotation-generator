@@ -252,6 +252,18 @@ const toSourceInput = () => {
           @click="selectImage($event)"
         >
           <img
+            src="../assets/images/dada_15.png"
+            alt=""
+            data-img="dada_15.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
             src="../assets/images/yoda_01.png"
             alt=""
             data-img="yoda_01.png"
@@ -291,18 +303,6 @@ const toSourceInput = () => {
             src="../assets/images/yoda_04.png"
             alt=""
             data-img="yoda_04.png"
-            @load="secondHalfImagesLoad"
-          >
-        </div>
-        <div
-          v-show="isSecondHalfLoadDown"
-          class="image"
-          @click="selectImage($event)"
-        >
-          <img
-            src="../assets/images/yoda_05.png"
-            alt=""
-            data-img="yoda_05.png"
             @load="secondHalfImagesLoad"
           >
         </div>

@@ -14,6 +14,22 @@ const router = useRouter()
 const isSelected = ref(true)
 const canvasEl = ref(null)
 const loading = ref(false)
+const rainbowColor = ['red', 'orange', 'yellow', 'ForestGreen', 'RoyalBlue', 'BlueViolet', 'DarkMagenta']
+
+const quotationStore = useQuotationDataStore()
+const {
+  sourceUrl,
+  quotation,
+  fontColorValue,
+  fontStyleValue,
+  hasTextShadow,
+  backgroundImageValue,
+  image,
+  date,
+  shortUrl
+} = storeToRefs(quotationStore)
+
+const fontStyle = ref(fontStyleValue.value)
 
 /** Loading */
 const isLoadDown = ref(false)
@@ -22,8 +38,6 @@ const contentImageLoad = () => {
 }
 
 /** Source input */
-const quotationStore = useQuotationDataStore()
-const { sourceUrl, quotation, image, date, shortUrl } = storeToRefs(quotationStore)
 const updateSource = (event) => {
   quotationStore.setSourceUrl(event.target.value)
 }
@@ -45,7 +59,7 @@ const makeImage = async () => {
     isSelected.value && await setShortUrl(sourceUrl.value)
 
     // 取得圖片
-    const baseImage = new URL('./../assets/images/image_base.jpg', import.meta.url).href // 尺寸 1080 * 574
+    const baseImage = getBackgroundImage.value // 尺寸 1080 * 574
     const dadaImage = getImage.value
     const frameImage = new URL('./../assets/images/frame.png', import.meta.url).href
     const quotationImage = new URL(getTextImage('quotation'), import.meta.url).href
@@ -58,7 +72,7 @@ const makeImage = async () => {
       baseImage,
       { src: dadaImage, x: 0, y: 44 },
       frameImage,
-      { src: quotationImage, x: 480, y: 0 }, // 506px為canvas圖，距離圖左邊界的距離
+      { src: quotationImage, x: 480, y: 0 }, // 480px為canvas圖，距離圖左邊界的距離
       { src: nameImage, x: 480, y: 0 },
       { src: dateImage, x: 480, y: 0 },
       { src: sourceUrlImage, x: 0, y: 0 }
@@ -95,17 +109,24 @@ const getTextImage = (textContent) => {
 
   // 署名字串
   if (textContent === 'name') {
+    const fontSize = 37
+    const dashXStartPosition = 170
+    const xStartPosition = 260
+    const yStartPosition = 485
     const name = getName()
-    canvasContext.font = '37px Noto Sans CJK TC'
-    // canvasContext.fillText(`${image.value.includes('yoda') ? '──  幼妲' : '──  灰妲'}`, 170, 485)
-    canvasContext.fillText(name, 170, 485)
+    canvasContext.font = `${fontSize}px ${fontStyle.value}`
+    setText(canvasContext, '——', fontSize, dashXStartPosition, yStartPosition)
+    setText(canvasContext, name, fontSize, xStartPosition, yStartPosition)
   }
 
   // 日期字串
   if (textContent === 'date') {
-    canvasContext.font = '30px Noto Sans CJK TC'
+    const fontSize = 30
+    const xStartPosition = 370
+    const yStartPosition = 485
+    canvasContext.font = `${fontSize}px ${fontStyle.value}`
     const dateString = date.value ? quotationStore.formatDate(date.value, ' . ') : ''
-    canvasContext.fillText(`${dateString}`, 370, 485)
+    setText(canvasContext, dateString, fontSize, xStartPosition, yStartPosition, 'date')
   }
 
   // 來源短網址字串
@@ -118,7 +139,9 @@ const getTextImage = (textContent) => {
 }
 
 const setTextOnImage = (text, canvas) => {
-  canvas.font = 'bold 40px Noto Sans CJK TC'
+  const fontSize = 40
+  const boldStyle = fontStyleValue.value === 'Noto Sans CJK TC' ? 'bold' : ''
+  canvas.font = `${boldStyle} ${fontSize}px ${fontStyle.value}`
   const textArray = convertToFull(text).match(/.{1,12}/g) // 先轉為全形字體，而後每12字組成一字串，再依序放入陣列中
   const lineHeight = (canvas.measureText(textArray[0]).fontBoundingBoxAscent + canvas.measureText(textArray[0]).fontBoundingBoxDescent) * 1.2 // *1.3行高
   const totalLines = textArray.length
@@ -127,19 +150,86 @@ const setTextOnImage = (text, canvas) => {
   // 若字體僅一行，水平置中
   if (totalLines === 1) {
     const textWidth = canvas.measureText(textArray[0]).width
-    canvas.fillText(textArray[0], (canvasEl.value.width - textWidth) / 2 - 20, startYPosition) // 20為x軸位置(留白)，因此計算上須扣除
+    const startXPosition = (canvasEl.value.width - textWidth) / 2 - 20 // 20為x軸位置(留白)，因此計算上須扣除
+    setText(canvas, textArray[0], fontSize, startXPosition, startYPosition)
   }
 
   // 超過一行，多行排列
   if (totalLines > 1) {
     const longestTextWidth = canvas.measureText(getLongestString(textArray)).width
+    const startXPosition = (canvasEl.value.width - longestTextWidth) / 2 - 20 // 20為x軸位置(留白)，因此計算上須扣除
     textArray.forEach((element, i) => {
-      canvas.fillText(element, (canvasEl.value.width - longestTextWidth) / 2 - 20, startYPosition + i * lineHeight) // 20為x軸位置(留白)，因此計算上須扣除
+      setText(canvas, element, fontSize, startXPosition, startYPosition + i * lineHeight)
     })
   }
 }
 
-/** 轉為全形字體 */
+// 設定字體陰影
+const setCanvasTextShadow = (canvas) => {
+  canvas.shadowOffsetX = 4
+  canvas.shadowOffsetY = 4
+  canvas.shadowBlur = 3
+  canvas.shadowColor = fontColorValue.value === 'white'
+    ? 'darkgray'
+    : 'white'
+}
+
+// 設定彩虹字
+const setRainbowText = (canvas, textHeight, yPosition) => {
+  // Create gradient
+  const gradient = canvas.createLinearGradient(0, yPosition - textHeight + 11, 0, yPosition) // +11 做微調
+  rainbowColor.forEach((color, index) => {
+    gradient.addColorStop(String(index * 0.1666), color)
+  })
+  return gradient
+}
+
+const getRandomFontStyle = () => {
+  const fontArray = ['PMingLiU', 'Noto Sans CJK TC', 'DFKai-SB', 'SimSun', 'Microsoft YaHei', 'Microsoft JhengHei']
+  const randomIndex = Math.floor(Math.random() * fontArray.length)
+  return fontArray[randomIndex]
+}
+
+const getRandomColor = () => {
+  const randomIndex = Math.floor(Math.random() * rainbowColor.length)
+  return rainbowColor[randomIndex]
+}
+
+// 判斷套用風格，並填上文字
+const setText = (canvas, text, fontSize, xPosition, yPosition, type) => {
+  const hasMixStyle = fontStyleValue.value === 'mixStyle'
+  const hasRandomColor = fontColorValue.value === 'randomColor'
+
+  canvas.fillStyle = fontColorValue.value === 'rainbow'
+    ? setRainbowText(canvas, fontSize, yPosition)
+    : 'white'
+
+  hasTextShadow.value && setCanvasTextShadow(canvas)
+
+  if (!hasMixStyle && !hasRandomColor) {
+    canvas.fillText(text, xPosition, yPosition)
+  } else {
+    let dateXPos = 0
+    for (let i = 0; i < text.length; i++) {
+      const fontName = hasMixStyle ? getRandomFontStyle() : fontStyle.value
+      canvas.fillStyle = hasRandomColor ? getRandomColor() : canvas.fillStyle
+      canvas.font = `${fontSize}px ${fontName}`
+
+      // 非日期處理
+      type !== 'date' && canvas.fillText(text[i], xPosition + (fontSize * i), yPosition)
+
+      // 日期處理
+      if (type === 'date') {
+        canvas.fillText(text[i], xPosition + dateXPos, yPosition)
+        dateXPos = dateXPos + ((text[i] === '.' || text[i] === ' ')
+          ? (fontSize / 4)
+          : (fontSize / 2 + 1))
+      }
+    }
+  }
+}
+
+// 轉為全形字體
 const convertToFull = (text) => text.replace(/[!-~]/g, matchedChar => String.fromCharCode(matchedChar.charCodeAt(0) + 0xfee0))
 
 /** 找出最長字串 */
@@ -189,19 +279,33 @@ const getName = () => {
   const name = image.value.split('_')[0]
   switch (name) {
     case 'dada':
-      return '──  灰妲'
+      return '灰妲'
     case 'yoda':
-      return '──  幼妲'
+      return '幼妲'
     case 'chenda':
-      return '──  真妲'
+      return '真妲'
     case 'dage':
-      return '──  妲哥'
+      return '妲哥'
     case 'dabird':
-      return '──  鳥球'
+      return '鳥球'
     default:
-      return '──  灰妲'
+      return '灰妲'
   }
 }
+
+/** 取得背景圖(需使用靜態路由) */
+const getBackgroundImage = computed(() => {
+  switch (backgroundImageValue.value) {
+    case 'image_base':
+      return new URL('./../assets/images/image_base.jpg', import.meta.url).href
+    case 'image_base_rainbow_1':
+      return new URL('./../assets/images/image_base_rainbow_1.jpg', import.meta.url).href
+    case 'image_base_rainbow_2':
+      return new URL('./../assets/images/image_base_rainbow_2.jpg', import.meta.url).href
+    default:
+      return new URL('./../assets/images/image_base.jpg', import.meta.url).href
+  }
+})
 
 /** 取得圖片(需使用靜態路由) */
 const getImage = computed(() => {
@@ -234,6 +338,8 @@ const getImage = computed(() => {
       return new URL('./../assets/images/dada_13.png', import.meta.url).href
     case 'dada_14.png':
       return new URL('./../assets/images/dada_14.png', import.meta.url).href
+    case 'dada_15.png':
+      return new URL('./../assets/images/dada_15.png', import.meta.url).href
     case 'yoda_01.png':
       return new URL('./../assets/images/yoda_01.png', import.meta.url).href
     case 'yoda_02.png':
@@ -242,8 +348,6 @@ const getImage = computed(() => {
       return new URL('./../assets/images/yoda_03.png', import.meta.url).href
     case 'yoda_04.png':
       return new URL('./../assets/images/yoda_04.png', import.meta.url).href
-    case 'yoda_05.png':
-      return new URL('./../assets/images/yoda_05.png', import.meta.url).href
     case 'chenda_01.png':
       return new URL('./../assets/images/chenda_01.png', import.meta.url).href
     case 'dage_01.png':
@@ -552,4 +656,10 @@ input[type=text] {
     max-width: 40rem;
   }
 }
+
+@font-face {
+  font-family: "cwTeXYen";
+  src: url(https://fonts.googleapis.com/earlyaccess/cwtexyen.css)
+}
+
 </style>
