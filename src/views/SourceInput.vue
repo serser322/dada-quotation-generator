@@ -20,16 +20,18 @@ const quotationStore = useQuotationDataStore()
 const {
   sourceUrl,
   quotation,
-  fontColorValue,
-  fontStyleValue,
-  hasTextShadow,
-  backgroundImageValue,
+  exportStyle,
   image,
   date,
   shortUrl
 } = storeToRefs(quotationStore)
 
-const fontStyle = ref(fontStyleValue.value)
+const {
+  fontStyle,
+  fontColor,
+  hasTextShadow,
+  backgroundImage
+} = exportStyle.value
 
 /** Loading */
 const isLoadDown = ref(false)
@@ -114,7 +116,7 @@ const getTextImage = (textContent) => {
     const xStartPosition = 260
     const yStartPosition = 485
     const name = getName()
-    canvasContext.font = `${fontSize}px ${fontStyle.value}`
+    canvasContext.font = `${fontSize}px ${fontStyle}`
     setText(canvasContext, '——', fontSize, dashXStartPosition, yStartPosition)
     setText(canvasContext, name, fontSize, xStartPosition, yStartPosition)
   }
@@ -124,7 +126,7 @@ const getTextImage = (textContent) => {
     const fontSize = 30
     const xStartPosition = 370
     const yStartPosition = 485
-    canvasContext.font = `${fontSize}px ${fontStyle.value}`
+    canvasContext.font = `${fontSize}px ${fontStyle}`
     const dateString = date.value ? quotationStore.formatDate(date.value, ' . ') : ''
     setText(canvasContext, dateString, fontSize, xStartPosition, yStartPosition, 'date')
   }
@@ -140,8 +142,8 @@ const getTextImage = (textContent) => {
 
 const setTextOnImage = (text, canvas) => {
   const fontSize = 40
-  const boldStyle = fontStyleValue.value === 'Noto Sans CJK TC' ? 'bold' : ''
-  canvas.font = `${boldStyle} ${fontSize}px ${fontStyle.value}`
+  const boldStyle = fontStyle === 'Noto Sans CJK TC' ? 'bold' : ''
+  canvas.font = `${boldStyle} ${fontSize}px ${fontStyle}`
   const textArray = convertToFull(text).match(/.{1,12}/g) // 先轉為全形字體，而後每12字組成一字串，再依序放入陣列中
   const lineHeight = (canvas.measureText(textArray[0]).fontBoundingBoxAscent + canvas.measureText(textArray[0]).fontBoundingBoxDescent) * 1.2 // *1.3行高
   const totalLines = textArray.length
@@ -169,7 +171,7 @@ const setCanvasTextShadow = (canvas) => {
   canvas.shadowOffsetX = 4
   canvas.shadowOffsetY = 4
   canvas.shadowBlur = 3
-  canvas.shadowColor = fontColorValue.value === 'white'
+  canvas.shadowColor = fontColor === 'white'
     ? 'darkgray'
     : 'white'
 }
@@ -197,21 +199,21 @@ const getRandomColor = () => {
 
 // 判斷套用風格，並填上文字
 const setText = (canvas, text, fontSize, xPosition, yPosition, type) => {
-  const hasMixStyle = fontStyleValue.value === 'mixStyle'
-  const hasRandomColor = fontColorValue.value === 'randomColor'
+  const hasMixStyle = fontStyle === 'mixStyle'
+  const hasRandomColor = fontColor === 'randomColor'
 
-  canvas.fillStyle = fontColorValue.value === 'rainbow'
+  canvas.fillStyle = fontColor === 'rainbow'
     ? setRainbowText(canvas, fontSize, yPosition)
     : 'white'
 
-  hasTextShadow.value && setCanvasTextShadow(canvas)
+  hasTextShadow && setCanvasTextShadow(canvas)
 
   if (!hasMixStyle && !hasRandomColor) {
     canvas.fillText(text, xPosition, yPosition)
   } else {
     let dateXPos = 0
     for (let i = 0; i < text.length; i++) {
-      const fontName = hasMixStyle ? getRandomFontStyle() : fontStyle.value
+      const fontName = hasMixStyle ? getRandomFontStyle() : fontStyle
       canvas.fillStyle = hasRandomColor ? getRandomColor() : canvas.fillStyle
       canvas.font = `${fontSize}px ${fontName}`
 
@@ -295,7 +297,7 @@ const getName = () => {
 
 /** 取得背景圖(需使用靜態路由) */
 const getBackgroundImage = computed(() => {
-  switch (backgroundImageValue.value) {
+  switch (backgroundImage) {
     case 'image_base':
       return new URL('./../assets/images/image_base.jpg', import.meta.url).href
     case 'image_base_rainbow_1':

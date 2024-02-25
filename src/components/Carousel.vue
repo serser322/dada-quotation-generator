@@ -18,10 +18,11 @@ const imageLoad = () => {
     :speed="2500"
     :navigation="true"
     :pagination="true"
-    :pagination-clickable="true"
     :slides-per-view="1"
     :autoplay="{
       delay: 4000,
+      pauseOnMouseEnter:true,
+      paginationClickable: true
     }"
     :breakpoints="{
       768: {

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 
 export const useQuotationDataStore = defineStore('quotationData', () => {
   // Sidebar on mobile
@@ -27,24 +27,18 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
   }
 
   // Style
-  const fontStyleValue = ref('Noto Sans CJK TC')
-  const setFontStyleValue = (newValue) => {
-    fontStyleValue.value = newValue
-  }
+  const exportStyle = reactive({
+    fontStyle: 'Noto Sans CJK TC',
+    fontColor: 'white',
+    hasTextShadow: false,
+    backgroundImage: 'image_base'
+  })
 
-  const fontColorValue = ref('white')
-  const setFontColorValue = (newValue) => {
-    fontColorValue.value = newValue
-  }
+  const setExportStyle = (type, value) => {
+    exportStyle[type] = value
 
-  const hasTextShadow = ref(false)
-  const setHasTextShadow = (newValue) => {
-    hasTextShadow.value = newValue
-  }
-
-  const backgroundImageValue = ref('image_base')
-  const setBackgroundImageValue = (newValue) => {
-    backgroundImageValue.value = newValue
+    if (value === 'true') exportStyle[type] = true
+    if (value === 'false') exportStyle[type] = false
   }
 
   // Image
@@ -80,6 +74,82 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
     return `${year}${sign}${month}${sign}${day}`
   }
 
+  /* Style Options **/
+  const styleOptions = ref([
+    {
+      title: '字型',
+      type: 'fontStyle',
+      options: [
+        {
+          text: '預設',
+          value: 'Noto Sans CJK TC',
+          hint: '誠心建議'
+        },
+        {
+          text: '酷酷新細明體',
+          value: 'PMingLiU'
+        },
+        {
+          text: '炫炮雞尾酒 (字體混搭)',
+          value: 'mixStyle'
+        }
+      ]
+    },
+    {
+      title: '文字顏色',
+      type: 'fontColor',
+      options: [
+        {
+          text: '預設',
+          value: 'white',
+          hint: '強烈建議'
+        },
+        {
+          text: '華麗彩虹色',
+          value: 'rainbow'
+        },
+        {
+          text: '水晶寶寶缸 (隨機配色)',
+          value: 'randomColor'
+        }
+      ]
+    },
+    {
+      title: '文字陰影',
+      type: 'hasTextShadow',
+      options: [
+        {
+          text: '無陰影',
+          value: false,
+          hint: '建議'
+        },
+        {
+          text: '有陰影才有型',
+          value: true
+        }
+      ]
+    },
+    {
+      title: '背景圖',
+      type: 'backgroundImage',
+      options: [
+        {
+          text: '預設',
+          value: 'image_base',
+          hint: '下跪建議'
+        },
+        {
+          text: '豪華彩虹',
+          value: 'image_base_rainbow_1'
+        },
+        {
+          text: '魔幻彩虹',
+          value: 'image_base_rainbow_2'
+        }
+      ]
+    }
+  ])
+
   return {
     isSidebarOpen,
     setSidebarOpen,
@@ -89,14 +159,8 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
     setQuotation,
     date,
     setDate,
-    fontColorValue,
-    setFontColorValue,
-    fontStyleValue,
-    setFontStyleValue,
-    hasTextShadow,
-    setHasTextShadow,
-    backgroundImageValue,
-    setBackgroundImageValue,
+    exportStyle,
+    setExportStyle,
     image,
     setImage,
     sourceUrl,
@@ -105,6 +169,7 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
     setShortUrl,
     finalImageB64,
     setFinalImageB64,
-    formatDate
+    formatDate,
+    styleOptions
   }
 })

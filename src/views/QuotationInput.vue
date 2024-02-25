@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuotationDataStore } from '../store/quotationData'
 import { storeToRefs } from 'pinia'
@@ -30,10 +30,8 @@ const exampleImageLoaded = () => {
 const {
   quotation,
   date,
-  fontColorValue,
-  fontStyleValue,
-  hasTextShadow,
-  backgroundImageValue
+  exportStyle,
+  styleOptions
 } = storeToRefs(quotationStore)
 
 const isTextarea = ref(true)
@@ -111,24 +109,9 @@ watch(hasDate, (newValue) => {
 })
 
 // Style select radio
-const fontStyle = ref(fontStyleValue.value)
-const setFontStyle = (event) => {
-  quotationStore.setFontStyleValue(fontStyle.value)
-}
-
-const fontColor = ref(fontColorValue.value)
-const setFontColor = (event) => {
-  quotationStore.setFontColorValue(fontColor.value)
-}
-
-const hasShadow = ref(hasTextShadow.value)
-const setHasShadow = (event) => {
-  quotationStore.setHasTextShadow(hasShadow.value)
-}
-
-const backgroundImage = ref(backgroundImageValue.value)
-const setBackgroundImage = (event) => {
-  quotationStore.setBackgroundImageValue(backgroundImage.value)
+const styleSelect = reactive(exportStyle)
+const setStyleSelect = (event, type) => {
+  quotationStore.setExportStyle(type, event.target.value)
 }
 
 // Button router
@@ -152,23 +135,7 @@ const toImageSelection = () => {
       />
 
       <BaseStepper page="quotationInput" />
-      <!-- <BaseCard class="example__card">
-        <div class="example">
-          <div class="title">
-            <h2>名言圖範例：</h2>
-          </div>
-          <div class="images">
-            <img
-              src="../assets/images/example1.png"
-              @load="contentImageLoad"
-            >
-            <img
-              src="../assets/images/example2.png"
-              @load="contentImageLoad"
-            >
-          </div>
-        </div>
-      </BaseCard> -->
+
       <BaseCard>
         <div class="quotation">
           <div class="title">
@@ -277,158 +244,29 @@ const toImageSelection = () => {
             </div>
 
             <div class="style__select">
-              <div>
+              <div
+                v-for="item in styleOptions"
+                :key="item.title"
+              >
                 <div class="subtitle">
-                  字型：
+                  {{ item.title }}
                 </div>
                 <div class="options">
-                  <div>
+                  <div
+                    v-for="option in item.options"
+                    :key="option.value"
+                  >
                     <input
-                      id="Noto Sans CJK TC"
-                      v-model="fontStyle"
+                      :id="option.value"
+                      v-model="styleSelect[item.type]"
                       type="radio"
-                      value="Noto Sans CJK TC"
-                      @change="setFontStyle"
+                      :value="option.value"
+                      @change="setStyleSelect($event, item.type)"
                     >
-                    <label for="Noto Sans CJK TC">
-                      預設
-                      <small>(誠心建議)</small>
+                    <label :for="option.value">
+                      {{ option.text }}
+                      <small v-if="option.hint">({{ option.hint }})</small>
                     </label>
-                  </div>
-                  <div>
-                    <input
-                      id="PMingLiU"
-                      v-model="fontStyle"
-                      type="radio"
-                      value="PMingLiU"
-                      @change="setFontStyle"
-                    >
-                    <label for="PMingLiU"> 酷酷新細明體 </label>
-                  </div>
-                  <div>
-                    <input
-                      id="mixStyle"
-                      v-model="fontStyle"
-                      type="radio"
-                      value="mixStyle"
-                      @change="setFontStyle"
-                    >
-                    <label for="mixStyle"> 炫炮雞尾酒 (字體混搭) </label>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <div class="subtitle">
-                  文字顏色：
-                </div>
-                <div class="options">
-                  <div>
-                    <input
-                      id="white"
-                      v-model="fontColor"
-                      type="radio"
-                      value="white"
-                      @change="setFontColor"
-                    >
-                    <label for="white">
-                      預設
-                      <small>(強烈建議)</small>
-                    </label>
-                  </div>
-                  <div>
-                    <input
-                      id="rainbow"
-                      v-model="fontColor"
-                      type="radio"
-                      value="rainbow"
-                      @change="setFontColor"
-                    >
-                    <label for="rainbow"> 華麗彩虹色 </label>
-                  </div>
-                  <div>
-                    <input
-                      id="randomColor"
-                      v-model="fontColor"
-                      type="radio"
-                      value="randomColor"
-                      @change="setFontColor"
-                    >
-                    <label for="randomColor">
-                      水晶寶寶缸 (隨機配色)
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <div class="subtitle">
-                  文字陰影：
-                </div>
-                <div class="options">
-                  <div>
-                    <input
-                      id="no"
-                      v-model="hasShadow"
-                      type="radio"
-                      :value="false"
-                      @change="setHasShadow"
-                    >
-                    <label for="no">
-                      無陰影
-                      <small>(建議)</small>
-                    </label>
-                  </div>
-                  <div>
-                    <input
-                      id="hasShadow"
-                      v-model="hasShadow"
-                      type="radio"
-                      :value="true"
-                      @change="setHasShadow"
-                    >
-                    <label for="hasShadow"> 有陰影才有型 </label>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <div class="subtitle">
-                  背景圖：
-                </div>
-                <div class="options">
-                  <div>
-                    <input
-                      id="image_base"
-                      v-model="backgroundImage"
-                      type="radio"
-                      value="image_base"
-                      @change="setBackgroundImage"
-                    >
-                    <label for="image_base">
-                      預設
-                      <small>(下跪建議)</small>
-                    </label>
-                  </div>
-                  <div>
-                    <input
-                      id="image_base_rainbow_1"
-                      v-model="backgroundImage"
-                      type="radio"
-                      value="image_base_rainbow_1"
-                      @change="setBackgroundImage"
-                    >
-                    <label for="image_base_rainbow_1"> 豪華彩虹 </label>
-                  </div>
-                  <div>
-                    <input
-                      id="image_base_rainbow_2"
-                      v-model="backgroundImage"
-                      type="radio"
-                      value="image_base_rainbow_2"
-                      @change="setBackgroundImage"
-                    >
-                    <label for="image_base_rainbow_2"> 魔幻彩虹 </label>
                   </div>
                 </div>
               </div>
