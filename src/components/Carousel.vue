@@ -1,15 +1,44 @@
 <script setup>
 import { register } from 'swiper/element/bundle'
+import sweetAlert from 'sweetalert2'
+import exampleImage1 from '../assets/images/example1.png'
+import exampleImage2 from '../assets/images/example2.png'
+import exampleImage3 from '../assets/images/example3.png'
+import exampleImage4 from '../assets/images/example4.png'
+import exampleImage5 from '../assets/images/example5.png'
+import exampleImage6 from '../assets/images/example6.png'
 
 // register Swiper custom elements
 register()
 
 const emit = defineEmits(['onImageLoaded'])
+const exampleImages = [
+  exampleImage1,
+  exampleImage2,
+  exampleImage3,
+  exampleImage4,
+  exampleImage5,
+  exampleImage6
+]
 
 let imageLoadedNum = 0
 const imageLoad = () => {
   imageLoadedNum++
-  imageLoadedNum === 5 && emit('onImageLoaded')
+  imageLoadedNum === exampleImages.length && emit('onImageLoaded')
+}
+
+const previewImage = (customEvent) => {
+  const [swiper] = customEvent.detail
+  if (typeof swiper.clickedIndex !== 'number') return
+
+  const image = exampleImages[swiper.clickedIndex]
+  sweetAlert.fire({
+    width: 600,
+    imageUrl: image,
+    imageWidth: 550,
+    imageAlt: '預覽範例',
+    confirmButtonText: '關閉'
+  })
 }
 </script>
 
@@ -32,8 +61,19 @@ const imageLoad = () => {
         slidesPerView: 3,
       },
     }"
+    @swiperclick="previewImage"
   >
-    <swiper-slide>
+    <swiper-slide
+      v-for="image in exampleImages"
+      :key="image"
+    >
+      <img
+        :src="image"
+        alt="預覽圖"
+        @load="imageLoad"
+      >
+    </swiper-slide>
+    <!-- <swiper-slide>
       <img
         src="../assets/images/example1.png"
         @load="imageLoad"
@@ -68,7 +108,7 @@ const imageLoad = () => {
         src="../assets/images/example6.png"
         @load="imageLoad"
       >
-    </swiper-slide>
+    </swiper-slide> -->
   </swiper-container>
 </template>
 
@@ -86,6 +126,10 @@ swiper-slide {
   img {
     width: auto;
     height: 100%;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
 

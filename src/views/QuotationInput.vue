@@ -3,6 +3,8 @@ import { ref, computed, watch, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuotationDataStore } from '../store/quotationData'
 import { storeToRefs } from 'pinia'
+import sweetAlert from 'sweetalert2'
+import dadaImage from '../assets/images/dada_angry.png'
 import BaseLoader from '../components/BaseLoader.vue'
 import Carousel from '../components/Carousel.vue'
 import BaseStepper from '../components/BaseStepper.vue'
@@ -120,8 +122,33 @@ const toImageSelection = () => {
   validateQuotation(quotation.value)
   hasDate.value && validateDate(date.value)
   if ((isInputValid.value || isTextareaValid.value) && isDateValid.value) {
-    router.push({ name: 'ImagesSelection' })
+    const string = getStyleString()
+
+    !string.length && router.push({ name: 'ImagesSelection' })
+
+    if (string.length) {
+      const { isConfirmed } = sweetAlert.fire({
+        imageUrl: dadaImage,
+        imageWidth: 150,
+        title: '你要確定欸!?',
+        html: `<span>你套用了<strong>${string}</strong>風格，真的確定？<span>`
+      })
+
+      isConfirmed && router.push({ name: 'ImagesSelection' })
+    }
   }
+}
+
+const getStyleString = () => {
+  const specialStyle = []
+  styleOptions.value.forEach((item, index) => {
+    if (exportStyle.value[item.type] !== item.options[0].value) {
+      const selection = styleOptions.value[index].options.find(option => exportStyle.value[item.type] === option.value)
+      specialStyle.push(selection.text)
+    }
+  })
+
+  return specialStyle.join('、')
 }
 </script>
 
