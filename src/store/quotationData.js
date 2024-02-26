@@ -90,7 +90,7 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
           value: 'PMingLiU'
         },
         {
-          text: '炫炮雞尾酒 (字型混搭)',
+          text: '炫炮雞尾酒 (五字型混搭)',
           value: 'mixStyle'
         }
       ]
@@ -109,7 +109,7 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
           value: 'rainbow'
         },
         {
-          text: '水晶寶寶缸 (隨機配色)',
+          text: '水晶寶寶缸 (七彩混搭)',
           value: 'randomColor'
         }
       ]
@@ -139,12 +139,16 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
           hint: '下跪建議'
         },
         {
-          text: '豪華彩虹',
+          text: '魅力彩虹',
           value: 'image_base_rainbow_1'
         },
         {
           text: '魔幻彩虹',
           value: 'image_base_rainbow_2'
+        },
+        {
+          text: '絢麗彩虹',
+          value: 'image_base_rainbow_3'
         }
       ]
     }

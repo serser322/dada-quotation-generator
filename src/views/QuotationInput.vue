@@ -4,7 +4,10 @@ import { useRouter } from 'vue-router'
 import { useQuotationDataStore } from '../store/quotationData'
 import { storeToRefs } from 'pinia'
 import sweetAlert from 'sweetalert2'
-import dadaImage from '../assets/images/dada_angry.png'
+import dadaImage1 from '../assets/images/dada_alert1.png'
+import dadaImage2 from '../assets/images/dada_alert2.png'
+import dadaImage3 from '../assets/images/dada_alert3.png'
+import dadaImage4 from '../assets/images/dada_alert4.png'
 import BaseLoader from '../components/BaseLoader.vue'
 import Carousel from '../components/Carousel.vue'
 import BaseStepper from '../components/BaseStepper.vue'
@@ -116,40 +119,92 @@ const setStyleSelect = (event, type) => {
   quotationStore.setExportStyle(type, event.target.value)
 }
 
+// Style alert setting
+const styleNameList = ref([])
+const styleNum = computed(() => styleNameList.value.length)
+
+const styleAlertConfig = computed(() => {
+  const styleString = styleNameList.value.join('、')
+
+  if (!styleNum.value) return {}
+
+  const baseConfig = {
+    imageUrl: dadaImage1,
+    imageWidth: 150,
+    showCloseButton: true,
+    showCancelButton: true,
+    allowOutsideClick: false,
+    confirmButtonColor: '#fa9b02',
+    title: '你要確定欸!?',
+    html: `
+    <div>
+      你確定要套用特殊風格<strong>${styleString}</strong>？？
+    <div>
+    <small>(灰妲在<a href='https://www.youtube.com/live/l67iajGSTPA?si=MRNvbz4auvkuu9sL&t=9522'>剪輯教學台</a>好像不是這樣教的...)
+    </small>`,
+    confirmButtonText: '確定套用，滿滿感動',
+    cancelButtonText: '返回重選'
+  }
+
+  if (styleNum.value === 1) {
+    return {
+      ...baseConfig
+    }
+  } else if (styleNum.value === 2) {
+    return {
+      ...baseConfig,
+      imageUrl: dadaImage2,
+      title: '美術老師即將暈厥...',
+      confirmButtonText: '確定套用，老師保重',
+      cancelButtonText: '好，我重選'
+    }
+  } else if (styleNum.value === 3) {
+    return {
+      ...baseConfig,
+      imageUrl: dadaImage3,
+      title: '你4不4想讓大家中風!?',
+      confirmButtonText: '確定套用，一起中風',
+      cancelButtonText: '我錯了，我再重選'
+    }
+  } else {
+    return {
+      ...baseConfig,
+      imageUrl: dadaImage4,
+      title: '你是不是想報復社會!?',
+      confirmButtonText: '堅持美學，報復社會',
+      cancelButtonText: '對不起社會，我再重選'
+    }
+  }
+})
+
+const getStyleNameList = () => {
+  styleNameList.value = []
+  styleOptions.value.forEach((item, index) => {
+    if (exportStyle.value[item.type] !== item.options[0].value) {
+      const selection = styleOptions.value[index].options.find(option => exportStyle.value[item.type] === option.value)
+      styleNameList.value.push(selection.text)
+    }
+  })
+}
+
 // Button router
 const router = useRouter()
-const toImageSelection = () => {
+const toImageSelection = async () => {
   validateQuotation(quotation.value)
   hasDate.value && validateDate(date.value)
   if ((isInputValid.value || isTextareaValid.value) && isDateValid.value) {
-    const string = getStyleString()
+    getStyleNameList()
 
-    !string.length && router.push({ name: 'ImagesSelection' })
+    !styleNum.value && router.push({ name: 'ImagesSelection' })
 
-    if (string.length) {
-      const { isConfirmed } = sweetAlert.fire({
-        imageUrl: dadaImage,
-        imageWidth: 150,
-        title: '你要確定欸!?',
-        html: `<span>你套用了<strong>${string}</strong>風格，真的確定？<span>`
-      })
+    if (styleNum.value) {
+      const { isConfirmed } = await sweetAlert.fire({ ...styleAlertConfig.value })
 
       isConfirmed && router.push({ name: 'ImagesSelection' })
     }
   }
 }
 
-const getStyleString = () => {
-  const specialStyle = []
-  styleOptions.value.forEach((item, index) => {
-    if (exportStyle.value[item.type] !== item.options[0].value) {
-      const selection = styleOptions.value[index].options.find(option => exportStyle.value[item.type] === option.value)
-      specialStyle.push(selection.text)
-    }
-  })
-
-  return specialStyle.join('、')
-}
 </script>
 
 <template>
@@ -627,7 +682,14 @@ label[for="none"] {
     .style__select {
       & > div {
         .options {
-          grid-template-columns: 9rem 9rem auto;
+          grid-template-columns: 8.8rem 8.8rem auto;
+        }
+
+        &:nth-child(4) {
+          .options {
+
+            grid-template-columns: 8.8rem 8.8rem 8.8rem auto;
+          }
         }
       }
     }

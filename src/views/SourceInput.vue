@@ -304,6 +304,8 @@ const getBackgroundImage = computed(() => {
       return new URL('./../assets/images/image_base_rainbow_1.jpg', import.meta.url).href
     case 'image_base_rainbow_2':
       return new URL('./../assets/images/image_base_rainbow_2.jpg', import.meta.url).href
+    case 'image_base_rainbow_3':
+      return new URL('./../assets/images/image_base_rainbow_3.jpg', import.meta.url).href
     default:
       return new URL('./../assets/images/image_base.jpg', import.meta.url).href
   }
