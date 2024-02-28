@@ -11,7 +11,6 @@
 <style lang="scss" scoped>
 .card {
   width: 100%;
-  /* min-height: 25rem; */
   background-color: #fff;
   margin: 0 auto 0 auto;
   padding: 2rem 1.5rem;

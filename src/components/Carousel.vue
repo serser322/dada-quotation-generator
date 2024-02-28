@@ -73,42 +73,6 @@ const previewImage = (customEvent) => {
         @load="imageLoad"
       >
     </swiper-slide>
-    <!-- <swiper-slide>
-      <img
-        src="../assets/images/example1.png"
-        @load="imageLoad"
-      >
-    </swiper-slide>
-    <swiper-slide>
-      <img
-        src="../assets/images/example2.png"
-        @load="imageLoad"
-      >
-    </swiper-slide>
-    <swiper-slide>
-      <img
-        src="../assets/images/example3.png"
-        @load="imageLoad"
-      >
-    </swiper-slide>
-    <swiper-slide>
-      <img
-        src="../assets/images/example4.png"
-        @load="imageLoad"
-      >
-    </swiper-slide>
-    <swiper-slide>
-      <img
-        src="../assets/images/example5.png"
-        @load="imageLoad"
-      >
-    </swiper-slide>
-    <swiper-slide>
-      <img
-        src="../assets/images/example6.png"
-        @load="imageLoad"
-      >
-    </swiper-slide> -->
   </swiper-container>
 </template>
 
@@ -116,6 +80,7 @@ const previewImage = (customEvent) => {
 swiper-container {
   width: 100%;
   height: 10rem;
+  animation: carouselAnimate 0.6s ease-in-out forwards;
 }
 
 swiper-slide {
@@ -147,6 +112,18 @@ swiper-container::part(bullet) {
 swiper-container::part(bullet-active) {
   background-color: var(--secondary-yellow);
 }
+
+@keyframes carouselAnimate {
+    0% {
+      top: -30px;
+      opacity: 0%;
+    }
+
+    100% {
+      top: 0px;
+      opacity: 100%;
+    }
+  }
 
 @media (min-width: 576px) {
   swiper-container {
