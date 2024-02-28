@@ -114,7 +114,7 @@ watch(hasDate, (newValue) => {
 })
 
 // Style select radio
-const styleSelect = reactive(exportStyle)
+const styleSelect = reactive(exportStyle.value)
 const setStyleSelect = (event, type) => {
   quotationStore.setExportStyle(type, event.target.value)
 }
