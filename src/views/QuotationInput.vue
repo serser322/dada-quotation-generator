@@ -1,9 +1,15 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuotationDataStore } from '../store/quotationData'
 import { storeToRefs } from 'pinia'
+import sweetAlert from 'sweetalert2'
+import dadaImage1 from '../assets/images/dada_alert1.png'
+import dadaImage2 from '../assets/images/dada_alert2.png'
+import dadaImage3 from '../assets/images/dada_alert3.png'
+import dadaImage4 from '../assets/images/dada_alert4.png'
 import BaseLoader from '../components/BaseLoader.vue'
+import Carousel from '../components/Carousel.vue'
 import BaseStepper from '../components/BaseStepper.vue'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
@@ -17,22 +23,20 @@ const MAX_LINES = 6
 const MAX_CHARACTERS_PER_LINE = 12
 
 // Loading
-const contentImagesNum = ref(0)
-const isLoadDown = computed(
-  () => contentImagesNum.value === 2 && quotationStore.headerLoadDown
+const isExampleImagesLoadDown = ref(false)
+const isLoadDown = computed(() =>
+  isExampleImagesLoadDown.value && quotationStore.headerLoadDown
 )
-const contentImageLoad = () => {
-  contentImagesNum.value++
+const exampleImageLoaded = () => {
+  isExampleImagesLoadDown.value = true
 }
 
 // Quotation input / textarea
 const {
   quotation,
   date,
-  fontColorValue,
-  fontStyleValue,
-  hasTextShadow,
-  backgroundImageValue
+  exportStyle,
+  styleOptions
 } = storeToRefs(quotationStore)
 
 const isTextarea = ref(true)
@@ -110,59 +114,119 @@ watch(hasDate, (newValue) => {
 })
 
 // Style select radio
-const fontStyle = ref(fontStyleValue.value)
-const setFontStyle = (event) => {
-  quotationStore.setFontStyleValue(fontStyle.value)
+const styleSelect = reactive(exportStyle.value)
+const setStyleSelect = (event, type) => {
+  quotationStore.setExportStyle(type, event.target.value)
 }
 
-const fontColor = ref(fontColorValue.value)
-const setFontColor = (event) => {
-  quotationStore.setFontColorValue(fontColor.value)
-}
+// Style alert setting
+const styleNameList = ref([])
+const styleNum = computed(() => styleNameList.value.length)
 
-const hasShadow = ref(hasTextShadow.value)
-const setHasShadow = (event) => {
-  quotationStore.setHasTextShadow(hasShadow.value)
-}
+const img1 = new Image()
+img1.src = dadaImage1
+const img2 = new Image()
+img2.src = dadaImage2
+const img3 = new Image()
+img3.src = dadaImage3
+const img4 = new Image()
+img4.src = dadaImage4
 
-const backgroundImage = ref(backgroundImageValue.value)
-const setBackgroundImage = (event) => {
-  quotationStore.setBackgroundImageValue(backgroundImage.value)
+const styleAlertConfig = computed(() => {
+  const styleString = styleNameList.value.join('、')
+
+  if (!styleNum.value) return {}
+
+  const baseConfig = {
+    imageUrl: dadaImage1,
+    imageWidth: 150,
+    showCloseButton: true,
+    showCancelButton: true,
+    allowOutsideClick: false,
+    confirmButtonColor: '#fa9b02',
+    title: '你要確定欸!?',
+    html: `
+    <div>
+      你確定要套用特殊風格<strong>${styleString}</strong>？？
+    <div>
+    <small>(灰妲在<a href='https://www.youtube.com/live/l67iajGSTPA?si=MRNvbz4auvkuu9sL&t=9522'>剪輯教學台</a>好像不是這樣教的...)
+    </small>`,
+    confirmButtonText: '確定套用，滿滿感動',
+    cancelButtonText: '返回重選'
+  }
+
+  if (styleNum.value === 1) {
+    return {
+      ...baseConfig
+    }
+  } else if (styleNum.value === 2) {
+    return {
+      ...baseConfig,
+      imageUrl: dadaImage2,
+      title: '美術老師即將暈厥...',
+      confirmButtonText: '確定套用，老師保重',
+      cancelButtonText: '好，我重選'
+    }
+  } else if (styleNum.value === 3) {
+    return {
+      ...baseConfig,
+      imageUrl: dadaImage3,
+      title: '你4不4想讓大家中風!?',
+      confirmButtonText: '確定套用，一起中風',
+      cancelButtonText: '我錯了，我再重選'
+    }
+  } else {
+    return {
+      ...baseConfig,
+      imageUrl: dadaImage4,
+      title: '你是不是想報復社會!?',
+      confirmButtonText: '堅持美學，報復社會',
+      cancelButtonText: '對不起社會，我再重選'
+    }
+  }
+})
+
+const getStyleNameList = () => {
+  styleNameList.value = []
+  styleOptions.value.forEach((item, index) => {
+    if (exportStyle.value[item.type] !== item.options[0].value) {
+      const selection = styleOptions.value[index].options.find(option => exportStyle.value[item.type] === option.value)
+      styleNameList.value.push(selection.text)
+    }
+  })
 }
 
 // Button router
 const router = useRouter()
-const toImageSelection = () => {
+const toImageSelection = async () => {
   validateQuotation(quotation.value)
   hasDate.value && validateDate(date.value)
   if ((isInputValid.value || isTextareaValid.value) && isDateValid.value) {
-    router.push({ name: 'ImagesSelection' })
+    getStyleNameList()
+
+    !styleNum.value && router.push({ name: 'ImagesSelection' })
+
+    if (styleNum.value) {
+      const { isConfirmed } = await sweetAlert.fire({ ...styleAlertConfig.value })
+
+      isConfirmed && router.push({ name: 'ImagesSelection' })
+    }
   }
 }
+
 </script>
 
 <template>
   <main>
-    <BaseLoader v-show="!isLoadDown" />
+    <BaseLoader v-if="!isLoadDown" />
     <div v-show="isLoadDown">
+      <Carousel
+        class="carousel"
+        @on-image-loaded="exampleImageLoaded"
+      />
+
       <BaseStepper page="quotationInput" />
-      <BaseCard class="example__card">
-        <div class="example">
-          <div class="title">
-            <h2>名言圖範例：</h2>
-          </div>
-          <div class="images">
-            <img
-              src="../assets/images/example1.png"
-              @load="contentImageLoad"
-            >
-            <img
-              src="../assets/images/example2.png"
-              @load="contentImageLoad"
-            >
-          </div>
-        </div>
-      </BaseCard>
+
       <BaseCard>
         <div class="quotation">
           <div class="title">
@@ -234,9 +298,9 @@ const toImageSelection = () => {
             <VueDatePicker
               :model-value="hasDate ? date : null"
               :enable-time-picker="false"
-              auto-apply
+              :auto-apply="true"
               locale="zh-tw"
-              dark
+              :dark="true"
               :format="quotationStore.formatDate(date, '/')"
               :day-names="['一', '二', '三', '四', '五', '六', '日']"
               :disabled="!hasDate"
@@ -271,158 +335,29 @@ const toImageSelection = () => {
             </div>
 
             <div class="style__select">
-              <div>
+              <div
+                v-for="item in styleOptions"
+                :key="item.title"
+              >
                 <div class="subtitle">
-                  字型：
+                  {{ item.title }}
                 </div>
                 <div class="options">
-                  <div>
+                  <div
+                    v-for="option in item.options"
+                    :key="option.value"
+                  >
                     <input
-                      id="Noto Sans CJK TC"
-                      v-model="fontStyle"
+                      :id="option.value"
+                      v-model="styleSelect[item.type]"
                       type="radio"
-                      value="Noto Sans CJK TC"
-                      @change="setFontStyle"
+                      :value="option.value"
+                      @change="setStyleSelect($event, item.type)"
                     >
-                    <label for="Noto Sans CJK TC">
-                      預設
-                      <small>(誠心建議)</small>
+                    <label :for="option.value">
+                      {{ option.text }}
+                      <small v-if="option.hint">({{ option.hint }})</small>
                     </label>
-                  </div>
-                  <div>
-                    <input
-                      id="PMingLiU"
-                      v-model="fontStyle"
-                      type="radio"
-                      value="PMingLiU"
-                      @change="setFontStyle"
-                    >
-                    <label for="PMingLiU"> 酷酷新細明體 </label>
-                  </div>
-                  <div>
-                    <input
-                      id="mixStyle"
-                      v-model="fontStyle"
-                      type="radio"
-                      value="mixStyle"
-                      @change="setFontStyle"
-                    >
-                    <label for="mixStyle"> 炫炮雞尾酒 (字體混搭) </label>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <div class="subtitle">
-                  文字顏色：
-                </div>
-                <div class="options">
-                  <div>
-                    <input
-                      id="white"
-                      v-model="fontColor"
-                      type="radio"
-                      value="white"
-                      @change="setFontColor"
-                    >
-                    <label for="white">
-                      預設
-                      <small>(強烈建議)</small>
-                    </label>
-                  </div>
-                  <div>
-                    <input
-                      id="rainbow"
-                      v-model="fontColor"
-                      type="radio"
-                      value="rainbow"
-                      @change="setFontColor"
-                    >
-                    <label for="rainbow"> 華麗彩虹色 </label>
-                  </div>
-                  <div>
-                    <input
-                      id="randomColor"
-                      v-model="fontColor"
-                      type="radio"
-                      value="randomColor"
-                      @change="setFontColor"
-                    >
-                    <label for="randomColor">
-                      水晶寶寶缸 (隨機配色)
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <div class="subtitle">
-                  文字陰影：
-                </div>
-                <div class="options">
-                  <div>
-                    <input
-                      id="no"
-                      v-model="hasShadow"
-                      type="radio"
-                      :value="false"
-                      @change="setHasShadow"
-                    >
-                    <label for="no">
-                      無陰影
-                      <small>(建議)</small>
-                    </label>
-                  </div>
-                  <div>
-                    <input
-                      id="hasShadow"
-                      v-model="hasShadow"
-                      type="radio"
-                      :value="true"
-                      @change="setHasShadow"
-                    >
-                    <label for="hasShadow"> 有陰影才有型 </label>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <div class="subtitle">
-                  背景圖：
-                </div>
-                <div class="options">
-                  <div>
-                    <input
-                      id="image_base"
-                      v-model="backgroundImage"
-                      type="radio"
-                      value="image_base"
-                      @change="setBackgroundImage"
-                    >
-                    <label for="image_base">
-                      預設
-                      <small>(下跪建議)</small>
-                    </label>
-                  </div>
-                  <div>
-                    <input
-                      id="image_base_rainbow_1"
-                      v-model="backgroundImage"
-                      type="radio"
-                      value="image_base_rainbow_1"
-                      @change="setBackgroundImage"
-                    >
-                    <label for="image_base_rainbow_1"> 豪華彩虹 </label>
-                  </div>
-                  <div>
-                    <input
-                      id="image_base_rainbow_2"
-                      v-model="backgroundImage"
-                      type="radio"
-                      value="image_base_rainbow_2"
-                      @change="setBackgroundImage"
-                    >
-                    <label for="image_base_rainbow_2"> 魔幻彩虹 </label>
                   </div>
                 </div>
               </div>
@@ -445,26 +380,9 @@ const toImageSelection = () => {
 main {
   color: var(--secondary-yellow);
 }
-.example__card {
-  margin-bottom: 1.5rem;
 
-  .example {
-    .title {
-      margin-bottom: 1rem;
-    }
-
-    .images {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-      row-gap: 1rem;
-
-      img {
-        width: 16rem;
-        box-shadow: var(--image-shadow);
-      }
-    }
-  }
+.carousel {
+  margin-bottom: 2.5rem;
 }
 
 .quotation {
@@ -653,8 +571,6 @@ label[for="none"] {
 
   &.hidden {
     visibility: hidden;
-    /* opacity: 0%; */
-    /* animation: hiddenAnimate 0.3s ease-out forwards; */
   }
 
   &.showHint {
@@ -692,16 +608,6 @@ label[for="none"] {
 }
 
 @media (min-width: 576px) {
-  .example__card {
-    .example {
-      .images {
-        img {
-          width: 21rem;
-        }
-      }
-    }
-  }
-
   .quotation {
     .title {
       display: flex;
@@ -775,16 +681,6 @@ label[for="none"] {
 }
 
 @media (min-width: 768px) {
-  .example__card {
-    .example {
-      .images {
-        img {
-          width: 16.5rem;
-        }
-      }
-    }
-  }
-
   .date {
     .date__select {
       width: 50%;
@@ -795,48 +691,14 @@ label[for="none"] {
     .style__select {
       & > div {
         .options {
-          grid-template-columns: 9rem 9rem auto;
+          grid-template-columns: 8.8rem 8.8rem auto;
         }
-      }
-    }
-  }
-}
 
-@media (min-width: 992px) {
-  .example__card {
-    .example {
-      .images {
-        img {
-          width: 22rem;
-        }
-      }
-    }
-  }
-}
+        &:nth-child(4) {
+          .options {
 
-@media (min-width: 1200px) {
-  .example__card {
-    .example {
-      .images {
-        justify-content: center;
-        column-gap: 3rem;
-
-        img {
-          width: 24rem;
-        }
-      }
-    }
-  }
-}
-
-@media (min-width: 1440px) {
-  .example__card {
-    .example {
-      .images {
-        column-gap: 4rem;
-
-        img {
-          width: 25rem;
+            grid-template-columns: 8.8rem 8.8rem 8.8rem auto;
+          }
         }
       }
     }
