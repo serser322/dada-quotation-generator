@@ -1,15 +1,11 @@
 <script setup>
 import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
-// import SidebarMobile from '../components/SidebarMobile.vue'
-// import Sidebar from '../components/Sidebar.vue'
 
 </script>
 
 <template>
   <div class="container">
-    <!-- <SidebarMobile class="sidebar__mobile" />
-    <Sidebar class="sidebar" /> -->
     <div>
       <Header />
       <div class="container__warp">
@@ -24,7 +20,6 @@ import Footer from '../components/Footer.vue'
 .container {
   display: flex;
   height: auto;
-  /* min-height: 100vh; */
 
   .sidebar {
     display: none;
@@ -37,12 +32,6 @@ import Footer from '../components/Footer.vue'
   div {
     width: 100%;
     min-height: 75vh;
-    /* margin-left: 3.5rem; //保留空間給sidebar */
-
-    @media (min-width: 576px) {
-      /* margin-left: 0 */
-      /* margin-left: 3.5rem; //保留空間給sidebar */
-    }
 
     .container__warp {
       width: 90%;

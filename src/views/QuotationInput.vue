@@ -123,6 +123,15 @@ const setStyleSelect = (event, type) => {
 const styleNameList = ref([])
 const styleNum = computed(() => styleNameList.value.length)
 
+const img1 = new Image()
+img1.src = dadaImage1
+const img2 = new Image()
+img2.src = dadaImage2
+const img3 = new Image()
+img3.src = dadaImage3
+const img4 = new Image()
+img4.src = dadaImage4
+
 const styleAlertConfig = computed(() => {
   const styleString = styleNameList.value.join('、')
 

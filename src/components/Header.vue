@@ -4,9 +4,6 @@ import { useQuotationDataStore } from '../store/quotationData'
 import BaseLoader from './BaseLoader.vue'
 
 const quotationStore = useQuotationDataStore()
-// const openSidebar = () => {
-//   quotationStore.setSidebarOpen(true)
-// }
 
 const headerLoadedImagesNum = ref(0)
 const isLoadDown = computed(() => headerLoadedImagesNum.value === 3)
@@ -24,15 +21,6 @@ const headerImageLoad = () => {
     <BaseLoader />
   </div>
   <header v-show="isLoadDown">
-    <!-- <div
-      class="header__sidebar__toggler"
-      @click="openSidebar"
-    >
-      <span class="material-symbols-outlined">
-        menu
-      </span>
-    </div> -->
-
     <div class="header__image1">
       <img
         src="../assets/header_image.png"
@@ -83,20 +71,6 @@ header {
   align-items: center;
   width: 100%;
   background: url('../assets/header_background.png');
-  /* .header__sidebar__toggler {
-    position: absolute;
-    left: 10px;
-    top: 50px;
-
-    span.material-symbols-outlined {
-      border: 1px solid white;
-      width: 25px;
-      height: 25px;
-      font-size: 25px;
-      font-weight: 600;
-      background-color: var(--sidebar-background-color);
-    }
-  } */
 
   .header__image1 {
     display: none;
@@ -111,8 +85,6 @@ header {
 
     img {
       height: 100%;
-      /* width: 80%; */
-      /* max-height: 7rem; */
     }
   }
 
@@ -171,7 +143,6 @@ header {
       animation: img1Animate 0.5s ease-out 0.5s forwards;
 
       img {
-        /* height: 80%; */
         width: 80%;
         max-width: 8rem;
       }

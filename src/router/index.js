@@ -33,10 +33,6 @@ const routes = [
       }
     ]
   }
-  // {
-  //   path: '/:catchAll(.*)',
-  //   redirect: { name: 'QuotationInput' }
-  // }
 ]
 
 const router = createRouter(
