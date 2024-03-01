@@ -1,14 +1,9 @@
 # 灰妲名言產生器
 
-<div style="position: relative" align="center">
-  <img src="./src/assets/header_background.png" alt="example" width="auto" height="90px"/>
-  <img style="position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%);" src="./src/assets/logo.png" alt="example" width="150" height="auto"/>
+<div align="center">
+    <img src="./src/assets/images/example1.png" alt="example" width="300" height="auto">
+    <div><small>▲灰妲名言圖(範例)</small></div>
 </div>
-<br />
-<figure align="center">
-    <img style="max-width:280px; width:100%" src="./src/assets/images/example1.png" alt="example" height="auto">
-    <figcaption><small>▲灰妲名言圖(範例)</small></figcaption>
-</figure>
 
 ## 關於
 
@@ -23,8 +18,6 @@
    如選擇「妲哥」立繪，則隨後匯出圖的署名，會標示「妲哥」。
 3. 輸入該言論的出處連結(非必填)，如推特、Youtube 連結，其中 Youtube 連結建議附上含時間之連結，以便有興趣者查找。輸入完成後，即可點選製作名言圖按鍵，完成製作。
 
-## 版本 1.1.0
-
 ## 開發工具
 
 [![Vite][Vite]][Vite-url]
@@ -38,6 +31,8 @@
 ## 圖片來源
 
 本網站使用之圖片素材，皆取自灰妲官方非營利二創素材包，部分背景素材取自免費免版權圖庫。
+
+## 版本 1.1.0
 
 [Web-url]: https://serser322.github.io/dada-quotation-generator/
 [Dada-youtube-url]: https://www.youtube.com/@ReLiveDaDa
