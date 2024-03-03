@@ -90,7 +90,7 @@ export const useQuotationDataStore = defineStore('quotationData', () => {
           value: 'PMingLiU'
         },
         {
-          text: '炫炮雞尾酒 (五字型混搭)',
+          text: '炫炮雞尾酒 (六字型混搭)',
           value: 'mixStyle'
         }
       ]
