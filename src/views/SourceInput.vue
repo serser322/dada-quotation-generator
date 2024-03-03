@@ -344,6 +344,18 @@ const getImage = computed(() => {
       return new URL('./../assets/images/dada_14.png', import.meta.url).href
     case 'dada_15.png':
       return new URL('./../assets/images/dada_15.png', import.meta.url).href
+    case 'dada_16.png':
+      return new URL('./../assets/images/dada_16.png', import.meta.url).href
+    case 'dada_17.png':
+      return new URL('./../assets/images/dada_17.png', import.meta.url).href
+    case 'dada_18.png':
+      return new URL('./../assets/images/dada_18.png', import.meta.url).href
+    case 'dada_19.png':
+      return new URL('./../assets/images/dada_19.png', import.meta.url).href
+    case 'dada_20.png':
+      return new URL('./../assets/images/dada_20.png', import.meta.url).href
+    case 'dada_21.png':
+      return new URL('./../assets/images/dada_21.png', import.meta.url).href
     case 'yoda_01.png':
       return new URL('./../assets/images/yoda_01.png', import.meta.url).href
     case 'yoda_02.png':
