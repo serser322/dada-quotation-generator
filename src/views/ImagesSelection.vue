@@ -8,11 +8,11 @@ import BaseStepper from '../components/BaseStepper.vue'
 import BaseCard from '../components/BaseCard.vue'
 import BaseButton from '../components/BaseButton.vue'
 
-// Loading (為避免一次load 24張圖時間過久，分兩次顯示)
+// Loading (為避免一次load 30張圖時間過久，分兩次顯示)
 const firstHalfImagesNum = ref(0)
 const secondHalfImagesNum = ref(0)
 const isFirstHalfLoadDown = computed(() => firstHalfImagesNum.value === 10)
-const isSecondHalfLoadDown = computed(() => secondHalfImagesNum.value === 14)
+const isSecondHalfLoadDown = computed(() => secondHalfImagesNum.value === 20)
 const firstHalfImagesLoad = () => {
   firstHalfImagesNum.value++
 }
@@ -55,7 +55,6 @@ const toQuotationInput = () => {
 const toSourceInput = () => {
   validate()
   isValid.value && router.push({ name: 'SourceInput' })
-  // isValid.value && router.push('/dada-quotation-generator/source-input')
 }
 
 </script>
@@ -78,7 +77,7 @@ const toSourceInput = () => {
         class="images"
         :class="{ invalid__border: !isValid, invalid__border__space: isValid }"
       >
-        <!-- 為避免一次load 24張圖時間過久，前10張load完先顯示 -->
+        <!-- 為避免一次load 30張圖時間過久，前10張load完先顯示 -->
         <div
           class="image"
           @click="selectImage($event)"
@@ -191,7 +190,7 @@ const toSourceInput = () => {
           >
         </div>
 
-        <!-- 繼續等待後14張load -->
+        <!-- 繼續等待後20張load -->
         <div
           v-if="!isSecondHalfLoadDown"
           class="img__loader"
@@ -255,6 +254,78 @@ const toSourceInput = () => {
             src="../assets/images/dada_15.png"
             alt=""
             data-img="dada_15.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/dada_16.png"
+            alt=""
+            data-img="dada_16.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/dada_17.png"
+            alt=""
+            data-img="dada_17.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/dada_18.png"
+            alt=""
+            data-img="dada_18.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/dada_19.png"
+            alt=""
+            data-img="dada_19.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/dada_20.png"
+            alt=""
+            data-img="dada_20.png"
+            @load="secondHalfImagesLoad"
+          >
+        </div>
+        <div
+          v-show="isSecondHalfLoadDown"
+          class="image"
+          @click="selectImage($event)"
+        >
+          <img
+            src="../assets/images/dada_21.png"
+            alt=""
+            data-img="dada_21.png"
             @load="secondHalfImagesLoad"
           >
         </div>
